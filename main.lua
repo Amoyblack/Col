@@ -11,7 +11,7 @@
 
 
 DefaultData = {
-	["Version"] = "8.0.031",
+	["Version"] = "8.0.032",
 	["OriBar"] = false,
 	["OriCast"] = true,
 	["OriElite"] = true,
@@ -33,6 +33,8 @@ DefaultData = {
 	["AuraNum"] = 5,
 	["OriAuraSize"] = true,
 	["AuraSize"] = 25, 
+	["AuraTimer"] = false,
+	["AuraNumSize"] = 13,
 
 	["DctAura"] = {	
 	[3355] = true,	--冰冻陷阱
@@ -50,8 +52,6 @@ DefaultData = {
 	[217832]= true, --dh禁锢
 	[102359]= true, --群缠绕
 
-	[19574] = true, --红人
-	[193530] = true, --绿叶
 }
 }
 
@@ -151,7 +151,7 @@ local function GetDetailText(unit)
 	local fPer = string.format("%.0f",(CurHealth/MaxHealth*100)).."%"
 	local fCur = nil 
 	if CurHealth > 10000 then
-		fCur = string.format("%.1f",CurHealth/10000).."w"
+		fCur = string.format("%.1f",CurHealth/10000).."万"
 	else
 		fCur = tostring(CurHealth)
 	end
@@ -412,7 +412,12 @@ local function UpdateBuffs(self, unit, filter, showAll)
 					end
 
 					CooldownFrame_Set(buff.Cooldown, expirationTime - duration, duration, duration > 0, true);
-					buff.Cooldown:SetHideCountdownNumbers(C.HideCount)
+					buff.Cooldown:SetHideCountdownNumbers(not SavedData["AuraTimer"])
+
+					local regon = buff.Cooldown:GetRegions()
+					if regon.GetText then 
+						regon:SetFont(C.NameFont, SavedData["AuraNumSize"], nil)  --Default : 15 "OUTLINE"
+					end
 
 					buff:Show();
 					buffIndex = buffIndex + 1;

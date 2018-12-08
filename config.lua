@@ -3,7 +3,7 @@ C = {}
 
 C.NameFont = STANDARD_TEXT_FONT		--名字字体
 C.NameTextSize = 12					--名字大小
-C.CenterDetail = false              --居中显示血量与百分比
+C.CenterDetail = true              --居中显示血量与百分比
 
 -- 开启源生施法条后 下两条设定不会生效
 C.CastbarHeight = 5					--施法条高度
@@ -19,8 +19,5 @@ C.LowCol = {.1, .7, .9}				--dps低仇恨 (安全)/ 默认蓝色
 
 
 
--- 光环计时
-
-C.HideCount = true  				--隐藏倒计时数字
 
 

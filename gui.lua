@@ -395,8 +395,8 @@ myGUI.frame1:SetScript("OnShow", function(frame)
 
 	-- check  默认光环样式
 	if not frame.pOriBuffSize then
-		frame.pOriBuffSize = newCheckbox("默认光环样式|r","使用默认光环显示样式与尺寸，取消勾选光环样式会以正方形显示")
-		frame.pOriBuffSize:SetPoint("TOPLEFT", 260, -400)
+		frame.pOriBuffSize = newCheckbox("默认光环样式|r","使用源生光环样式，取消勾选以正方形效果显示光环")
+		frame.pOriBuffSize:SetPoint("TOPLEFT", 260, -385)
 	end
 	frame.pOriBuffSize:SetChecked(SavedData["OriAuraSize"])
 	frame.pOriBuffSize:HookScript("OnClick", function(self)
@@ -409,7 +409,7 @@ myGUI.frame1:SetScript("OnShow", function(frame)
 
 	-- slider 光环尺寸
 	if not frame.pAuraSize then
-		frame.pAuraSize = newSlider("pAuraSize", 440, -400, 15, 40, 20, 1, "小", "大", "光环大小", "" )
+		frame.pAuraSize = newSlider("pAuraSize", 440, -385, 15, 40, 20, 1, "小", "大", "光环大小", "光环图标缩放" )
 	end
 	frame.pAuraSize:SetValue(SavedData["AuraSize"])
 	frame.pAuraSize:HookScript("OnValueChanged", function(self, value)
@@ -418,6 +418,25 @@ myGUI.frame1:SetScript("OnShow", function(frame)
 	if frame.pOriBuffSize:GetChecked() then 
 		frame.pAuraSize:Hide()
 	end
+
+	-- check  开启计时器
+	if not frame.pAuraTimer then
+		frame.pAuraTimer = newCheckbox("显示计时器|r","显示光环剩余时间计时器")
+		frame.pAuraTimer:SetPoint("TOPLEFT", 260, -430)
+	end
+	frame.pAuraTimer:SetChecked(SavedData["AuraTimer"])
+	frame.pAuraTimer:HookScript("OnClick", function(self)
+		SavedData["AuraTimer"] = self:GetChecked()
+	end)
+
+	-- slider 计时器数字大小
+	if not frame.pAuraNumSize then
+		frame.pAuraNumSize = newSlider("pAuraNumSize", 440, -430, 7, 30, 13, 1, "小", "大", "计时器大小", "计时器数字缩放" )
+	end
+	frame.pAuraNumSize:SetValue(SavedData["AuraNumSize"])
+	frame.pAuraNumSize:HookScript("OnValueChanged", function(self, value)
+		SavedData["AuraNumSize"] = tonumber(string.format("%.0f",self:GetValue()))
+	end)
 
 end)
 
