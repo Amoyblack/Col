@@ -11,11 +11,10 @@
 
 
 DefaultData = {
-	["Version"] = "8.0.017",
+	["Version"] = "8.0.031",
 	["OriBar"] = false,
 	["OriCast"] = true,
 	["OriElite"] = true,
-	["OriBuff"] = true,
 	["Detail"] = true,
 	["Omen3"] = true,
 	["Select"] = 1,
@@ -26,8 +25,15 @@ DefaultData = {
 	["KillRGBr"] = 1,
 	["KillRGBg"] = 0.75,
 	["KillRGBb"] = 0.15,
-	["AuraNum"] = 0,
+
+	["AuraDefault"] = true,
+	["AuraWhite"] = true,
 	["AuraOnlyMe"] = false,
+	["AuraHeight"] = 20,
+	["AuraNum"] = 5,
+	["OriAuraSize"] = true,
+	["AuraSize"] = 25, 
+
 	["DctAura"] = {	
 	[3355] = true,	--冰冻陷阱
 	[51514]	= true, --妖术
@@ -43,6 +49,9 @@ DefaultData = {
 	[179057]= true, --混沌
 	[217832]= true, --dh禁锢
 	[102359]= true, --群缠绕
+
+	[19574] = true, --红人
+	[193530] = true, --绿叶
 }
 }
 
@@ -169,47 +178,6 @@ local function SetCastbar(frame)
 	end
 end
 
-local function SetOneAura(frame, index, icon, lasttime, endtime, spellid)
-	local timeNow = GetTime()
-	frame.Auras[index].cd:SetCooldown(timeNow - (lasttime - (endtime - timeNow)), lasttime + 0.2)
-	frame.Auras[index].icon:SetTexture(icon)
-	frame.Auras[index]:Show()
-	-- body
-end
-
-local function CreateAura(parent, index, icon, lasttime, endtime, spellid)
-	local aura = CreateFrame("Frame", nil , parent)  -- 不继承V 关闭血条后该对象仍然没法释放
-	aura:SetSize(C.iAuraWidth, C.iAuraHeight) 
-	aura:SetPoint("BOTTOMLEFT", parent, "BOTTOMLEFT", (C.iAuraWidth+5) *(index-1), 0)  -- 没这个不显示
-
-	aura.icon = aura:CreateTexture(nil, "OVERLAY", nil)
-	aura.icon:SetPoint("TOPLEFT",aura,"TOPLEFT", 1, -1)
-	aura.icon:SetPoint("BOTTOMRIGHT",aura,"BOTTOMRIGHT",-1, 1)
-	-- aura.icon:SetTexture(icon)
-	aura.icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
-
-	-- 可以在NF.Auras 区域染色
-	aura.board = aura:CreateTexture(nil, "ARTWORK", nil)
-	aura.board:SetTexture("Interface\\Buttons\\WHITE8x8")
-	aura.board:SetVertexColor(0, 0, 0)
-	aura.board:SetAllPoints()
-	-- aura.board:SetPoint("TOPLEFT",aura.icon,"TOPLEFT", -2, 2)
-	-- aura.board:SetPoint("BOTTOMRIGHT",aura.icon,"BOTTOMRIGHT", 2, -2)
-
-	-- aura.count = createtext(aura, "OVERLAY", 8, "OUTLINE", "CENTER") 
-	-- aura.count:SetPoint("CENTER", aura.icon, "CENTER", 0, 0)
-	-- aura.count:SetText("29")
-	-- aura.count:SetFont(STANDARD_TEXT_FONT, 20, "OUTLINE")
-
-	aura.cd = CreateFrame("Cooldown", nil , aura, "CooldownFrameTemplate")  --不继承全屏幕CD.....
-	-- aura.cd:SetCooldown(GetTime() - (lasttime - (endtime-GetTime())) ,lasttime+ .2)  --tode  anim末端截取
-	aura.cd:SetAllPoints()
-	aura.cd:SetReverse(true)
-	aura.cd:SetDrawEdge(true)
-	aura.cd:SetHideCountdownNumbers(C.HideCount)
-	return aura
-end
-
 function SetBarColor(frame)
 
 	unit = frame.unit
@@ -258,75 +226,15 @@ function SetBarColor(frame)
 
 end
 
-
-local function AuraFilter(name,comefrom, spellid)
-	if not name then return end 
-	-- 只检测我的
-	if SavedData["AuraOnlyMe"] then 
-		if not (comefrom == "player" or comefrom == "pet") then 
-			return false
-		end
-	end
-
-	-- 白名单
-	if SavedData["DctAura"][spellid] then return true end
-	return false
-
-end
-
-
--- 每次从服务器拿到数据全部重刷就行
--- 清空
-local function SetAura(unitframe)
-	unit = unitframe.displayedUnit
-
-	for i = 1, SavedData["AuraNum"] do 
-		if unitframe.Auras[i] then 
-			unitframe.Auras[i]:Hide()
-			-- unitframe.Auras[i] = nil
-		end
-	end
-
-
-	local curIcon, maxIcon = 1, SavedData["AuraNum"]
-
-	for i = 1 , 15 do 
-		if curIcon < maxIcon + 1 then 
-			local name, icon, _, type, lasttime, endtime, comefrom, _, _, spellid= UnitAura(unit, i, "HARMFUL")
-			if not name then return end
-			if AuraFilter(name, comefrom, spellid) then 
-				if not unitframe.Auras[curIcon] then 
-					unitframe.Auras[curIcon] = CreateAura(unitframe.Auras, curIcon, icon, lasttime, endtime, spellid)
-				end
-				SetOneAura(unitframe, curIcon, icon, lasttime, endtime, spellid)
-				curIcon = curIcon + 1
-			end			
-		end
-	end
-
-	for i = 1 , 15 do 
-		if curIcon < maxIcon + 1 then 
-			local name, icon, _, type, lasttime, endtime, comefrom, _, _, spellid= UnitAura(unit, i, "HELPFUL")
-			if not name then return end
-			if AuraFilter(name, comefrom, spellid) then 
-				if not unitframe.Auras[curIcon] then 
-					unitframe.Auras[curIcon] = CreateAura(unitframe.Auras, curIcon, icon, lasttime, endtime, spellid)
-				end
-				SetOneAura(unitframe, curIcon, icon, lasttime, endtime, spellid)
-				curIcon = curIcon + 1
-			end
-		end
-	end
-end
-
-
 -- hooksecurefunc("CompactUnitFrame_OnUpdate", function(frame)
 -- 	print 'gui'
 -- end) 
 
+
 ---手动设置一次需要设置的
 local function On_NpRefreshOnce(unitFrame)
 
+	
 	if not SavedData["OriCast"] then 
 		SetCastbar(unitFrame)
 	end
@@ -334,10 +242,11 @@ local function On_NpRefreshOnce(unitFrame)
 	if not SavedData["OriBar"] then 
 		unitFrame.healthBar:SetStatusBarTexture("Interface\\AddOns\\Col\\rsbar")
 		unitFrame.castBar:SetStatusBarTexture("Interface\\AddOns\\Col\\rsbar")
+		ClassNameplateManaBarFrame:SetStatusBarTexture("Interface\\AddOns\\Col\\rsbar")
+		-- ClassNameplateManaBarFrame:SetStatusBarColor(1,1,1)
 		-- unitFrame.powerBar:SetStatusBarTexture("Interface\\AddOns\\Col\\rsbar")
 	end
 
-	SetAura(unitFrame)
 	SetBarColor(unitFrame)
 	unitFrame.name:SetTextColor(1,1,1)
 
@@ -355,11 +264,11 @@ local function Event_NamePlatesFrame(self, event, ...)
 	local unit = self.displayedUnit
 	-- 光环  -----------------------------------------------------------------------
 
-	if ( event == "UNIT_AURA" ) then
-		SetAura(self)
+	-- if ( event == "UNIT_AURA" ) then
+	-- 	SetAura(self)
 
 	-- 仇恨 -----------------------------------------------------------------------
-	elseif (event == "UNIT_THREAT_LIST_UPDATE") then 
+	if (event == "UNIT_THREAT_LIST_UPDATE") then 
 		if IsOnThreatList(self.displayedUnit) then 
 			if SavedData["Detail"] then
 				self.healthBar.value:Show()
@@ -417,7 +326,7 @@ local function RegisterNamePlateEvents(unitFrame)
 	unitFrame:RegisterEvent("UNIT_THREAT_LIST_UPDATE")
 	unitFrame:RegisterEvent("UNIT_HEALTH")
 	unitFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
-	unitFrame:RegisterEvent("UNIT_AURA")
+	-- unitFrame:RegisterEvent("UNIT_AURA")
 end
 
 
@@ -430,9 +339,110 @@ local createtext = function(f, layer, fontsize, flag, justifyh)
 end
 
 
+local function UpdateBuffs(self, unit, filter, showAll)
+
+	if not self.isActive then
+		for i = 1, BUFF_MAX_DISPLAY do
+			if (self.buffList[i]) then
+				self.buffList[i]:Hide();
+			end
+		end
+		return;
+	end
+	
+	self.unit = unit;
+	self.filter = filter;
+	self:UpdateAnchor();
+	if filter == "NONE" then
+		for i, buff in ipairs(self.buffList) do
+			buff:Hide();
+		end
+	else
+		-- Some buffs may be filtered out, use this to create the buff frames.
+		local buffIndex = 1;
+		for i = 1, BUFF_MAX_DISPLAY do
+			if buffIndex <= SavedData["AuraNum"] then 
+				local name, texture, count, debuffType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellId, _, _, _, nameplateShowAll = UnitAura(unit, i,filter);
+				if name then 
+					-- print (caster, spellId, name, count, canStealOrPurge)
+
+				-----------------------------------------------------------
+				local flag = false
+				-- 默认过滤器
+				if SavedData["AuraDefault"] then 
+					flag = self:ShouldShowBuff(name, caster, nameplateShowPersonal, nameplateShowAll or showAll, duration) 
+				end
+
+				-- 白名单
+				if SavedData["AuraWhite"] then 
+					if SavedData["DctAura"][spellId] then 
+						flag = true end 
+				end
+
+				-- 只显示我
+				if SavedData["AuraOnlyMe"] then 
+					if not (caster == "player" or caster == "pet") then 
+						flag = false
+					end
+				end
+				-----------------------------------------------------------
+				if (flag) then
+					if (not self.buffList[buffIndex]) then
+						self.buffList[buffIndex] = CreateFrame("Frame", self:GetParent():GetName() .. "Buff" .. buffIndex, self, "NameplateBuffButtonTemplate");
+						self.buffList[buffIndex]:SetMouseClickEnabled(false);
+						self.buffList[buffIndex].layoutIndex = buffIndex;
+						self.buffList[buffIndex].align = "right"
+					end
+					local buff = self.buffList[buffIndex];
+					buff:SetID(i);
+					if not SavedData["OriAuraSize"] then 
+						buff:SetSize(SavedData["AuraSize"],SavedData["AuraSize"])
+						buff.Icon:SetPoint("TOPLEFT",buff,"TOPLEFT", 1, -1)
+						buff.Icon:SetPoint("BOTTOMRIGHT",buff,"BOTTOMRIGHT", -1, 1)
+						buff.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
+					end
+					buff.Icon:SetTexture(texture);
+
+					-- 层数 
+					if (count > 1) then
+						buff.CountFrame.Count:SetText(count);
+						buff.CountFrame.Count:Show();
+					else
+						buff.CountFrame.Count:Hide();
+					end
+
+					CooldownFrame_Set(buff.Cooldown, expirationTime - duration, duration, duration > 0, true);
+					buff.Cooldown:SetHideCountdownNumbers(C.HideCount)
+
+					buff:Show();
+					buffIndex = buffIndex + 1;
+				end
+			end
+		end
+
+		for i = buffIndex, BUFF_MAX_DISPLAY do
+			if (self.buffList[i]) then
+				self.buffList[i]:Hide();
+			end
+		end
+	end
+	self:Layout();
+end
+end
+
+
+
 local function On_NpCreate(namePlate)
 
 	local NF = namePlate.UnitFrame	
+
+	-- 接管buff模块
+	NF.BuffFrame.UpdateBuffs = UpdateBuffs;
+
+	-- buff位置
+	function NF.BuffFrame:UpdateAnchor()
+		self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, SavedData["AuraHeight"]);
+	end
 
 	if not SavedData["OriCast"] then 	
 		NF.castBar:HookScript('OnUpdate', function ( ... )
@@ -440,10 +450,6 @@ local function On_NpCreate(namePlate)
 				NF.castBar.Icon:Show()
 			end
 		end) 
-	end
-
-	if not SavedData["OriBuff"] then 
-		NF.BuffFrame:Hide()  --隐藏默认光环
 	end
 
 	if not SavedData["OriElite"] then 
@@ -466,15 +472,9 @@ local function On_NpCreate(namePlate)
 	-- NF.healthBar.value:SetText("Value")
 	NF.healthBar.value:Hide()
 
-	-- 创建光环位置框架
-	NF.Auras = CreateFrame("Frame", nil, NF)
-	NF.Auras:SetPoint("BOTTOM", NF.name, "TOP", 0, 10)
-	NF.Auras:SetWidth(140)
-	NF.Auras:SetHeight(20)
-	NF.Auras:SetFrameLevel(NF:GetFrameLevel() + 2)
-
-
 end
+
+
 
 local function UnregisterNamePlateEvents(unitFrame)
 	unitFrame:UnregisterAllEvents()
@@ -482,6 +482,7 @@ local function UnregisterNamePlateEvents(unitFrame)
 end
 
 local function SetUnit(unitFrame, unit)
+	-- print (UnitName(unit, false))
 	unitFrame.unit = unit
 	unitFrame.displayedUnit = unit	 -- For vehicles
 	unitFrame.inVehicle = false
@@ -511,12 +512,15 @@ local function On_NpRemoved(unit)
 	CastingBarFrame_SetUnit(namePlate.UnitFrame.castBar, nil, false, true)
 end
 
-
+local function UpdateAllNameplates()
+	for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+		local unitFrame = namePlate.UnitFrame
+		On_NpRefreshOnce(unitFrame)
+	end	
+end
 
 local function NamePlates_OnEvent(self, event, ...)
 
-	-- if ( event == "VARIABLES_LOADED" ) then
-		-- print ' ------ VARIABLES_LOADED'
 
 	if ( event == "NAME_PLATE_CREATED" ) then
 		local unit = ...
@@ -530,8 +534,12 @@ local function NamePlates_OnEvent(self, event, ...)
 		-- if not UnitIsPlayer(namePlate.UnitFrame.unit) then 
 		-- 	RegisterNamePlateEvents(unitFrame)
 		-- end
-		
 
+	-- elseif ( event == "VARIABLES_LOADED" ) then
+		-- UpdateAllNameplates()
+		
+	elseif ( event == "DISPLAY_SIZE_CHANGED" ) then  -- 窗口大小改变
+		UpdateAllNameplates()
 		
 
 	elseif ( event == "NAME_PLATE_UNIT_REMOVED" ) then
@@ -540,12 +548,10 @@ local function NamePlates_OnEvent(self, event, ...)
 
 	-- elseif event == "RAID_TARGET_UPDATE" then
 
-	-- elseif event == "DISPLAY_SIZE_CHANGED" then
-
-	-- elseif ( event == "UNIT_FACTION" ) then
+	elseif ( event == "UNIT_FACTION" ) then   --载入后第一次
+		UpdateAllNameplates()
 
 	elseif ( event == "PLAYER_ENTERING_WORLD" ) then
-
 		SetCVar("nameplateMaxDistance", G_Distence)
 		SetCVar("nameplateSelectedScale", G_Select)
 		SetCVar("nameplateMinAlpha", G_Alpha)
@@ -573,9 +579,9 @@ NamePlatesFrame:RegisterEvent("NAME_PLATE_CREATED")
 NamePlatesFrame:RegisterEvent("NAME_PLATE_UNIT_ADDED")
 NamePlatesFrame:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
 -- NamePlatesFrame:RegisterEvent("CVAR_UPDATE")
--- NamePlatesFrame:RegisterEvent("DISPLAY_SIZE_CHANGED")
+NamePlatesFrame:RegisterEvent("DISPLAY_SIZE_CHANGED")
 -- NamePlatesFrame:RegisterEvent("RAID_TARGET_UPDATE")
--- NamePlatesFrame:RegisterEvent("UNIT_FACTION")
+NamePlatesFrame:RegisterEvent("UNIT_FACTION")
 -- NamePlatesFrame:RegisterEvent("UNIT_AURA")
 NamePlatesFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 
