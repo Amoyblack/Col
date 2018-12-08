@@ -1,0 +1,10 @@
+/dump GetCVar("nameplateOtherTopInset")
+/dump GetCVar("nameplateOtherBottomInset")
+/dump GetCVar("nameplateLargeTopInset")
+/dump GetCVar("nameplateLargeBottomInset")
+
+/dump GetCVar("nameplateOverlapH")
+/dump GetCVar("nameplateOverlapV")
+
+/run SetCVar("nameplateOverlapH", 0.5)
+/run SetCVar("nameplateOverlapV", 0.8)
