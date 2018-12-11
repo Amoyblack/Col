@@ -11,10 +11,10 @@
 
 
 DefaultData = {
-	["Version"] = "8.0.032",
+	["Version"] = "8.0.033",
 	["OriBar"] = false,
-	["OriCast"] = true,
-	["OriElite"] = true,
+	["OriCast"] = false,
+	["OriElite"] = false,
 	["Detail"] = true,
 	["Omen3"] = true,
 	["Select"] = 1,
@@ -151,12 +151,13 @@ local function GetDetailText(unit)
 	local fPer = string.format("%.0f",(CurHealth/MaxHealth*100)).."%"
 	local fCur = nil 
 	if CurHealth > 10000 then
-		fCur = string.format("%.1f",CurHealth/10000).."万"
+		fCur = string.format("%.1f",CurHealth/10000).."W"
 	else
 		fCur = tostring(CurHealth)
 	end
 
-	return fCur.."/"..fPer
+	return fCur
+	-- return fCur.."/"..fPer
 end
 
 local function IsOnKillHealth(unit)
@@ -166,11 +167,26 @@ local function IsOnKillHealth(unit)
 	-- body
 end
 
+-- Highlight / 高亮
+local function SetSelectionHighlight(unitFrame)
+	local unit = unitFrame.unit
+	if UnitIsUnit(unit, "target") and not UnitIsUnit(unit, "player") then
+		unitFrame.Tarlight:Show()
+		unitFrame.selectionHighlight:Show()
+		unitFrame.selectionHighlight:SetVertexColor(1,1,1)
+		unitFrame.name:SetText(GetUnitName(unitFrame.unit))
+	else
+		unitFrame.Tarlight:Hide()
+		unitFrame.selectionHighlight:Hide()
+	end
+end
+
 local function SetCastbar(frame)
 	if frame.castBar then
 		frame.castBar:SetHeight(C.CastbarHeight)
 		frame.castBar.Icon:SetSize(C.CastBarIconSize, C.CastBarIconSize)
 		frame.castBar.Icon:SetPoint("BOTTOMRIGHT", frame.castBar, "BOTTOMLEFT", -2,-0)
+		frame.castBar.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
 		frame.castBar.Icon:Show()
 		frame.castBar.BorderShield:SetAtlas("nameplates-InterruptShield")
 		frame.castBar.BorderShield:SetSize(13, 15)
@@ -222,7 +238,7 @@ function SetBarColor(frame)
 		r, g, b, a = 1, 0, 0, 1
 	end
 
-	frame.healthBar:SetStatusBarColor(r, g, b, a)
+	frame.healthBar:SetStatusBarColor(r, g, b, .8)
 
 end
 
@@ -234,15 +250,18 @@ end
 ---手动设置一次需要设置的
 local function On_NpRefreshOnce(unitFrame)
 
-	
+	SetSelectionHighlight(unitFrame)
+
+	unitFrame.healthBar.border:SetVertexColor(0,0,0,.8)
+
 	if not SavedData["OriCast"] then 
 		SetCastbar(unitFrame)
 	end
 	
 	if not SavedData["OriBar"] then 
-		unitFrame.healthBar:SetStatusBarTexture("Interface\\AddOns\\Col\\rsbar")
-		unitFrame.castBar:SetStatusBarTexture("Interface\\AddOns\\Col\\rsbar")
-		ClassNameplateManaBarFrame:SetStatusBarTexture("Interface\\AddOns\\Col\\rsbar")
+		unitFrame.healthBar:SetStatusBarTexture("Interface\\AddOns\\Col\\media\\bar_knp")
+		unitFrame.castBar:SetStatusBarTexture("Interface\\AddOns\\Col\\media\\bar_knp")
+		ClassNameplateManaBarFrame:SetStatusBarTexture("Interface\\AddOns\\Col\\media\\bar_knp")
 		-- ClassNameplateManaBarFrame:SetStatusBarColor(1,1,1)
 		-- unitFrame.powerBar:SetStatusBarTexture("Interface\\AddOns\\Col\\rsbar")
 	end
@@ -280,7 +299,6 @@ local function Event_NamePlatesFrame(self, event, ...)
 		
 		SetBarColor(self)
 
-
 	-- 血量  -----------------------------------------------------------------------
 	elseif (event == "UNIT_HEALTH") then
 		local CurHealth = UnitHealth(unit)
@@ -288,36 +306,12 @@ local function Event_NamePlatesFrame(self, event, ...)
 		self.healthBar:SetMinMaxValues(0,1)
 		self.healthBar:SetValue(CurHealth/MaxHealth)
 		self.healthBar.value:SetText(GetDetailText(unit))
-
 		SetBarColor(self)
 
 
 	-- 切目标  -----------------------------------------------------------------------
 	elseif (event == "PLAYER_TARGET_CHANGED") then 
-		-- 当前目标
-		if UnitIsUnit(self.unit, "target") and not UnitIsUnit(self.unit, "player") then
-			self.selectionHighlight:Show()
-			self.selectionHighlight:SetVertexColor(1,1,1)
-			self.healthBar.border:SetVertexColor(1,1,1,.5)
-
-			self.name:SetText(GetUnitName(self.unit))
-
-			if (not self.name:IsShown()) then 
-				self.name:Show()
-			end
-			-- print (UnitReaction(self.unit, "player"))    ----- 打印选中目标与玩家的Reaction类型
-			-- local _, threatStatus = UnitDetailedThreatSituation("player", self.unit)
-			-- print (threatStatus)		----- 打印选中目标与玩家的仇恨关系
-
-		-- 非当前目标
-		else
-			self.selectionHighlight:Hide()
-			self.healthBar.border:SetVertexColor(0,0,0,.6)
-			-- if (UnitReaction(self.unit, "player") == 4) then
-			-- 	self.name:Hide()
-			-- end
-		end
-
+		SetSelectionHighlight(self)
 	end
 end
 
@@ -436,6 +430,47 @@ end
 end
 
 
+-- 纯色背景
+local function CreateBG(frame)
+	local f = frame
+	if frame:GetObjectType() == "Texture" then f = frame:GetParent() end
+
+	local bg = f:CreateTexture(nil, "BACKGROUND")
+	bg:SetPoint("TOPLEFT", frame, -1, 1)
+	bg:SetPoint("BOTTOMRIGHT", frame, 1, -1)
+	bg:SetTexture("Interface\\Buttons\\WHITE8x8")
+	bg:SetVertexColor(0, 0, 0)
+
+	return bg
+end
+
+-- 带毛框幕布背景
+local function CreateBackDrop(parent, anchor, a)
+    local frame = CreateFrame("Frame", nil, parent)
+
+	local flvl = parent:GetFrameLevel()
+	if flvl - 1 >= 0 then frame:SetFrameLevel(flvl-1) end
+
+	frame:ClearAllPoints()
+    frame:SetPoint("TOPLEFT", anchor, "TOPLEFT", -3, 3)
+    frame:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", 3, -3)
+
+    frame:SetBackdrop(
+    	{
+    edgeFile = "Interface\\AddOns\\Col\\media\\glow", edgeSize = 3,  --外材宽度
+    bgFile = "Interface\\Buttons\\WHITE8x8",
+    insets = {left = 3, right = 3, top = 3, bottom = 3}	--内材与外材插入空隙
+		}
+	)
+	if a then
+		frame:SetBackdropColor(.2, .2, .2, 1)  --内材颜色
+		frame:SetBackdropBorderColor(0, 0, 0)  --外材颜色
+	end
+
+    return frame
+end
+
+
 
 local function On_NpCreate(namePlate)
 
@@ -460,24 +495,45 @@ local function On_NpCreate(namePlate)
 	if not SavedData["OriElite"] then 
 		NF.ClassificationFrame:Hide()
 	end
+
+	-- 描边
+	NF.healthBar.border:SetVertexColor(0,0,0,.8)
+
+	-- 名字
 	NF.name:SetFont(C.NameFont, C.NameTextSize, nil)
-
-	-- 描边颜色 与 字体颜色
-	NF.healthBar.border:SetVertexColor(0,0,0,.6)
 	NF.name:SetTextColor(1,1,1)
+	NF.name:SetShadowColor(0,0,0,1)
+	NF.name:SetShadowOffset(.5,-.5)
 
-	-- 创建血量百分比
-	NF.healthBar.value = createtext(NF.healthBar, "OVERLAY", 8, "OUTLINE", "CENTER")
+	-- 血量
+	NF.healthBar.value = createtext(NF.healthBar, "OVERLAY", 10, nil, "CENTER")
+	NF.healthBar.value:SetShadowColor(0,0,0,1)
+	NF.healthBar.value:SetShadowOffset(.5,-.5)
+	NF.healthBar.value:SetTextColor(1,1,1)
+	NF.healthBar.value:Hide()
 	if C.CenterDetail then
 		NF.healthBar.value:SetPoint("BOTTOM", NF.healthBar, "CENTER", 0, -4)
 	else
 		NF.healthBar.value:SetPoint("BOTTOMRIGHT", NF.healthBar, "RIGHT", 0, -4)
 	end
-	NF.healthBar.value:SetTextColor(1,1,1)
-	-- NF.healthBar.value:SetText("Value")
-	NF.healthBar.value:Hide()
 
+	-- 施法条
+	CreateBackDrop(NF.castBar, NF.castBar, 1) 
+	NF.castBar.Icon.iconborder = CreateBG(NF.castBar.Icon)
+	NF.castBar.Icon.iconborder:SetDrawLayer("OVERLAY", -1)  -- IconLayer = 1
+
+	-- 选中高亮
+	NF.Tarlight = NF:CreateTexture("targethighlight", "BACKGROUND", nil, -1)
+	NF.Tarlight:SetTexture("Interface\\AddOns\\Col\\media\\light")
+	NF.Tarlight:SetPoint("BOTTOMLEFT", NF, "LEFT", 7, -7)
+	NF.Tarlight:SetPoint("BOTTOMRIGHT", NF, "RIGHT", -7, 0)
+	NF.Tarlight:SetVertexColor(0, 0.65, 1, 0.9)
+	NF.Tarlight:SetTexCoord(0, 1, 1, 0)
+	NF.Tarlight:SetBlendMode("ADD")
+	NF.Tarlight:Hide()
 end
+
+
 
 
 

@@ -3,11 +3,11 @@ C = {}
 
 C.NameFont = STANDARD_TEXT_FONT		--名字字体
 C.NameTextSize = 12					--名字大小
-C.CenterDetail = true              --居中显示血量与百分比
+C.CenterDetail = false              --居中显示血量与百分比
 
 -- 开启源生施法条后 下两条设定不会生效
 C.CastbarHeight = 5					--施法条高度
-C.CastBarIconSize = 20				--施法条法术图标大小
+C.CastBarIconSize = 18				--施法条法术图标大小
 
 -- 仇恨颜色
 -- 参数 r,g,b  格式: (255,0,255) --> (1,0,1)
