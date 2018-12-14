@@ -1,9 +1,9 @@
-## Interface: 80000
+## Interface: 80100
 ## Title: |cffffff00 Rs_Plates|r 
 ## Version: R1.0
-## Author: Rs @ 埃德萨拉 - 戦殇
+## Author: Amoy@埃德萨拉
 ## Notes: RsPlates
-## Notes-zhCN: 原生姓名板增强
+## Notes-zhCN: 源生轻量姓名板
 ##SavedVariables: SavedData
 
 

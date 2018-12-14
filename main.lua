@@ -11,7 +11,7 @@
 
 
 DefaultData = {
-	["Version"] = "8.0.033",
+	["Version"] = "8.1.001",
 	["OriBar"] = false,
 	["OriCast"] = false,
 	["OriElite"] = false,
@@ -194,9 +194,12 @@ local function SetCastbar(frame)
 	end
 end
 
+-- elseif only patch one
 function SetBarColor(frame)
 
-	unit = frame.unit
+	local unit = frame.unit
+	local guid = UnitGUID(frame.unit)
+	local _, _, _, _, _, id = strsplit("-", guid or "") 
 	local r, g, b, a = 0, 1, 0, .8
 
 	-- 玩家
@@ -214,11 +217,11 @@ function SetBarColor(frame)
 		r, g, b, a = 0, 0, 1, .8
 
 	-- 共生子嗣
-	elseif ((GetUnitName(unit, false)) == '戈霍恩之嗣') then 
+	elseif (id == "141851") then  
 		r, g, b, a = 0, 0, 1, .8
 
 	-- 易爆球
-	elseif ((GetUnitName(unit, false)) == '爆炸物') then 
+	elseif (id == "120651") then 
 		r, g, b, a = .2, 1, .2, 1
 
 	-- 斩杀
@@ -519,14 +522,16 @@ local function On_NpCreate(namePlate)
 
 	-- 施法条
 	CreateBackDrop(NF.castBar, NF.castBar, 1) 
+	if not SavedData["OriCast"] then 
 	NF.castBar.Icon.iconborder = CreateBG(NF.castBar.Icon)
 	NF.castBar.Icon.iconborder:SetDrawLayer("OVERLAY", -1)  -- IconLayer = 1
+	end 
 
 	-- 选中高亮
 	NF.Tarlight = NF:CreateTexture("targethighlight", "BACKGROUND", nil, -1)
 	NF.Tarlight:SetTexture("Interface\\AddOns\\Col\\media\\light")
-	NF.Tarlight:SetPoint("BOTTOMLEFT", NF, "LEFT", 7, -7)
-	NF.Tarlight:SetPoint("BOTTOMRIGHT", NF, "RIGHT", -7, 0)
+	NF.Tarlight:SetPoint("BOTTOMLEFT", NF.healthBar, "LEFT", 7, 6)
+	NF.Tarlight:SetPoint("BOTTOMRIGHT", NF.healthBar, "RIGHT", -7, 13)
 	NF.Tarlight:SetVertexColor(0, 0.65, 1, 0.9)
 	NF.Tarlight:SetTexCoord(0, 1, 1, 0)
 	NF.Tarlight:SetBlendMode("ADD")
