@@ -11,11 +11,11 @@
 
 
 DefaultData = {
-	["Version"] = "8.1.002",
+	["Version"] = "8.1.003",
 	["OriBar"] = false,
 	["OriCast"] = false,
 	["OriElite"] = false,
-	["Detail"] = true,
+	["DetailType"] = 3,
 	["Omen3"] = true,
 	["Select"] = 1,
 	["GlobalScale"] = 1.0,
@@ -156,8 +156,21 @@ local function GetDetailText(unit)
 		fCur = tostring(CurHealth)
 	end
 
-	return fCur
-	-- return fCur.."/"..fPer
+	local iType = SavedData["DetailType"]
+
+	if iType == 1 then  --不显示
+		return ""
+
+	elseif iType == 2 then  --百分比
+		return fPer
+
+	elseif iType == 3 then --数值
+		return fCur
+
+	elseif iType == 4 then --数值/百分比
+		return fCur.."/"..fPer
+	end
+
 end
 
 local function IsOnKillHealth(unit)
@@ -292,10 +305,8 @@ local function Event_NamePlatesFrame(self, event, ...)
 	-- 仇恨 -----------------------------------------------------------------------
 	if (event == "UNIT_THREAT_LIST_UPDATE") then 
 		if IsOnThreatList(self.displayedUnit) then 
-			if SavedData["Detail"] then
-				self.healthBar.value:Show()
-				self.healthBar.value:SetText(GetDetailText(unit))
-			end
+			self.healthBar.value:Show()
+			self.healthBar.value:SetText(GetDetailText(unit))
 		else
 			self.healthBar.value:Hide()
 		end

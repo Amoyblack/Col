@@ -166,7 +166,7 @@ myGUI.frame1:SetScript("OnShow", function(frame)
 	end
 
 
-	local bFlat, bDetail, bOmen3, fSelecte, fAlpha, fDistence = SavedData["Flat"], SavedData["Detail"], SavedData["Omen3"], SavedData["Select"], SavedData["Alpha"], SavedData["Distence"]
+	local bFlat, bOmen3, fSelecte, fAlpha, fDistence = SavedData["Flat"], SavedData["Omen3"], SavedData["Select"], SavedData["Alpha"], SavedData["Distence"]
 	frame.fR, frame.fG, frame.fB = SavedData["KillRGBr"], SavedData["KillRGBg"], SavedData["KillRGBb"]
 	local iKillper = SavedData["KillPer"]
 	local fGlobalScale = SavedData["GlobalScale"]
@@ -183,25 +183,54 @@ myGUI.frame1:SetScript("OnShow", function(frame)
 		SavedData["OriBar"] = self:GetChecked()
 	end)
 
-	-- 显示血量
-	if not frame.pDetail then
-		frame.pDetail = newCheckbox("显示血量与百分比|cffFFC0CB|r","进入战斗中的单位将会在血条内显示血量与百比分")
-		frame.pDetail:SetPoint("TOPLEFT", 16, -120)
-	end
-	frame.pDetail:SetChecked(SavedData["Detail"])
-	frame.pDetail:HookScript("OnClick", function(self)
-		SavedData["Detail"] = self:GetChecked()
-	end)
-
 	-- 仇恨染色
 	if not frame.pOmen3 then
 		frame.pOmen3 = newCheckbox("开启仇恨染色|cffFFC0CB|r","根据单位与你的仇恨对血条进行染色：\n\n|cff1AB3E9蓝色|r：低仇恨，安全\n|cff661AE9紫色|r：高仇恨，即将OT\n|cffE91AE9红色|r：极高仇恨，已OT(获得仇恨)")
-		frame.pOmen3:SetPoint("TOPLEFT", 16, -160)
+		frame.pOmen3:SetPoint("TOPLEFT", 16, -120)
 	end
 	frame.pOmen3:SetChecked(SavedData["Omen3"])
 	frame.pOmen3:HookScript("OnClick", function(self)
 		SavedData["Omen3"] = self:GetChecked()
 	end)
+
+
+	-- 血量显示
+	local dctMenu = {
+		[1] = "不显示";
+		[2] = "百分比";
+		[3] = "数值";
+		[4] = "数值/百分比"
+ 	}
+	
+	function WPDropDownDemo_Menu(self, level, menuList)
+	 local info = UIDropDownMenu_CreateInfo()
+	 local DetailType = SavedData["DetailType"]
+	 info.func = self.SetValue
+
+	 info.text, info.checked, info.arg1, info.arg2 = "不显示", DetailType == 1, 1, dctMenu[1]
+	 UIDropDownMenu_AddButton(info)
+	 info.text, info.checked, info.arg1, info.arg2 = "百分比", DetailType == 2, 2, dctMenu[2]
+	 UIDropDownMenu_AddButton(info)
+	 info.text, info.checked, info.arg1, info.arg2 = "数值", DetailType == 3, 3, dctMenu[3]
+	 UIDropDownMenu_AddButton(info)
+	 info.text, info.checked, info.arg1, info.arg2 = "数值/百分比", DetailType == 4, 4, dctMenu[4]
+	 UIDropDownMenu_AddButton(info)
+	end
+
+	if not frame.dropDown then 
+		frame.dropDown = CreateFrame("Frame", "WPDemoDropDown", frame, "UIDropDownMenuTemplate")
+		frame.dropDown:SetPoint("TOPLEFT", 0, -160)
+		UIDropDownMenu_SetWidth(frame.dropDown, 180) -- Use in place of dropDown:SetWidth
+		-- Bind an initializer function to the dropdown; see previous sections for initializer function examples.
+		UIDropDownMenu_SetText(frame.dropDown, "血量 : "..dctMenu[SavedData["DetailType"]])
+		UIDropDownMenu_Initialize(frame.dropDown, WPDropDownDemo_Menu)
+
+		function frame.dropDown:SetValue(var1, var2, checked)
+			SavedData["DetailType"] = var1
+			UIDropDownMenu_SetText(frame.dropDown, "血量 : "..var2)
+		 	CloseDropDownMenus()
+		end	
+	end
 
 	-- 选中缩放
 	if not frame.pSelectedScale then
