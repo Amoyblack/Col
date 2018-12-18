@@ -11,7 +11,7 @@
 
 
 DefaultData = {
-	["Version"] = "8.1.001",
+	["Version"] = "8.1.002",
 	["OriBar"] = false,
 	["OriCast"] = false,
 	["OriElite"] = false,
@@ -185,7 +185,7 @@ local function SetCastbar(frame)
 	if frame.castBar then
 		frame.castBar:SetHeight(C.CastbarHeight)
 		frame.castBar.Icon:SetSize(C.CastBarIconSize, C.CastBarIconSize)
-		frame.castBar.Icon:SetPoint("BOTTOMRIGHT", frame.castBar, "BOTTOMLEFT", -2,-0)
+		frame.castBar.Icon:SetPoint("BOTTOMRIGHT", frame.castBar, "BOTTOMLEFT", -2, 0)
 		frame.castBar.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
 		frame.castBar.Icon:Show()
 		frame.castBar.BorderShield:SetAtlas("nameplates-InterruptShield")
@@ -241,7 +241,7 @@ function SetBarColor(frame)
 		r, g, b, a = 1, 0, 0, 1
 	end
 
-	frame.healthBar:SetStatusBarColor(r, g, b, .8)
+	frame.healthBar:SetStatusBarColor(r, g, b, 1)
 
 end
 
@@ -622,6 +622,9 @@ local function NamePlates_OnEvent(self, event, ...)
 		SetCVar("nameplateSelectedScale", G_Select)
 		SetCVar("nameplateMinAlpha", G_Alpha)
 		SetCVar("nameplateGlobalScale", G_GlobalScale)
+		--不让血条随距离改变而变小,预设Min 0.8
+		SetCVar("namePlateMinScale", 1) 
+		SetCVar("namePlateMaxScale", 1) 
 		if G_InitFirstLoadedOption then
 			SetCVar("nameplateShowAll", 1)   --显示所有
 			SetCVar("nameplateShowEnemies", 1)   --敌对单位
