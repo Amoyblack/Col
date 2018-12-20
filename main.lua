@@ -11,7 +11,7 @@
 
 
 DefaultData = {
-	["Version"] = "8.1.003",
+	["Version"] = "8.1.004",
 	["OriBar"] = false,
 	["OriCast"] = false,
 	["OriElite"] = false,
@@ -195,16 +195,18 @@ local function SetSelectionHighlight(unitFrame)
 end
 
 local function SetCastbar(frame)
-	if frame.castBar then
-		frame.castBar:SetHeight(C.CastbarHeight)
-		frame.castBar.Icon:SetSize(C.CastBarIconSize, C.CastBarIconSize)
-		frame.castBar.Icon:SetPoint("BOTTOMRIGHT", frame.castBar, "BOTTOMLEFT", -2, 0)
-		frame.castBar.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
-		frame.castBar.Icon:Show()
-		frame.castBar.BorderShield:SetAtlas("nameplates-InterruptShield")
-		frame.castBar.BorderShield:SetSize(13, 15)
-		frame.castBar.BorderShield:SetPoint("CENTER", frame.castBar, "LEFT", 5,-0)
-	end
+	-- if frame.castBar then
+		if not SavedData["OriCast"] then 
+			frame.castBar:SetHeight(C.CastbarHeight)
+			frame.castBar.Icon:SetSize(C.CastBarIconSize, C.CastBarIconSize)
+			frame.castBar.Icon:SetPoint("BOTTOMRIGHT", frame.castBar, "BOTTOMLEFT", -2, 0)
+			frame.castBar.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
+			frame.castBar.Icon:Show()
+			frame.castBar.BorderShield:SetAtlas("nameplates-InterruptShield")
+			frame.castBar.BorderShield:SetSize(13, 15)
+			frame.castBar.BorderShield:SetPoint("CENTER", frame.castBar, "LEFT", 5,-0)
+		end
+	-- end
 end
 
 -- elseif only patch one
@@ -268,11 +270,9 @@ local function On_NpRefreshOnce(unitFrame)
 
 	SetSelectionHighlight(unitFrame)
 
-	unitFrame.healthBar.border:SetVertexColor(0,0,0,.8)
+	SetCastbar(unitFrame)
 
-	if not SavedData["OriCast"] then 
-		SetCastbar(unitFrame)
-	end
+	unitFrame.healthBar.border:SetVertexColor(0,0,0,.8)
 	
 	if not SavedData["OriBar"] then 
 		unitFrame.healthBar:SetStatusBarTexture("Interface\\AddOns\\Col\\media\\bar_knp")
@@ -499,10 +499,11 @@ local function On_NpCreate(namePlate)
 	end
 
 	if not SavedData["OriCast"] then 	
-		NF.castBar:HookScript('OnUpdate', function ( ... )
-			if not NF.castBar.Icon:IsShown() then 
-				NF.castBar.Icon:Show()
-			end
+		NF.castBar:HookScript('OnShow', function ( ... )
+			SetCastbar(NF)
+		end)
+		NF.castBar:HookScript('OnSizeChanged', function ( ... )
+			SetCastbar(NF)
 		end) 
 	end
 
