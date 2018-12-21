@@ -11,7 +11,7 @@
 
 
 DefaultData = {
-	["Version"] = "8.1.004",
+	["Version"] = "8.1.005",
 	["OriBar"] = false,
 	["OriCast"] = false,
 	["OriElite"] = false,
@@ -505,6 +505,11 @@ local function On_NpCreate(namePlate)
 		NF.castBar:HookScript('OnSizeChanged', function ( ... )
 			SetCastbar(NF)
 		end) 
+		NF.castBar:HookScript("OnUpdate", function ( ... )
+			if not NF.castBar.Icon:IsShown() then 
+				NF.castBar.Icon:Show()
+			end
+		end)
 	end
 
 	if not SavedData["OriElite"] then 
@@ -634,9 +639,16 @@ local function NamePlates_OnEvent(self, event, ...)
 		SetCVar("nameplateSelectedScale", G_Select)
 		SetCVar("nameplateMinAlpha", G_Alpha)
 		SetCVar("nameplateGlobalScale", G_GlobalScale)
+
 		--不让血条随距离改变而变小,预设Min 0.8
 		SetCVar("namePlateMinScale", 1) 
 		SetCVar("namePlateMaxScale", 1) 
+
+		-- 血条水平堆叠 预设：0.8
+		SetCVar("nameplateOverlapH",  0.6) 
+		-- 血条垂直堆叠 预设 1.1
+		SetCVar("nameplateOverlapV",  0.9) 
+
 		if G_InitFirstLoadedOption then
 			SetCVar("nameplateShowAll", 1)   --显示所有
 			SetCVar("nameplateShowEnemies", 1)   --敌对单位
