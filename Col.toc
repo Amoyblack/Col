@@ -7,6 +7,10 @@
 ## SavedVariables: SavedData
 
 
+##locale\zhCN.lua
+##locale\zhTW.lua
+##locale\enUS.lua
+##locale\ruRU.lua
 
 config.lua
 gui.lua

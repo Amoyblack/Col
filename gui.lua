@@ -1,4 +1,10 @@
 
+local addon, ns = ...
+
+local L = ns.L
+
+
+
 -------SomePrepare Tools(Jobs) ---------
 
 function table_copy(table)
@@ -128,7 +134,7 @@ myGUI.frame1:SetScript("OnShow", function(frame)
 	frame.sInfo = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 	end
 	frame.sInfo:SetPoint("BOTTOMRIGHT", -10, 10)
-	frame.sInfo:SetText("建议系统设置开启 “大姓名板”\r\r @版本号: "..version)
+	frame.sInfo:SetText("版本号: "..version)
 	frame.sInfo:SetJustifyH("RIGHT")
 
 

@@ -1,5 +1,8 @@
+local _, ns = ...
 
-C = {}
+ns.C = {}
+
+local C = ns.C
 
 C.NameFont = STANDARD_TEXT_FONT		--名字字体
 C.NameTextSize = 12					--名字大小

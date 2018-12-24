@@ -7,11 +7,13 @@
 -- NamePlates1UnitFrame.unit
 -- NamePlates1UnitFrame. etc
 
+local _, ns = ...
 
+local C = ns.C
 
 
 DefaultData = {
-	["Version"] = "8.1.005",
+	["Version"] = "8.1.010",
 	["OriBar"] = false,
 	["OriCast"] = false,
 	["OriElite"] = false,
@@ -635,11 +637,39 @@ local function NamePlates_OnEvent(self, event, ...)
 		UpdateAllNameplates()
 
 	elseif ( event == "PLAYER_ENTERING_WORLD" ) then
+
+		-- 强制大姓名板, todo 这里可取消esc变色
+		local checkBox = InterfaceOptionsNamesPanelUnitNameplatesMakeLarger
+		function checkBox.setFunc(value)
+			-- NamePlates_UpdateNamePlateOptions()
+		end
+
+		-- local dropdown = InterfaceOptionsNPCNamesDropDown_OnClick
+		-- function dropdown.SetValue(value)
+		-- 	-- body
+		-- end
+
+		-- Show All Name
+		SetCVar("UnitNameNPC", "1");
+		SetCVar("UnitNameFriendlySpecialNPCName", "0");
+		SetCVar("UnitNameHostleNPC", "0");
+		SetCVar("UnitNameInteractiveNPC", "0");
+		SetCVar("ShowQuestUnitCircles", "1");
+
+		-- Large NamePlate 
+		SetCVar("NamePlateHorizontalScale", 1.4);
+		SetCVar("NamePlateVerticalScale", 2.7);
+		NamePlateDriverFrame:UpdateNamePlateOptions();   --变红
+
 		SetCVar("nameplateMaxDistance", G_Distence)
 		SetCVar("nameplateSelectedScale", G_Select)
 		SetCVar("nameplateMinAlpha", G_Alpha)
 		SetCVar("nameplateGlobalScale", G_GlobalScale)
 
+		-- 堆叠 1 重叠 0
+		SetCVar("nameplateMotion", 1) 
+
+    
 		--不让血条随距离改变而变小,预设Min 0.8
 		SetCVar("namePlateMinScale", 1) 
 		SetCVar("namePlateMaxScale", 1) 
@@ -655,10 +685,6 @@ local function NamePlates_OnEvent(self, event, ...)
 			SetCVar("nameplateShowEnemyMinions", 1)   --仆从
 			SetCVar("nameplateShowEnemyMinus", 1)   --杂兵
 
-
-			-- No Use , Todo Find way to solve
-			-- SetCVar("NamePlateHorizontalScale", 1.4) --大姓名版的数据
-			-- SetCVar("NamePlateVerticalScale", 2.7)
 		end
 	end
 
