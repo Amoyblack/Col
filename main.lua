@@ -13,7 +13,7 @@ local C = ns.C
 
 
 DefaultData = {
-	["Version"] = "8.1.010",
+	["Version"] = "8.1.011",
 	["OriBar"] = false,
 	["OriCast"] = false,
 	["OriElite"] = false,
@@ -316,14 +316,16 @@ local function Event_NamePlatesFrame(self, event, ...)
 		SetBarColor(self)
 
 	-- 血量  -----------------------------------------------------------------------
-	elseif (event == "UNIT_HEALTH") then
+	elseif (event == "UNIT_HEALTH_FREQUENT") then
 		local CurHealth = UnitHealth(unit)
 		local MaxHealth = UnitHealthMax(unit)
 		self.healthBar:SetMinMaxValues(0,1)
 		self.healthBar:SetValue(CurHealth/MaxHealth)
 		self.healthBar.value:SetText(GetDetailText(unit))
-		SetBarColor(self)
 
+		if SavedData["KillPer"] ~= 0 then  -- 检查斩杀线
+			SetBarColor(self)
+		end
 
 	-- 切目标  -----------------------------------------------------------------------
 	elseif (event == "PLAYER_TARGET_CHANGED") then 
@@ -332,9 +334,11 @@ local function Event_NamePlatesFrame(self, event, ...)
 end
 
 local function RegisterNamePlateEvents(unitFrame)
+	unitFrame:UnregisterAllEvents()
 	unitFrame:SetScript("OnEvent", Event_NamePlatesFrame)
 	unitFrame:RegisterEvent("UNIT_THREAT_LIST_UPDATE")
-	unitFrame:RegisterEvent("UNIT_HEALTH")
+	-- unitFrame:RegisterEvent("UNIT_HEALTH")
+	unitFrame:RegisterEvent("UNIT_HEALTH_FREQUENT")
 	unitFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
 	-- unitFrame:RegisterEvent("UNIT_AURA")
 end
@@ -666,25 +670,23 @@ local function NamePlates_OnEvent(self, event, ...)
 		SetCVar("nameplateMinAlpha", G_Alpha)
 		SetCVar("nameplateGlobalScale", G_GlobalScale)
 
-		-- 堆叠 1 重叠 0
-		SetCVar("nameplateMotion", 1) 
-
-    
-		--不让血条随距离改变而变小,预设Min 0.8
-		SetCVar("namePlateMinScale", 1) 
-		SetCVar("namePlateMaxScale", 1) 
-
-		-- 血条水平堆叠 预设：0.8
-		SetCVar("nameplateOverlapH",  0.6) 
-		-- 血条垂直堆叠 预设 1.1
-		SetCVar("nameplateOverlapV",  0.9) 
-
 		if G_InitFirstLoadedOption then
 			SetCVar("nameplateShowAll", 1)   --显示所有
 			SetCVar("nameplateShowEnemies", 1)   --敌对单位
 			SetCVar("nameplateShowEnemyMinions", 1)   --仆从
 			SetCVar("nameplateShowEnemyMinus", 1)   --杂兵
 
+			-- 堆叠 1 重叠 0
+			SetCVar("nameplateMotion", 1) 
+
+			--不让血条随距离改变而变小,预设Min 0.8
+			SetCVar("namePlateMinScale", 1) 
+			SetCVar("namePlateMaxScale", 1) 
+
+			-- 血条水平堆叠 预设：0.8
+			SetCVar("nameplateOverlapH",  0.6) 
+			-- 血条垂直堆叠 预设 1.1
+			SetCVar("nameplateOverlapV",  0.9) 
 		end
 	end
 
