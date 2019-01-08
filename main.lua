@@ -13,7 +13,7 @@ local C = ns.C
 
 
 DefaultData = {
-	["Version"] = "8.1.011",
+	["Version"] = "8.1.012",
 	["OriBar"] = false,
 	["OriCast"] = false,
 	["OriElite"] = false,
@@ -624,8 +624,9 @@ local function NamePlates_OnEvent(self, event, ...)
 		-- 	RegisterNamePlateEvents(unitFrame)
 		-- end
 
-	-- elseif ( event == "VARIABLES_LOADED" ) then
-		-- UpdateAllNameplates()
+	elseif ( event == "VARIABLES_LOADED" ) then
+		SetCVar("NamePlateHorizontalScale", 1.4);
+		SetCVar("NamePlateVerticalScale", 2.7);
 		
 	elseif ( event == "DISPLAY_SIZE_CHANGED" ) then  -- 窗口大小改变
 		UpdateAllNameplates()
@@ -641,7 +642,7 @@ local function NamePlates_OnEvent(self, event, ...)
 		UpdateAllNameplates()
 
 	elseif ( event == "PLAYER_ENTERING_WORLD" ) then
-
+		InterfaceOptionsNamesPanelUnitNameplatesMakeLarger:SetValue(1)
 		-- 强制大姓名板, todo 这里可取消esc变色
 		local checkBox = InterfaceOptionsNamesPanelUnitNameplatesMakeLarger
 		function checkBox.setFunc(value)
@@ -661,9 +662,9 @@ local function NamePlates_OnEvent(self, event, ...)
 		SetCVar("ShowQuestUnitCircles", "1");
 
 		-- Large NamePlate 
-		SetCVar("NamePlateHorizontalScale", 1.4);
-		SetCVar("NamePlateVerticalScale", 2.7);
-		NamePlateDriverFrame:UpdateNamePlateOptions();   --变红
+		-- SetCVar("NamePlateHorizontalScale", 1.4);
+		-- SetCVar("NamePlateVerticalScale", 2.7);
+		-- NamePlateDriverFrame:UpdateNamePlateOptions();   --变红
 
 		SetCVar("nameplateMaxDistance", G_Distence)
 		SetCVar("nameplateSelectedScale", G_Select)
@@ -695,7 +696,7 @@ end
 
 local NamePlatesFrame = CreateFrame("Frame", "NamePlatesFrame", UIParent)
 NamePlatesFrame:SetScript("OnEvent", NamePlates_OnEvent)
--- NamePlatesFrame:RegisterEvent("VARIABLES_LOADED")
+NamePlatesFrame:RegisterEvent("VARIABLES_LOADED")
 NamePlatesFrame:RegisterEvent("NAME_PLATE_CREATED")
 NamePlatesFrame:RegisterEvent("NAME_PLATE_UNIT_ADDED")
 NamePlatesFrame:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
