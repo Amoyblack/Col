@@ -10,14 +10,14 @@
 local _, ns = ...
 
 local C = ns.C
-
+local L = ns.L
 
 DefaultData = {
-	["Version"] = "8.1.012",
+	["Version"] = "8.1.020",
 	["OriBar"] = false,
 	["OriCast"] = false,
 	["OriElite"] = false,
-	["DetailType"] = 3,
+	["DetailType"] = 2,
 	["Omen3"] = true,
 	["Select"] = 1,
 	["GlobalScale"] = 1.0,
@@ -74,14 +74,14 @@ function loadFrame:OnEvent(event, arg1)
 		-- 代码库与玩家存储的配置长度不一样时，直接更新
 		if (table_leng(SavedData) ~= table_leng(DefaultData)) then 
 			SavedData = DefaultData
-			print "|cffFFD700---RsPlates : 检测到您已更新版本，所有设定已重置为预设值 |r"
-			print ("|cffFFD700---当前版本： |r"..SavedData["Version"] ) 
+			print ("|cffFFD700---RsPlates : "..L["UpdateInfo"].." |r")
+			print ("|cffFFD700---".. L["UpdateVersion"]..": |r"..SavedData["Version"] ) 
 		-- 长度一样，但版本号不同
 
 		elseif SavedData["Version"] ~= DefaultData["Version"] then 
 			SavedData = DefaultData
-			print "|cffFFD700---RsPlates : 检测到您已更新版本，所有设定已重置为预设值 |r"	
-			print ("|cffFFD700---当前版本： |r"..SavedData["Version"] ) 		
+			print ("|cffFFD700---RsPlates : "..L["UpdateInfo"].." |r")	
+			print ("|cffFFD700---".. L["UpdateVersion"]..": |r"..SavedData["Version"] ) 		
 		end
  	end
 	-- G_Flat = SavedData["OriBar"]
