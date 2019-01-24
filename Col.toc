@@ -1,5 +1,5 @@
 ﻿## Interface: 80100
-## Title: |cffffff00 Rs_Plates|r 
+## Title: |cff66CCFFRS|rPlates
 ## Version: R1.0
 ## Author: Amoy@埃德萨拉
 ## Notes: RsPlates

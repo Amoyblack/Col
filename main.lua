@@ -6,6 +6,13 @@
 -- NamePlates1UnitFrame.name
 -- NamePlates1UnitFrame.unit
 -- NamePlates1UnitFrame. etc
+-- CVars
+-- /dump GetCVar("NamePlateHorizontalScale")
+-- /dump GetCVar("NamePlateVerticalScale")
+-- /dump GetCVar("nameplateOverlapH")
+-- /dump GetCVar("nameplateOverlapV")
+-- /dump GetCVar("namePlateMinScale")
+-- /dump GetCVar("namePlateMaxScale")
 
 local _, ns = ...
 
@@ -13,30 +20,41 @@ local C = ns.C
 local L = ns.L
 
 DefaultData = {
-	["Version"] = "8.1.020",
+	["Version"] = "8.1.030",
 	["OriBar"] = false,
 	["OriCast"] = false,
 	["OriElite"] = false,
+	["BarBgCol"] = false,
+
 	["DetailType"] = 2,
-	["Omen3"] = true,
+	["Omen3"] = false,
 	["Select"] = 1,
 	["GlobalScale"] = 1.0,
 	["Alpha"] = 0.8,
-	["Distence"] = 50,
+	["Distence"] = 45,
+	["GapV"] = 0.6,
+	["GapH"] = 0.6,
+
 	["KillPer"] = 0,
 	["KillRGBr"] = 1,
 	["KillRGBg"] = 0.75,
 	["KillRGBb"] = 0.15,
 
+	["OriName"] = false,
+	["NameWhite"] = true,
+	["NameSize"] = 12,
+
 	["AuraDefault"] = true,
 	["AuraWhite"] = true,
 	["AuraOnlyMe"] = false,
 	["AuraHeight"] = 20,
-	["AuraNum"] = 5,
+	["AuraNum"] = 4,
 	["OriAuraSize"] = true,
-	["AuraSize"] = 25, 
+	["AuraSize"] = 22, 
 	["AuraTimer"] = false,
 	["AuraNumSize"] = 13,
+
+	["Expball"] = false,
 
 	["DctAura"] = {	
 	[3355] = true,	--冰冻陷阱
@@ -53,6 +71,8 @@ DefaultData = {
 	[179057]= true, --混沌
 	[217832]= true, --dh禁锢
 	[102359]= true, --群缠绕
+
+	[205473]= true, --冰刺
 
 }
 }
@@ -186,13 +206,21 @@ end
 local function SetSelectionHighlight(unitFrame)
 	local unit = unitFrame.unit
 	if UnitIsUnit(unit, "target") and not UnitIsUnit(unit, "player") then
-		unitFrame.Tarlight:Show()
+		-- 高亮材质
+		-- unitFrame.Tarlight:Show()
+		-- 中央高光
 		unitFrame.selectionHighlight:Show()
 		unitFrame.selectionHighlight:SetVertexColor(1,1,1)
-		unitFrame.name:SetText(GetUnitName(unitFrame.unit))
+		-- unitFrame.name:Show()
+		-- unitFrame.name:SetText(GetUnitName(unitFrame.unit))
+		-- 边框
+		unitFrame.healthBar.border:SetVertexColor(1,1,1,.6)
 	else
-		unitFrame.Tarlight:Hide()
+		-- 高亮材质
+		-- unitFrame.Tarlight:Hide()
 		unitFrame.selectionHighlight:Hide()
+		-- 边框
+		unitFrame.healthBar.border:SetVertexColor(0,0,0,.6)
 	end
 end
 
@@ -212,7 +240,7 @@ local function SetCastbar(frame)
 end
 
 -- elseif only patch one
-function SetBarColor(frame)
+local function SetBarColor(frame)
 
 	local unit = frame.unit
 	local guid = UnitGUID(frame.unit)
@@ -230,12 +258,12 @@ function SetBarColor(frame)
 		r, g, b, a = .5, .5, .5 , .8
 
 	-- 共生
-	elseif IsGhn(frame) then 
-		r, g, b, a = 0, 0, 1, .8
+	-- elseif IsGhn(frame) then 
+	-- 	r, g, b, a = 0, 0, 1, .8
 
 	-- 共生子嗣
-	elseif (id == "141851") then  
-		r, g, b, a = 0, 0, 1, .8
+	-- elseif (id == "141851") then  
+	-- 	r, g, b, a = 0, 0, 1, .8
 
 	-- 易爆球
 	elseif (id == "120651") then 
@@ -259,7 +287,9 @@ function SetBarColor(frame)
 	end
 
 	frame.healthBar:SetStatusBarColor(r, g, b, 1)
-
+	if SavedData["BarBgCol"] then 
+		frame.healthBar.background:SetColorTexture(2*r/5, 2*g/5, 2*b/5, .8)
+	end
 end
 
 -- hooksecurefunc("CompactUnitFrame_OnUpdate", function(frame)
@@ -274,7 +304,15 @@ local function On_NpRefreshOnce(unitFrame)
 
 	SetCastbar(unitFrame)
 
-	unitFrame.healthBar.border:SetVertexColor(0,0,0,.8)
+	SetBarColor(unitFrame)
+
+	if not SavedData["OriName"] then 
+		if SavedData["NameWhite"] then 
+			unitFrame.name:SetTextColor(1,1,1)
+		end
+		unitFrame.name:SetFont(C.NameFont, SavedData["NameSize"], nil)
+	end
+	-- unitFrame.healthBar.border:SetVertexColor(0,0,0,.6)
 	
 	if not SavedData["OriBar"] then 
 		unitFrame.healthBar:SetStatusBarTexture("Interface\\AddOns\\Col\\media\\bar_knp")
@@ -284,8 +322,6 @@ local function On_NpRefreshOnce(unitFrame)
 		-- unitFrame.powerBar:SetStatusBarTexture("Interface\\AddOns\\Col\\rsbar")
 	end
 
-	SetBarColor(unitFrame)
-	unitFrame.name:SetTextColor(1,1,1)
 
 	if not IsOnThreatList(unitFrame.displayedUnit) then
 		unitFrame.healthBar.value:Hide()  --隐藏非仇恨单位的血量显示
@@ -522,14 +558,23 @@ local function On_NpCreate(namePlate)
 		NF.ClassificationFrame:Hide()
 	end
 
+	-- todo 吸收模块暂做屏蔽
+	NF.healthBar.totalAbsorbOverlay:SetAlpha(0)
+	NF.healthBar.totalAbsorb:SetAlpha(0)
+	NF.healthBar.myHealAbsorb:SetAlpha(0)
+	NF.healthBar.myHealPrediction:SetAlpha(0)
+	NF.healthBar.otherHealPrediction:SetAlpha(0)
+	NF.healthBar.overAbsorbGlow:SetAlpha(0)
+	NF.healthBar.overHealAbsorbGlow:SetAlpha(0)
+
 	-- 描边
-	NF.healthBar.border:SetVertexColor(0,0,0,.8)
+	NF.healthBar.border:SetVertexColor(0,0,0,.6)
 
 	-- 名字
-	NF.name:SetFont(C.NameFont, C.NameTextSize, nil)
-	NF.name:SetTextColor(1,1,1)
-	NF.name:SetShadowColor(0,0,0,1)
-	NF.name:SetShadowOffset(.5,-.5)
+	-- NF.name:SetFont(C.NameFont, C.NameTextSize, nil)
+	-- NF.name:SetTextColor(1,1,1)
+	-- NF.name:SetShadowColor(0,0,0,1)
+	-- NF.name:SetShadowOffset(.5,-.5)
 
 	-- 血量
 	NF.healthBar.value = createtext(NF.healthBar, "OVERLAY", 10, nil, "CENTER")
@@ -551,14 +596,14 @@ local function On_NpCreate(namePlate)
 	end 
 
 	-- 选中高亮
-	NF.Tarlight = NF:CreateTexture("targethighlight", "BACKGROUND", nil, -1)
-	NF.Tarlight:SetTexture("Interface\\AddOns\\Col\\media\\light")
-	NF.Tarlight:SetPoint("BOTTOMLEFT", NF.healthBar, "LEFT", 7, 6)
-	NF.Tarlight:SetPoint("BOTTOMRIGHT", NF.healthBar, "RIGHT", -7, 13)
-	NF.Tarlight:SetVertexColor(0, 0.65, 1, 0.9)
-	NF.Tarlight:SetTexCoord(0, 1, 1, 0)
-	NF.Tarlight:SetBlendMode("ADD")
-	NF.Tarlight:Hide()
+	-- NF.Tarlight = NF:CreateTexture("targethighlight", "BACKGROUND", nil, -1)
+	-- NF.Tarlight:SetTexture("Interface\\AddOns\\Col\\media\\light")
+	-- NF.Tarlight:SetPoint("BOTTOMLEFT", NF.healthBar, "LEFT", 7, 6)
+	-- NF.Tarlight:SetPoint("BOTTOMRIGHT", NF.healthBar, "RIGHT", -7, 13)
+	-- NF.Tarlight:SetVertexColor(0, 0.65, 1, 0.9)
+	-- NF.Tarlight:SetTexCoord(0, 1, 1, 0)
+	-- NF.Tarlight:SetBlendMode("ADD")
+	-- NF.Tarlight:Hide()
 end
 
 
@@ -601,10 +646,11 @@ local function On_NpRemoved(unit)
 	CastingBarFrame_SetUnit(namePlate.UnitFrame.castBar, nil, false, true)
 end
 
-local function UpdateAllNameplates()
+function UpdateAllNameplates()
 	for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
 		local unitFrame = namePlate.UnitFrame
 		On_NpRefreshOnce(unitFrame)
+		unitFrame.BuffFrame:UpdateAnchor()
 	end	
 end
 
@@ -671,6 +717,15 @@ local function NamePlates_OnEvent(self, event, ...)
 		SetCVar("nameplateMinAlpha", G_Alpha)
 		SetCVar("nameplateGlobalScale", G_GlobalScale)
 
+		-- 血条水平堆叠 预设：0.8
+		SetCVar("nameplateOverlapH",  SavedData["GapH"]) 
+		-- 血条垂直堆叠 预设 1.1
+		SetCVar("nameplateOverlapV",  SavedData["GapV"]) 
+
+		--不让血条随距离改变而变小,预设Min 0.8
+		SetCVar("namePlateMinScale", 1) 
+		SetCVar("namePlateMaxScale", 1) 
+			
 		if G_InitFirstLoadedOption then
 			SetCVar("nameplateShowAll", 1)   --显示所有
 			SetCVar("nameplateShowEnemies", 1)   --敌对单位
@@ -679,15 +734,6 @@ local function NamePlates_OnEvent(self, event, ...)
 
 			-- 堆叠 1 重叠 0
 			SetCVar("nameplateMotion", 1) 
-
-			--不让血条随距离改变而变小,预设Min 0.8
-			SetCVar("namePlateMinScale", 1) 
-			SetCVar("namePlateMaxScale", 1) 
-
-			-- 血条水平堆叠 预设：0.8
-			SetCVar("nameplateOverlapH",  0.6) 
-			-- 血条垂直堆叠 预设 1.1
-			SetCVar("nameplateOverlapV",  0.9) 
 		end
 	end
 
@@ -713,32 +759,67 @@ NamePlatesFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 SLASH_RELOADUI1 = "/rl"
 SlashCmdList.RELOADUI = ReloadUI
 
-SLASH_FRAMESTK1 = "/fs"
-SlashCmdList.FRAMESTK = function()
-	LoadAddOn('Blizzard_DebugTools')
-	FrameStackTooltip_Toggle()
-end
+-- SLASH_FRAMESTK1 = "/fs"
+-- SlashCmdList.FRAMESTK = function()
+-- 	LoadAddOn('Blizzard_DebugTools')
+-- 	FrameStackTooltip_Toggle()
+-- end
 
-SLASH_CPU1 = "/cpu"
-SlashCmdList.CPU = function()
-	local cpu = GetAddOnCPUUsage("Col")
-	print("CPU占用:    ", cpu-cpu%0.01)
-	local Memory = GetAddOnMemoryUsage("Col")
-	print("内存使用:   ", Memory-Memory%0.01, "  KB")
-end
-
-
-
-SLASH_REE1 = "/bian"
-SlashCmdList.REE = function()
-	print (SavedData["KillPer"])
-end
--- local cpuFrame = CreateFrame("Frame") 
--- cpuFrame:SetScript("OnUpdate", function ( ... )
+-- SLASH_CPU1 = "/cpu"
+-- SlashCmdList.CPU = function()
 -- 	local cpu = GetAddOnCPUUsage("Col")
 -- 	print("CPU占用:    ", cpu-cpu%0.01)
 -- 	local Memory = GetAddOnMemoryUsage("Col")
 -- 	print("内存使用:   ", Memory-Memory%0.01, "  KB")
--- 	-- body
--- end)
+-- end
+
+
+local function BoomBall()
+	local haskey = false
+
+	for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+		local unitFrame = namePlate.UnitFrame
+		local guid = UnitGUID(unitFrame.unit)
+		local _, _, _, _, _, id = strsplit("-", guid or "") 
+		if id == "120651" then
+			haskey = true
+		end
+		-- On_NpRefreshOnce(unitFrame)
+	end	
+
+	-- 场上存在易爆球
+	if haskey then 
+			for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+				local unitFrame = namePlate.UnitFrame
+				local guid = UnitGUID(unitFrame.unit)
+				local _, _, _, _, _, id = strsplit("-", guid or "") 
+				if id ~= "120651" then
+					unitFrame:Hide()
+				end
+			end
+	else
+			for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+				local unitFrame = namePlate.UnitFrame
+				unitFrame:Show()
+			end		
+
+	end
+end
+
+
+SLASH_REE1 = "/bian"
+SlashCmdList.REE = function()
+	UpdateAllNameplates()
+end
+
+local boomFrame = CreateFrame("Frame")
+local timei = 0 
+boomFrame:SetScript("OnUpdate", function (self, elasped)
+	if not SavedData["Expball"] then return end
+	timei = timei + elasped
+	if timei > 0.2 then
+		BoomBall()
+		timei = 0
+	end
+end)
 

@@ -67,49 +67,10 @@ end
 ------------------
 local myGUI = {}
 
--- local function OnOkay()
--- 	local GUIData = {}
--- 	GUIData["Version"] = SavedData["Version"]
--- 	GUIData["Flat"] = myGUI.frame1.pFlat:GetChecked()
--- 	GUIData["Detail"] = myGUI.frame1.pDetail:GetChecked()
--- 	GUIData["Omen3"] = myGUI.frame1.pOmen3:GetChecked()
--- 	GUIData["AuraOnlyMe"] = myGUI.frame2.pAuraOnlyMe:GetChecked()
--- 	GUIData["Select"] = tonumber(string.format("%.1f",myGUI.frame1.pSelectedScale:GetValue()))
--- 	GUIData["GlobalScale"] = tonumber(string.format("%.1f",myGUI.frame1.pGlobalScale:GetValue()))
--- 	GUIData["Alpha"] = tonumber(string.format("%.1f",myGUI.frame1.pAlpha:GetValue()))
--- 	GUIData["Distence"] = tonumber(string.format("%.0f",myGUI.frame1.pDistence:GetValue()))  
--- 	GUIData["KillPer"] = tonumber(string.format("%.0f",myGUI.frame1.pKillper:GetValue()))  
--- 	GUIData["KillRGBr"] = tonumber(string.format("%.2f",myGUI.frame1.fR))
--- 	GUIData["KillRGBg"] = tonumber(string.format("%.2f",myGUI.frame1.fG))
--- 	GUIData["KillRGBb"] = tonumber(string.format("%.2f",myGUI.frame1.fB))  
--- 	-----第二页
--- 	GUIData["AuraNum"] = tonumber(string.format("%.0f",myGUI.frame2.pAuraNum:GetValue()))  
--- 	GUIData["DctAura"] = myGUI.frame2.DctDisplay
--- 	-- GUIData["Distence"] = string.format("%.0f",frame.pDistence:GetValue()) 
-
--- 	DBcopy = table_copy(SavedData)
--- 	GUIcopy = table_copy(GUIData)
-
--- 	if (table_same(DBcopy["DctAura"],GUIData["DctAura"])) then   --光环相同
--- 		DBcopy["DctAura"] = nil
--- 		GUIData["DctAura"] = nil
--- 		if (table_same(DBcopy, GUIData)) then    --非光环相相同
--- 		else
--- 			SavedData = GUIcopy
--- 			ReloadUI()
--- 		end
-
--- 		--没做任何更改
--- 	else
--- 			SavedData = GUIcopy
--- 			ReloadUI()
--- 	end
--- end
-
 
 
 myGUI.frame1 = CreateFrame("Frame", "MainGUI", InterfaceOptionsFrame)
-myGUI.frame1.name = '|cff33FFFFRS_P|r '..L["MenuBasis"]
+myGUI.frame1.name = '|cff66CCFFRS P|r '..L["MenuBasis"]
 
 
 
@@ -119,88 +80,81 @@ myGUI.frame2 = CreateFrame( "Frame", "AURAGUI", myGUI.frame1);
 myGUI.frame2.name = '|cff33FFFF|r       '..L["MenuWhiteList"]
 myGUI.frame2.parent = myGUI.frame1.name
 
+local function newFont(offx, offy, createframe, anchora, anchroframe, anchorb, text, fontsize)
+	local font = createframe:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+	font:SetPoint(anchora, anchroframe, anchorb, offx, offy)
+	font:SetText(text)
+	font:SetFont("fonts\\ARHei.ttf", fontsize, "OUTLINE")	
+	return font
+end
 
-myGUI.frame1:SetScript("OnShow", function(frame)
+local function newFontSmall(x, y, createframe, anchroframe, text)
+	local font = createframe:CreateFontString(nil, "OVERLAY");
+	font:SetFontObject("GameFontHighlight");
+	font:SetPoint("TOPLEFT", anchroframe, "TOPLEFT", x, y);   
+	font:SetText(text);
+	return font
+end
 
 
-	local version = SavedData["Version"]
+local function newLine(createframe, anchroframe, offx, offy)
+	local line = createframe:CreateTexture(nil, "BACKGROUND")
+	line:SetColorTexture(.4,.4,.4,.8);
+	line:SetSize(570, 1)
+	line:SetPoint("BOTTOMLEFT", anchroframe, "BOTTOMLEFT", offx, offy)
+	return line
+end
 
-	local PlateColor = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-	PlateColor:SetPoint("TOPLEFT", 16, -16)
-	PlateColor:SetText(L["TitleBasis"])
-	PlateColor:SetFont("fonts\\ARHei.ttf", 30, "OUTLINE")
+local function newCheckbox(x, y, fatherframe, label, description, anchroframe, varname)
+	local check = CreateFrame("CheckButton", "PlateColorCheck" .. label, fatherframe, "InterfaceOptionsCheckButtonTemplate")
+	check:SetPoint("BOTTOMLEFT", anchroframe, "BOTTOMLEFT", x, y)
+	check.label = _G[check:GetName() .. "Text"]
+	check.label:SetText(label)
+	check.tooltipText = description
 
-	if not frame.sInfo then 
-	frame.sInfo = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+	
+	local CheckStatus = SavedData[varname]
+	check:SetChecked(CheckStatus)
+
+	check:SetScript("OnClick", function ( ... )
+		SavedData[varname] = check:GetChecked()
+	end)
+	-- check.tooltipRequirement = description
+	return check
+end
+
+local function newSlider(x, y, SliderName, minValue, maxValue, curValue, valueStep, lowText, highText, upText, tipText, anchroframe, fatherframe, varname, varformat, Cvar)
+	local pSlider = CreateFrame("Slider", "Slider"..SliderName , fatherframe, "OptionsSliderTemplate" );
+	pSlider:SetPoint("TOPLEFT", anchroframe, "TOPLEFT", x, y);
+	pSlider:SetMinMaxValues(minValue, maxValue);
+	pSlider:SetValue(curValue);
+	pSlider:SetValueStep(valueStep);
+	pSlider:SetObeyStepOnDrag(true);
+	pSlider.textLow = _G["Slider"..SliderName.."Low"]
+	pSlider.textHigh = _G["Slider"..SliderName.."High"]
+	pSlider.text = _G["Slider"..SliderName.."Text"]
+	pSlider.textLow:SetText(lowText)
+	pSlider.textHigh:SetText(highText)
+	if varname then 
+		pSlider:SetValue(SavedData[varname])
 	end
-	frame.sInfo:SetPoint("BOTTOMRIGHT", -10, 10)
-	frame.sInfo:SetText(L["Version"]..version)
-	frame.sInfo:SetJustifyH("RIGHT")
+	pSlider.text:SetText("|cffFFD700"..upText.." :  "..string.format("%.1f",pSlider:GetValue()).."|r")
 
-
-
-	local function newCheckbox(label, description)
-		local check = CreateFrame("CheckButton", "PlateColorCheck" .. label, frame, "InterfaceOptionsCheckButtonTemplate")
-		check.label = _G[check:GetName() .. "Text"]
-		check.label:SetText(label)
-		check.tooltipText = description
-		-- check.tooltipRequirement = description
-		return check
-	end
-
-	local function newSlider(SliderName, x, y, minValue, maxValue, curValue, valueStep, lowText, highText, upText, tipText)
-		local pSlider = CreateFrame("Slider", "Slider"..SliderName , frame, "OptionsSliderTemplate" );
-		pSlider:SetPoint("TOPLEFT", frame, "TOPLEFT", x, y);
-		pSlider:SetMinMaxValues(minValue, maxValue);
-		pSlider:SetValue(curValue);
-		pSlider:SetValueStep(valueStep);
-		pSlider:SetObeyStepOnDrag(true);
-		pSlider.textLow = _G["Slider"..SliderName.."Low"]
-		pSlider.textHigh = _G["Slider"..SliderName.."High"]
-		pSlider.text = _G["Slider"..SliderName.."Text"]
-		pSlider.textLow:SetText(lowText)
-		pSlider.textHigh:SetText(highText)
+	pSlider:SetScript("OnValueChanged", function(pSlider,event,arg1) 
 		pSlider.text:SetText("|cffFFD700"..upText.." :  "..string.format("%.1f",pSlider:GetValue()).."|r")
-
-		pSlider:SetScript("OnValueChanged", 
-		function(pSlider,event,arg1) 
-			pSlider.text:SetText("|cffFFD700"..upText.." :  "..string.format("%.1f",pSlider:GetValue()).."|r")
-		end)
-		pSlider.tooltipText = tipText
-		-- body
-		return pSlider
-	end
-
-
-	local bFlat, bOmen3, fSelecte, fAlpha, fDistence = SavedData["Flat"], SavedData["Omen3"], SavedData["Select"], SavedData["Alpha"], SavedData["Distence"]
-	frame.fR, frame.fG, frame.fB = SavedData["KillRGBr"], SavedData["KillRGBg"], SavedData["KillRGBb"]
-	local iKillper = SavedData["KillPer"]
-	local fGlobalScale = SavedData["GlobalScale"]
-
-
-
-	-- 扁平材质
-	if not frame.pOriBar then
-		frame.pOriBar = newCheckbox(L["OriBarTexture"], L["OriBarTextureTT"])
-		frame.pOriBar:SetPoint("TOPLEFT", 16, -80)
-	end
-	frame.pOriBar:SetChecked(SavedData["OriBar"])
-	frame.pOriBar:HookScript("OnClick", function(self)
-		SavedData["OriBar"] = self:GetChecked()
+		if varname then 
+			SavedData[varname] = tonumber(string.format(varformat,pSlider:GetValue()))
+		end
+		if Cvar then
+			SetCVar(Cvar, SavedData[varname])
+		end
 	end)
+	pSlider.tooltipText = tipText
+	-- body
+	return pSlider
+end
 
-	-- 仇恨染色
-	if not frame.pOmen3 then
-		frame.pOmen3 = newCheckbox(L["Omen3"], L["Omen3TT"])
-		frame.pOmen3:SetPoint("TOPLEFT", 16, -120)
-	end
-	frame.pOmen3:SetChecked(SavedData["Omen3"])
-	frame.pOmen3:HookScript("OnClick", function(self)
-		SavedData["Omen3"] = self:GetChecked()
-	end)
-
-
-	-- 血量显示
+local function CreateHealthValueDropDown(fatherframe, anchroframe, x, y)
 	local dctMenu = {
 		[1] = L["HealthNone"];
 		[2] = L["HealthPercentage"];
@@ -223,256 +177,157 @@ myGUI.frame1:SetScript("OnShow", function(frame)
 	 UIDropDownMenu_AddButton(info)
 	end
 
-	if not frame.dropDown then 
-		frame.dropDown = CreateFrame("Frame", "WPDemoDropDown", frame, "UIDropDownMenuTemplate")
-		frame.dropDown:SetPoint("TOPLEFT", 0, -160)
-		UIDropDownMenu_SetWidth(frame.dropDown, 180) -- Use in place of dropDown:SetWidth
+	if not fatherframe.dropDown then 
+		fatherframe.dropDown = CreateFrame("Frame", "WPDemoDropDown", fatherframe, "UIDropDownMenuTemplate")
+		fatherframe.dropDown:SetPoint("TOPLEFT", anchroframe, "TOPLEFT", x, y)
+		UIDropDownMenu_SetWidth(fatherframe.dropDown, 180) -- Use in place of dropDown:SetWidth
 		-- Bind an initializer function to the dropdown; see previous sections for initializer function examples.
-		UIDropDownMenu_SetText(frame.dropDown, L["Health"]..dctMenu[SavedData["DetailType"]])
-		UIDropDownMenu_Initialize(frame.dropDown, WPDropDownDemo_Menu)
+		UIDropDownMenu_SetText(fatherframe.dropDown, L["Health"]..dctMenu[SavedData["DetailType"]])
+		UIDropDownMenu_Initialize(fatherframe.dropDown, WPDropDownDemo_Menu)
 
-		function frame.dropDown:SetValue(var1, var2, checked)
+		function fatherframe.dropDown:SetValue(var1, var2, checked)
 			SavedData["DetailType"] = var1
-			UIDropDownMenu_SetText(frame.dropDown, L["Health"]..var2)
+			UIDropDownMenu_SetText(fatherframe.dropDown, L["Health"]..var2)
 		 	CloseDropDownMenus()
 		end	
 	end
+end
 
-	-- 选中缩放
-	if not frame.pSelectedScale then
-		frame.pSelectedScale = newSlider("SelectedScale", 16, -220, 1, 2, 1.2, 0.1, L["SelectScale0"], L["SelectScale1"],L["SelectScale"],L["SelectScaleTT"])
-	end
-	frame.pSelectedScale:SetValue(fSelecte)
-	frame.pSelectedScale:HookScript("OnValueChanged", function(self, value)
-		SavedData["Select"] = tonumber(string.format("%.1f",self:GetValue()))
-		SetCVar("nameplateSelectedScale", SavedData["Select"])
-	end)
-
-
-	-- 透明度
-	if not frame.pAlpha then
-		frame.pAlpha = newSlider("Alpha", 16, -280, 0.2, 1, 0.8, 0.1, L["Alpha0"], L["Alpha1"], L["Alpha"], L["AlphaTT"])
-	end
-	frame.pAlpha:SetValue(fAlpha)
-	frame.pAlpha:HookScript("OnValueChanged", function(self, value)
-		SavedData["Alpha"] = tonumber(string.format("%.1f",self:GetValue()))
-		SetCVar("nameplateMinAlpha", SavedData["Alpha"])
-	end)
-
-	-- 血条距离
-	if not frame.pDistence then
-		frame.pDistence = newSlider ("Distence", 16, -340, 10, 60, 50, 1, L["Distance0"], L["Distance1"], L["Distance"], L["DistanceTT"])
-	end
-	frame.pDistence:SetValue(fDistence)
-	frame.pDistence:HookScript("OnValueChanged", function(self, value)
-		SavedData["Distence"] = tonumber(string.format("%.0f",self:GetValue()))
-		SetCVar("nameplateMaxDistance", SavedData["Distence"])
-	end)
-
-	-- 全局缩放
-	if not frame.pGlobalScale then
-		frame.pGlobalScale = newSlider("GlobalScale", 16, -400, 0.5, 2, 1, 0.1, L["GlobalScale0"], L["GlobalScale1"], L["GlobalScale"], L["GlobalScaleTT"] )
-	end
-	frame.pGlobalScale:SetValue(fGlobalScale)
-	frame.pGlobalScale:HookScript("OnValueChanged", function(self, value)
-		SavedData["GlobalScale"] = tonumber(string.format("%.1f",self:GetValue()))
-		SetCVar("nameplateGlobalScale", SavedData["GlobalScale"])
-	end)
-
-	-- 斩杀线
-	if not frame.pKillper then
-		frame.pKillper = newSlider("Killper", 16, -460, 0, 100, 0, 5, L["SlayLine0"], L["SlayLine1"], L["SlayLine"], L["SlayLineTT"])
-	end
-	frame.pKillper:SetValue(iKillper)
-	frame.pKillper:HookScript("OnValueChanged", function(self, value)
-		SavedData["KillPer"] = tonumber(string.format("%.0f",self:GetValue()))
-	end)
-
-
-	-- 斩杀text
-	if not frame.AuraText then 
-		frame.AuraText = frame:CreateFontString(nil, "OVERLAY");
-	end
-	frame.AuraText:SetFontObject("GameFontHighlight");
-	frame.AuraText:SetPoint("TOPLEFT", frame, "TOPLEFT", 16, -520 );   
-	-- frame.AuraText:SetParent(frame)    
-	frame.AuraText:SetText(L["SlayCol"]);
-
-	-- 色块
-	if not frame.col then 
-		frame.col = frame:CreateTexture(nil, "BACKGROUND")
-		frame.col:SetPoint("TOPLEFT", frame, "TOPLEFT", 180, -520)
-		frame.col:SetSize(70,15)
-	end
-	frame.col:SetColorTexture(frame.fR,frame.fG,frame.fB)
+local function CreaeteColBlock(fatherframe, anchorframe, x, y)
+	fatherframe.col = fatherframe:CreateTexture(nil, "BACKGROUND")
+	fatherframe.col:SetPoint("TOPLEFT", anchorframe, "TOPLEFT", x, y)
+	fatherframe.col:SetSize(70,15)
+	fatherframe.col:SetColorTexture(fatherframe.fR,fatherframe.fG,fatherframe.fB)
 
 	-- 隐形btn
-	frame.BtnCol = CreateFrame("Button", nil, frame, "GameMenuButtonTemplate");
-	frame.BtnCol:SetPoint("TOPLEFT", frame, "TOPLEFT", 180 , -520);  
-	frame.BtnCol:SetSize(70,15);
-	frame.BtnCol:SetAlpha(0)
-	frame.BtnCol:SetNormalFontObject("GameFontNormalLarge");
-	frame.BtnCol:SetHighlightFontObject("GameFontHighlightLarge");
-	frame.BtnCol:SetScript("OnClick", function(self, button, down)
+	fatherframe.BtnCol = CreateFrame("Button", nil, fatherframe, "GameMenuButtonTemplate");
+	fatherframe.BtnCol:SetPoint("TOPLEFT", anchorframe, "TOPLEFT", x , y);  
+	fatherframe.BtnCol:SetSize(70,15);
+	fatherframe.BtnCol:SetAlpha(0)
+	fatherframe.BtnCol:SetNormalFontObject("GameFontNormalLarge");
+	fatherframe.BtnCol:SetHighlightFontObject("GameFontHighlightLarge");
+	fatherframe.BtnCol:SetScript("OnClick", function(self, button, down)
 
-		ColorPickerFrame:SetColorRGB(frame.fR,frame.fG,frame.fB)
-		ColorPickerFrame:Show()
-		ColorPickerCancelButton:Hide()
-		ColorPickerFrame.func = function(restore)
-				local r,g,b = ColorPickerFrame:GetColorRGB();
-				frame.col:SetColorTexture(r,g,b)  --同步色块颜色
-				SavedData["KillRGBr"] = tonumber(string.format("%.2f",r))
-				SavedData["KillRGBg"] = tonumber(string.format("%.2f",g))
-				SavedData["KillRGBb"] = tonumber(string.format("%.2f",b))
-				end
-		end)
-
-
-	-- 源生施法条
-	if not frame.pOriCast then
-		frame.pOriCast = newCheckbox(L["OriCastBar"],L["OriCastBarTT"])
-		frame.pOriCast:SetPoint("TOPLEFT", 260, -80)
-	end
-	frame.pOriCast:SetChecked(SavedData["OriCast"])
-	frame.pOriCast:HookScript("OnClick", function(self)
-		SavedData["OriCast"] = self:GetChecked()
+	ColorPickerFrame:SetColorRGB(fatherframe.fR,fatherframe.fG,fatherframe.fB)
+	ColorPickerFrame:Show()
+	ColorPickerCancelButton:Hide()
+	ColorPickerFrame.func = function(restore)
+			local r,g,b = ColorPickerFrame:GetColorRGB();
+			fatherframe.col:SetColorTexture(r,g,b)  --同步色块颜色
+			SavedData["KillRGBr"] = tonumber(string.format("%.2f",r))
+			SavedData["KillRGBg"] = tonumber(string.format("%.2f",g))
+			SavedData["KillRGBb"] = tonumber(string.format("%.2f",b))
+			end
 	end)
+end
 
-	-- 源生精英图标
-	if not frame.pOriElite then
-		frame.pOriElite = newCheckbox(L["OriEliteIcon"],L["OriEliteIconTT"])
-		frame.pOriElite:SetPoint("TOPLEFT", 260, -120)
-	end
-	frame.pOriElite:SetChecked(SavedData["OriElite"])
-	frame.pOriElite:HookScript("OnClick", function(self)
-		SavedData["OriElite"] = self:GetChecked()
+local function newHelpBtn(x, y, fatherframe, anchorframe, text)
+	local helpbtn = CreateFrame("Button", nil, fatherframe);
+	helpbtn:SetPoint("CENTER", anchorframe, "TOPLEFT", x , y);  
+	helpbtn:SetSize(35,35);
+	helpbtn:SetText(nil)
+	helpbtn:SetNormalTexture("Interface\\common\\help-i")
+	helpbtn:SetScript("OnEnter", function(self, button, down)
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+		GameTooltip:SetText(text)
+		GameTooltip:Show()
 	end)
-
-	-- text- 光环显示策略
-	if not frame.AuraShow then 
-		frame.AuraShow = frame:CreateFontString(nil, "OVERLAY");
-	end
-	frame.AuraShow:SetFontObject("GameFontHighlight");
-	frame.AuraShow:SetPoint("TOPLEFT", frame, "TOPLEFT", 260, -180);   
-	frame.AuraShow:SetText(L["AuraText1"]);
-
-	-- btn 说明
-	if not frame.BtnAuraHelp then 
-		frame.BtnAuraHelp = CreateFrame("Button", nil, frame);
-		frame.BtnAuraHelp:SetPoint("CENTER", frame, "TOPLEFT", 540 , -187);  
-		frame.BtnAuraHelp:SetSize(35,35);
-		frame.BtnAuraHelp:SetText(nil)
-		frame.BtnAuraHelp:SetNormalTexture("Interface\\common\\help-i")
-		frame.BtnAuraHelp:SetScript("OnEnter", function(self, button, down)
-			GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-			GameTooltip:SetText(L["AuraHelpBtn1"])
-			GameTooltip:Show()
-		end)
-		frame.BtnAuraHelp:SetScript("OnLeave", function(self, button, down)
-			GameTooltip:Hide()
-		end)
-	end
-
-	-- check  默认
-	if not frame.pDefaultBuff then
-		frame.pDefaultBuff = newCheckbox(L["AuraDeault"], L["AuraDeaultTT"])
-		frame.pDefaultBuff:SetPoint("TOPLEFT", 260, -210)
-	end
-	frame.pDefaultBuff:SetChecked(SavedData["AuraDefault"])
-	frame.pDefaultBuff:HookScript("OnClick", function(self)
-		SavedData["AuraDefault"] = self:GetChecked()
+	helpbtn:SetScript("OnLeave", function(self, button, down)
+		GameTooltip:Hide()
 	end)
+	return helpbtn
+end
 
-	-- check  白名单
-	if not frame.pWitheListBuff then
-		frame.pWitheListBuff = newCheckbox(L["AuraWL"],L["AuraWLTT"])
-		frame.pWitheListBuff:SetPoint("TOPLEFT", 390, -210)
-	end
-	frame.pWitheListBuff:SetChecked(SavedData["AuraWhite"])
-	frame.pWitheListBuff:HookScript("OnClick", function(self)
-		SavedData["AuraWhite"] = self:GetChecked()
-	end)
+local function CreatePanel(frame)
+	if not frame.ScrollFrame then
+		frame.ScrollFrame = CreateFrame("ScrollFrame", nil, frame, "UIPanelScrollFrameTemplate");
+		frame.ScrollFrame:SetPoint("TOPLEFT", frame, "TOPLEFT", 4, -4);
+		frame.ScrollFrame:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -4, 4);
 
-	if not frame.pOnlyMeBuff then
-		frame.pOnlyMeBuff = newCheckbox(L["AuraOnlyMe"],L["AuraOnlyMeTT"])
-		frame.pOnlyMeBuff:SetPoint("TOPLEFT", 260, -240)
-	end
-	frame.pOnlyMeBuff:SetChecked(SavedData["AuraOnlyMe"])
-	frame.pOnlyMeBuff:HookScript("OnClick", function(self)
-		SavedData["AuraOnlyMe"] = self:GetChecked()
-	end)
+		frame.ScrollFrame:SetClipsChildren(true);
+		frame.ScrollFrame.ScrollBar:ClearAllPoints();
+		frame.ScrollFrame.ScrollBar:SetPoint("TOPRIGHT", frame.ScrollFrame, "TOPRIGHT", 0, -16);
+		frame.ScrollFrame.ScrollBar:SetPoint("BOTTOMRIGHT", frame.ScrollFrame, "BOTTOMRIGHT", 0, 16);
 
-	-- text- 光环显示样式
-	if not frame.AuraDetail then 
-		frame.AuraDetail = frame:CreateFontString(nil, "OVERLAY");
-	end
-	frame.AuraDetail:SetFontObject("GameFontHighlight");
-	frame.AuraDetail:SetPoint("TOPLEFT", frame, "TOPLEFT", 260, -280);   
-	frame.AuraDetail:SetText(L["AuraText2"]);
+		child = CreateFrame("Frame", nil, frame.ScrollFrame);
+		child:SetSize(595, 1250);
 
-	-- slider 光环显示高度
-	if not frame.pAuraHeight then
-		frame.pAuraHeight = newSlider("AuraHeight", 260, -340, -30, 50, 20, 1, L["AuraHeight0"], L["AuraHeight1"], L["AuraHeight"], L["AuraHeightTT"] )
-	end
-	frame.pAuraHeight:SetValue(SavedData["AuraHeight"])
-	frame.pAuraHeight:HookScript("OnValueChanged", function(self, value)
-		SavedData["AuraHeight"] = tonumber(string.format("%.0f",self:GetValue()))
-	end)
+		child.bg = child:CreateTexture(nil, "BACKGROUND");
+		child.bg:SetAllPoints(true);
+		child.bg:SetColorTexture(0, 0, 0, .4);
 
-	-- slider 光环显示数量
-	if not frame.pAuraNum then
-		frame.pAuraNum = newSlider("pAuraNum", 440, -340, 0, 5, 0, 1, L["AuraNum0"], L["AuraNum1"], L["AuraNum"], L["AuraNumTT"] )
-	end
-	frame.pAuraNum:SetValue(SavedData["AuraNum"])
-	frame.pAuraNum:HookScript("OnValueChanged", function(self, value)
-		SavedData["AuraNum"] = tonumber(string.format("%.0f",self:GetValue()))
-	end)
+		frame.ScrollFrame:SetScrollChild(child);
 
-	-- check  默认光环样式
-	if not frame.pOriBuffSize then
-		frame.pOriBuffSize = newCheckbox(L["OriAura"],L["OriAuraTT"])
-		frame.pOriBuffSize:SetPoint("TOPLEFT", 260, -385)
-	end
-	frame.pOriBuffSize:SetChecked(SavedData["OriAuraSize"])
-	frame.pOriBuffSize:HookScript("OnClick", function(self)
-		SavedData["OriAuraSize"] = self:GetChecked()
-		if self:GetChecked() then 
-			frame.pAuraSize:Hide() 
-		else 
-			frame.pAuraSize:Show() end 
-	end)
+		local version = SavedData["Version"]
+		child.fR, child.fG, child.fB = SavedData["KillRGBr"], SavedData["KillRGBg"], SavedData["KillRGBb"]
+		
+		child.Pagename = newFont(16, -16, child, "TOPLEFT", child, "TOPLEFT", L["TitleBasis"], 30)
+		
+		child.Gap1 = newFont(0, -60 , child, "TOPLEFT", child.Pagename, "TOPLEFT", L["Title1"], 22)
+		child.Line1 = newLine(child, child.Gap1, 0, -4)
+		child.OriTexture = newCheckbox(0, -40, child, L["OriBarTexture"], L["OriBarTextureTT"], child.Line1, "OriBar")
+		child.OriCast = newCheckbox(180, -40, child, L["OriCastBar"], L["OriCastBarTT"], child.Line1, "OriCast")
+		child.OriElite = newCheckbox(360, -40, child, L["OriEliteIcon"], L["OriEliteIconTT"], child.Line1, "OriElite")
+		child.BgCol = newCheckbox(0, -80, child, L["BgCol"], L["BgColTT"], child.Line1, "BarBgCol")
 
-	-- slider 光环尺寸
-	if not frame.pAuraSize then
-		frame.pAuraSize = newSlider("pAuraSize", 440, -385, 15, 40, 20, 1, L["AuraSize0"], L["AuraSize1"], L["AuraSize"], L["AuraSizeTT"] )
-	end
-	frame.pAuraSize:SetValue(SavedData["AuraSize"])
-	frame.pAuraSize:HookScript("OnValueChanged", function(self, value)
-		SavedData["AuraSize"] = tonumber(string.format("%.0f",self:GetValue()))
-	end)
-	if frame.pOriBuffSize:GetChecked() then 
-		frame.pAuraSize:Hide()
-	end
+		child.Gap2 = newFont(0, -130 , child, "TOPLEFT", child.Gap1, "TOPLEFT", L["Title2"], 22) 
+		child.Line2 = newLine(child, child.Gap2, 0, -4)
+		child.Select = newSlider(10, -30, "SelectedScale", 1, 2, 1.2, 0.1, L["SelectScale0"], L["SelectScale1"],L["SelectScale"],L["SelectScaleTT"], child.Line2, child, "Select", "%.1f", "nameplateSelectedScale")
+		child.Global = newSlider(200, -30, "GlobalScale", 0.5, 2, 1, 0.1, L["GlobalScale0"], L["GlobalScale1"], L["GlobalScale"], L["GlobalScaleTT"], child.Line2, child, "GlobalScale", "%.1f", "nameplateGlobalScale" )
+		child.Distance = newSlider (390, -30, "Distence", 10, 60, 50, 1, L["Distance0"], L["Distance1"], L["Distance"], L["DistanceTT"], child.Line2, child, "Distence", "%.0f", "nameplateMaxDistance")
+		child.Alpha = newSlider(10, -80, "Alpha", 0.2, 1, 0.8, 0.1, L["Alpha0"], L["Alpha1"], L["Alpha"], L["AlphaTT"], child.Line2, child, "Alpha", "%.1f", "nameplateMinAlpha")
+		child.OverlapV = newSlider(200, -80, "OverlapV", 0.4, 1.2, 0.8, 0.1, L["OverlapV0"], L["OverlapV1"], L["OverlapV"], L["OverlapVTT"], child.Line2, child, "GapV", "%.1f", "nameplateOverlapV")
+		child.OverlapH = newSlider(390, -80, "OverlapH", 0.4, 1.2, 0.8, 0.1, L["OverlapH0"], L["OverlapH1"], L["OverlapH"], L["OverlapHTT"], child.Line2, child, "GapH", "%.1f", "nameplateOverlapH")
 
-	-- check  开启计时器
-	if not frame.pAuraTimer then
-		frame.pAuraTimer = newCheckbox(L["Counter"],L["CounterTT"])
-		frame.pAuraTimer:SetPoint("TOPLEFT", 260, -430)
-	end
-	frame.pAuraTimer:SetChecked(SavedData["AuraTimer"])
-	frame.pAuraTimer:HookScript("OnClick", function(self)
-		SavedData["AuraTimer"] = self:GetChecked()
-	end)
+		child.Gap3 = newFont(0, -163 , child, "TOPLEFT", child.Gap2, "TOPLEFT", L["Title3"], 22) 
+		child.Line3 = newLine(child, child.Gap3, 0, -4)
+		CreateHealthValueDropDown(child, child.Line3, 0, -10)
+		child.ValueHelp = newHelpBtn(240, -23, child, child.Line3, L["ValueHelp"])
 
-	-- slider 计时器数字大小
-	if not frame.pAuraNumSize then
-		frame.pAuraNumSize = newSlider("pAuraNumSize", 440, -430, 7, 30, 13, 1, L["CounterSize0"], L["CounterSize1"], L["CounterSize"], L["CounterSizeTT"] )
-	end
-	frame.pAuraNumSize:SetValue(SavedData["AuraNumSize"])
-	frame.pAuraNumSize:HookScript("OnValueChanged", function(self, value)
-		SavedData["AuraNumSize"] = tonumber(string.format("%.0f",self:GetValue()))
-	end)
+		child.Gap4 = newFont(0, -90 , child, "TOPLEFT", child.Gap3, "TOPLEFT", L["Title4"], 22) 
+		child.Line4 = newLine(child, child.Gap4, 0, -4)
+		child.Omen3text = newFontSmall(0, -20, child, child.Line4, L["Omen3text"])
+		child.Omen3 = newCheckbox(90, -40, child, L["Omen3"], L["Omen3TT"], child.Line4, "Omen3")
+		child.Killtext = newFontSmall(0, -70, child, child.Line4, L["SlayColtext"])
+		child.Kill = newSlider(90, -70, "Killper", 0, 100, 0, 5, L["SlayLine0"], L["SlayLine1"], L["SlayLine"], L["SlayLineTT"], child.Line4, child, "KillPer", "%.0f")
+		child.KillColText = newFontSmall(280, -70, child, child.Line4, L["SlayColSelect"])
+		CreaeteColBlock(child, child.Line4, 370, -70)
 
+		child.Gap5 = newFont(0, -160 , child, "TOPLEFT", child.Gap4, "TOPLEFT", L["Title5"], 22)
+		child.Line5 = newLine(child, child.Gap5, 0, -4)
+		child.OriName = newCheckbox(0, -40, child, L["OriName"], L["OriNameTT"], child.Line5, "OriName")
+		child.NameWhite = newCheckbox(0, -80, child, L["WhiteName"], L["WhiteNameTT"], child.Line5, "NameWhite")
+		child.NameSize = newSlider(160, -60, "NameSize", 5, 30, 12, 1, L["NameSize0"], L["NameSize1"], L["NameSize"], L["NameSizeTT"], child.Line5, child, "NameSize", "%.0f")
+		child.NameSize:HookScript("OnValueChanged", function ( ... ) UpdateAllNameplates() end)
+
+		child.Gap6 = newFont(0, -140 , child, "TOPLEFT", child.Gap5, "TOPLEFT", L["Title6"], 22) 
+		child.Line6 = newLine(child, child.Gap6, 0, -4)
+		child.Aurashowtext = newFontSmall(0, -20, child, child.Line6, L["AuraText1"])
+		child.AuraDefault = newCheckbox(130, -40, child, L["AuraDeault"], L["AuraDeaultTT"], child.Line6, "AuraDefault")
+		child.AuraWL = newCheckbox(230, -40, child, L["AuraWL"],L["AuraWLTT"], child.Line6, "AuraWhite")
+		child.AuraMe = newCheckbox(330, -40, child, L["AuraOnlyMe"],L["AuraOnlyMeTT"], child.Line6, "AuraOnlyMe")
+		child.AuraHelp = newHelpBtn(550, -25, child, child.Line6, L["AuraHelpBtn1"])
+		child.Aurastyletext = newFontSmall(0, -80, child, child.Line6, L["AuraText2"])
+		child.AuraHeight = newSlider(100, -80, "AuraHeight", -30, 50, 20, 1, L["AuraHeight0"], L["AuraHeight1"], L["AuraHeight"], L["AuraHeightTT"], child.Line6, child, "AuraHeight", "%.0f" )
+		child.AuraHeight:HookScript("OnValueChanged", function ( ... ) UpdateAllNameplates() end)
+		child.AuraNumber = newSlider(280, -80, "pAuraNum", 0, 5, 0, 1, L["AuraNum0"], L["AuraNum1"], L["AuraNum"], L["AuraNumTT"], child.Line6, child, "AuraNum", "%.0f" )
+		child.AuraStyle = newCheckbox(100, -160, child, L["OriAura"],L["OriAuraTT"], child.Line6, "OriAuraSize")
+		child.AuraSize = newSlider(280, -140, "pAuraSize", 15, 40, 20, 1, L["AuraSize0"], L["AuraSize1"], L["AuraSize"], L["AuraSizeTT"], child.Line6, child, "AuraSize", "%.0f" )
+		child.AuraTimer = newCheckbox(100, -220, child, L["Counter"],L["CounterTT"], child.Line6, "AuraTimer")
+		child.AuraTimerSize = newSlider(280, -200, "pAuraNumSize", 7, 30, 13, 1, L["CounterSize0"], L["CounterSize1"], L["CounterSize"], L["CounterSizeTT"], child.Line6, child, "AuraNumSize", "%.0f" )
+
+		child.Gap7 = newFont(0, -300 , child, "TOPLEFT", child.Gap6, "TOPLEFT", L["Title7"], 22) 
+		child.Line7 = newLine(child, child.Gap7, 0, -4)
+		child.expball = newCheckbox(0, -40, child, L["Exp"], L["ExpTT"], child.Line7, "Expball")
+		child.expballhelp = newHelpBtn(140, -26, child, child.Line7, L["ExpHelpBtn"])
+
+		child.Version = newFont(-20, 20 , child, "BOTTOMRIGHT", child, "BOTTOMRIGHT", L["Version"]..version, 20) 
+	end		
+end
+
+
+myGUI.frame1:SetScript("OnShow", function(frame)
+	CreatePanel(frame)
 end)
 
 
@@ -498,43 +353,6 @@ myGUI.frame2:SetScript("OnShow", function(frame)
 
 	local DctSavedAura = SavedData["DctAura"]
 	frame.DctDisplay = table_copy(DctSavedAura)
-
-	local function newCheckbox(label, description)
-		local check = CreateFrame("CheckButton", "PlateColorCheck" .. label, frame, "InterfaceOptionsCheckButtonTemplate")
-		-- check:SetScript("OnClick", function(self)
-		-- 	local tick = self:GetChecked()
-		-- 	onClick(self, tick and true or false)
-		-- end)
-		check.label = _G[check:GetName() .. "Text"]
-		check.label:SetText(label)
-		check.tooltipText = description
-		-- check.tooltipRequirement = description
-		return check
-	end
-
-
-	local function newSlider(SliderName, x, y, minValue, maxValue, curValue, valueStep, lowText, highText, upText, tipText)
-		local pSlider = CreateFrame("Slider", "Slider"..SliderName , frame, "OptionsSliderTemplate" );
-		pSlider:SetPoint("TOPLEFT", frame, "TOPLEFT", x, y);
-		pSlider:SetMinMaxValues(minValue, maxValue);
-		pSlider:SetValue(curValue);
-		pSlider:SetValueStep(valueStep);
-		pSlider:SetObeyStepOnDrag(true);
-		pSlider.textLow = _G["Slider"..SliderName.."Low"]
-		pSlider.textHigh = _G["Slider"..SliderName.."High"]
-		pSlider.text = _G["Slider"..SliderName.."Text"]
-		pSlider.textLow:SetText(lowText)
-		pSlider.textHigh:SetText(highText)
-		pSlider.text:SetText("|cffFFD700"..upText.." :  "..string.format("%.1f",pSlider:GetValue()).."|r")
-
-		pSlider:SetScript("OnValueChanged", 
-		function(pSlider,event,arg1) 
-			pSlider.text:SetText("|cffFFD700"..upText.." :  "..string.format("%.1f",pSlider:GetValue()).."|r")
-		end)
-		pSlider.tooltipText = tipText
-		-- body
-		return pSlider
-	end
 
 	if not frame.BtnHelp then 
 		frame.BtnHelp = CreateFrame("Button", nil, frame);
@@ -717,7 +535,9 @@ myGUI.frame2:SetScript("OnShow", function(frame)
 	frame.sInfo2:SetJustifyH("RIGHT")
 
 end)
--- --這裡替重載介面指令寫一個確認框體 
+
+
+--這裡替重載介面指令寫一個確認框體 
 -- StaticPopupDialogs.SET_UI = { 
 --         text = "确定完成设置并重载界面", 
 --         button1 = ACCEPT, 
@@ -731,12 +551,17 @@ end)
 -- SLASH_SETUI1 = "/setui" 
 -- SLASH_SETUI2 = "/SETUI" 
 -- SlashCmdList["SETUI"] = function() 
---         StaticPopup_Show("SET_UI") 
+-- 		StaticPopup_Show("SET_UI") 
 -- end
 
-
+-- SLASH_BES1 = "/cc"
+-- SlashCmdList.BES = function()
+-- end
 
 
 
 InterfaceOptions_AddCategory(myGUI.frame1)
 InterfaceOptions_AddCategory(myGUI.frame2)
+
+
+
