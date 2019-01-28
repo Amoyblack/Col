@@ -296,10 +296,15 @@ end
 -- 	print 'gui'
 -- end) 
 
+--血量数值
+local function SetBloodValue(unitFrame)
+	unitFrame.healthBar.value:Show()
+	unitFrame.healthBar.value:SetText(GetDetailText(unitFrame.unit))
+end
 
 ---手动设置一次需要设置的
 local function On_NpRefreshOnce(unitFrame)
-
+	SetBloodValue(unitFrame)
 	SetSelectionHighlight(unitFrame)
 
 	SetCastbar(unitFrame)
@@ -322,11 +327,6 @@ local function On_NpRefreshOnce(unitFrame)
 		-- unitFrame.powerBar:SetStatusBarTexture("Interface\\AddOns\\Col\\rsbar")
 	end
 
-
-	if not IsOnThreatList(unitFrame.displayedUnit) then
-		unitFrame.healthBar.value:Hide()  --隐藏非仇恨单位的血量显示
-	end
-
 end
 
 
@@ -341,14 +341,7 @@ local function Event_NamePlatesFrame(self, event, ...)
 	-- 	SetAura(self)
 
 	-- 仇恨 -----------------------------------------------------------------------
-	if (event == "UNIT_THREAT_LIST_UPDATE") then 
-		if IsOnThreatList(self.displayedUnit) then 
-			self.healthBar.value:Show()
-			self.healthBar.value:SetText(GetDetailText(unit))
-		else
-			self.healthBar.value:Hide()
-		end
-		
+	if (event == "UNIT_THREAT_LIST_UPDATE") then 		
 		SetBarColor(self)
 
 	-- 血量  -----------------------------------------------------------------------
@@ -357,7 +350,7 @@ local function Event_NamePlatesFrame(self, event, ...)
 		local MaxHealth = UnitHealthMax(unit)
 		self.healthBar:SetMinMaxValues(0,1)
 		self.healthBar:SetValue(CurHealth/MaxHealth)
-		self.healthBar.value:SetText(GetDetailText(unit))
+		SetBloodValue(self)
 
 		if SavedData["KillPer"] ~= 0 then  -- 检查斩杀线
 			SetBarColor(self)
