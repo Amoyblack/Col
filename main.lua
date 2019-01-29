@@ -133,20 +133,57 @@ else
 	Ccolors = RAID_CLASS_COLORS
 end
 
-
-local function IsTapDenied(unitFrame)
-	return UnitIsTapDenied(unitFrame.unit) and not UnitPlayerControlled(unitFrame.unit)
+-- 文本
+local createtext = function(f, layer, fontsize, flag, justifyh)
+	local text = f:CreateFontString(nil, layer)
+	text:SetFont(STANDARD_TEXT_FONT, fontsize, flag)
+	text:SetJustifyH(justifyh)
+	return text
 end
 
+-- 纯色背景
+local function CreateBG(frame)
+	local f = frame
+	if frame:GetObjectType() == "Texture" then f = frame:GetParent() end
 
-function IsGhn(frame)
-	for i = 1, 20 do 
-		local dname, _, _, _, dduration, _, dcaster, _, _, dspellid = UnitAura(frame.unit, i, "HELPFUL")
-		if dspellid == 277242 then
-			return true
-		end
-	end	
-	return false
+	local bg = f:CreateTexture(nil, "BACKGROUND")
+	bg:SetPoint("TOPLEFT", frame, -1, 1)
+	bg:SetPoint("BOTTOMRIGHT", frame, 1, -1)
+	bg:SetTexture("Interface\\Buttons\\WHITE8x8")
+	bg:SetVertexColor(0, 0, 0)
+
+	return bg
+end
+
+-- 带毛框幕布背景
+local function CreateBackDrop(parent, anchor, a)
+    local frame = CreateFrame("Frame", nil, parent)
+
+	local flvl = parent:GetFrameLevel()
+	if flvl - 1 >= 0 then frame:SetFrameLevel(flvl-1) end
+
+	frame:ClearAllPoints()
+    frame:SetPoint("TOPLEFT", anchor, "TOPLEFT", -3, 3)
+    frame:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", 3, -3)
+
+    frame:SetBackdrop(
+    	{
+    edgeFile = "Interface\\AddOns\\Col\\media\\glow", edgeSize = 3,  --外材宽度
+    bgFile = "Interface\\Buttons\\WHITE8x8",
+    insets = {left = 3, right = 3, top = 3, bottom = 3}	--内材与外材插入空隙
+		}
+	)
+	if a then
+		frame:SetBackdropColor(.2, .2, .2, 1)  --内材颜色
+		frame:SetBackdropBorderColor(0, 0, 0)  --外材颜色
+	end
+
+    return frame
+end
+
+--灰名
+local function IsTapDenied(unitFrame)
+	return UnitIsTapDenied(unitFrame.unit) and not UnitPlayerControlled(unitFrame.unit)
 end
 
 local function IsOnThreatList(unit)
@@ -167,6 +204,9 @@ local function IsOnThreatList(unit)
 end
 
 local function GetDetailText(unit)
+	local iType = SavedData["DetailType"]
+	if iType == 1 then return "" end
+	
 	local CurHealth = UnitHealth(unit)
 	local MaxHealth = UnitHealthMax(unit)
 
@@ -178,12 +218,7 @@ local function GetDetailText(unit)
 		fCur = tostring(CurHealth)
 	end
 
-	local iType = SavedData["DetailType"]
-
-	if iType == 1 then  --不显示
-		return ""
-
-	elseif iType == 2 then  --百分比
+	if iType == 2 then  --百分比
 		return fPer
 
 	elseif iType == 3 then --数值
@@ -199,7 +234,6 @@ local function IsOnKillHealth(unit)
 	local CurHealth = UnitHealth(unit)
 	local MaxHealth = UnitHealthMax(unit)
 	return ((CurHealth/MaxHealth) < SavedData["KillPer"]/100);	
-	-- body
 end
 
 -- Highlight / 高亮
@@ -209,6 +243,7 @@ local function SetSelectionHighlight(unitFrame)
 		-- 高亮材质
 		-- unitFrame.Tarlight:Show()
 		-- 中央高光
+		--print (UnitName(unit))  name-server
 		unitFrame.selectionHighlight:Show()
 		unitFrame.selectionHighlight:SetVertexColor(1,1,1)
 		-- unitFrame.name:Show()
@@ -222,21 +257,6 @@ local function SetSelectionHighlight(unitFrame)
 		-- 边框
 		unitFrame.healthBar.border:SetVertexColor(0,0,0,.6)
 	end
-end
-
-local function SetCastbar(frame)
-	-- if frame.castBar then
-		if not SavedData["OriCast"] then 
-			frame.castBar:SetHeight(C.CastbarHeight)
-			frame.castBar.Icon:SetSize(C.CastBarIconSize, C.CastBarIconSize)
-			frame.castBar.Icon:SetPoint("BOTTOMRIGHT", frame.castBar, "BOTTOMLEFT", -2, 0)
-			frame.castBar.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
-			frame.castBar.Icon:Show()
-			frame.castBar.BorderShield:SetAtlas("nameplates-InterruptShield")
-			frame.castBar.BorderShield:SetSize(13, 15)
-			frame.castBar.BorderShield:SetPoint("CENTER", frame.castBar, "LEFT", 5,-0)
-		end
-	-- end
 end
 
 -- elseif only patch one
@@ -256,14 +276,6 @@ local function SetBarColor(frame)
 	-- 灰名
 	elseif IsTapDenied(frame) then
 		r, g, b, a = .5, .5, .5 , .8
-
-	-- 共生
-	-- elseif IsGhn(frame) then 
-	-- 	r, g, b, a = 0, 0, 1, .8
-
-	-- 共生子嗣
-	-- elseif (id == "141851") then  
-	-- 	r, g, b, a = 0, 0, 1, .8
 
 	-- 易爆球
 	elseif (id == "120651") then 
@@ -296,20 +308,63 @@ end
 -- 	print 'gui'
 -- end) 
 
---血量数值
+--血条数值
 local function SetBloodValue(unitFrame)
 	unitFrame.healthBar.value:Show()
 	unitFrame.healthBar.value:SetText(GetDetailText(unitFrame.unit))
 end
 
----手动设置一次需要设置的
-local function On_NpRefreshOnce(unitFrame)
-	SetBloodValue(unitFrame)
-	SetSelectionHighlight(unitFrame)
 
-	SetCastbar(unitFrame)
+-- 窄施法条
+local function SetThinCastingBar(self)
+	if not SavedData["OriCast"] then
+		self.Icon.iconborder:Show()
+		self.around:Show()
+		self:SetHeight(C.CastbarHeight)
+		self.Icon:SetSize(C.CastBarIconSize, C.CastBarIconSize)
+		self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -2, 0)
+		self.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
+		self.BorderShield:SetAtlas("nameplates-InterruptShield")
+		self.BorderShield:SetSize(13, 15)
+		self.BorderShield:SetPoint("CENTER", self, "LEFT", 5,-0)
+		self:HookScript("OnUpdate", function ( ... )
+			self.Icon:Show()
+		end)
+		self:HookScript("OnSizeChanged", function ( ... )
+			self.Icon.iconborder:Show()
+			self.around:Show()
+			self:SetHeight(C.CastbarHeight)
+			self.Icon:SetSize(C.CastBarIconSize, C.CastBarIconSize)
+			self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -2, 0)
+			self.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
+			self.BorderShield:SetAtlas("nameplates-InterruptShield")
+			self.BorderShield:SetSize(13, 15)
+			self.BorderShield:SetPoint("CENTER", self, "LEFT", 5,-0)			
+		end)
+	end
+end
 
-	SetBarColor(unitFrame)
+
+--血条材质
+local function SetBarTexture(unitFrame)
+	if not SavedData["OriBar"] then 
+		unitFrame.healthBar:SetStatusBarTexture("Interface\\AddOns\\Col\\media\\bar_knp")
+		unitFrame.castBar:SetStatusBarTexture("Interface\\AddOns\\Col\\media\\bar_knp")	
+		ClassNameplateManaBarFrame:SetStatusBarTexture("Interface\\AddOns\\Col\\media\\bar_knp")		
+	end
+end
+
+--名字
+local function SetBarName(unitFrame)
+	local r,g,b,a = 1,1,1,1
+	-- 黄名
+	if UnitReaction(unitFrame.unit, "player") == 4 then --中立
+		r, g, b, a = 1, 1, 0, 1
+	-- 红名
+	elseif UnitReaction(unitFrame.unit, "player") <= 3 then  --敌对
+		r, g, b, a = 1, 0, 0, 1	
+	end
+	unitFrame.name:SetTextColor(r, g, b, a)
 
 	if not SavedData["OriName"] then 
 		if SavedData["NameWhite"] then 
@@ -317,16 +372,21 @@ local function On_NpRefreshOnce(unitFrame)
 		end
 		unitFrame.name:SetFont(C.NameFont, SavedData["NameSize"], nil)
 	end
-	-- unitFrame.healthBar.border:SetVertexColor(0,0,0,.6)
-	
-	if not SavedData["OriBar"] then 
-		unitFrame.healthBar:SetStatusBarTexture("Interface\\AddOns\\Col\\media\\bar_knp")
-		unitFrame.castBar:SetStatusBarTexture("Interface\\AddOns\\Col\\media\\bar_knp")
-		ClassNameplateManaBarFrame:SetStatusBarTexture("Interface\\AddOns\\Col\\media\\bar_knp")
-		-- ClassNameplateManaBarFrame:SetStatusBarColor(1,1,1)
-		-- unitFrame.powerBar:SetStatusBarTexture("Interface\\AddOns\\Col\\rsbar")
-	end
+end
 
+---手动设置一次需要设置的
+local function On_NpRefreshOnce(unitFrame)
+	SetBarTexture(unitFrame)
+
+	SetThinCastingBar(unitFrame.castBar)
+
+	SetBloodValue(unitFrame)
+	
+	SetSelectionHighlight(unitFrame)
+
+	SetBarColor(unitFrame)
+
+	SetBarName(unitFrame)
 end
 
 
@@ -372,18 +432,8 @@ local function RegisterNamePlateEvents(unitFrame)
 	-- unitFrame:RegisterEvent("UNIT_AURA")
 end
 
-
--- 文本
-local createtext = function(f, layer, fontsize, flag, justifyh)
-	local text = f:CreateFontString(nil, layer)
-	text:SetFont(STANDARD_TEXT_FONT, fontsize, flag)
-	text:SetJustifyH(justifyh)
-	return text
-end
-
-
 local function UpdateBuffs(self, unit, filter, showAll)
-
+	if SavedData["AuraNum"] == 0 then return end
 	if not self.isActive then
 		for i = 1, BUFF_MAX_DISPLAY do
 			if (self.buffList[i]) then
@@ -479,72 +529,15 @@ end
 end
 
 
--- 纯色背景
-local function CreateBG(frame)
-	local f = frame
-	if frame:GetObjectType() == "Texture" then f = frame:GetParent() end
-
-	local bg = f:CreateTexture(nil, "BACKGROUND")
-	bg:SetPoint("TOPLEFT", frame, -1, 1)
-	bg:SetPoint("BOTTOMRIGHT", frame, 1, -1)
-	bg:SetTexture("Interface\\Buttons\\WHITE8x8")
-	bg:SetVertexColor(0, 0, 0)
-
-	return bg
-end
-
--- 带毛框幕布背景
-local function CreateBackDrop(parent, anchor, a)
-    local frame = CreateFrame("Frame", nil, parent)
-
-	local flvl = parent:GetFrameLevel()
-	if flvl - 1 >= 0 then frame:SetFrameLevel(flvl-1) end
-
-	frame:ClearAllPoints()
-    frame:SetPoint("TOPLEFT", anchor, "TOPLEFT", -3, 3)
-    frame:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", 3, -3)
-
-    frame:SetBackdrop(
-    	{
-    edgeFile = "Interface\\AddOns\\Col\\media\\glow", edgeSize = 3,  --外材宽度
-    bgFile = "Interface\\Buttons\\WHITE8x8",
-    insets = {left = 3, right = 3, top = 3, bottom = 3}	--内材与外材插入空隙
-		}
-	)
-	if a then
-		frame:SetBackdropColor(.2, .2, .2, 1)  --内材颜色
-		frame:SetBackdropBorderColor(0, 0, 0)  --外材颜色
-	end
-
-    return frame
-end
-
-
-
 local function On_NpCreate(namePlate)
-
 	local NF = namePlate.UnitFrame	
 
 	-- 接管buff模块
-	NF.BuffFrame.UpdateBuffs = UpdateBuffs;
+	NF.BuffFrame.UpdateBuffs = UpdateBuffs
 
 	-- buff位置
 	function NF.BuffFrame:UpdateAnchor()
 		self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, SavedData["AuraHeight"]);
-	end
-
-	if not SavedData["OriCast"] then 	
-		NF.castBar:HookScript('OnShow', function ( ... )
-			SetCastbar(NF)
-		end)
-		NF.castBar:HookScript('OnSizeChanged', function ( ... )
-			SetCastbar(NF)
-		end) 
-		NF.castBar:HookScript("OnUpdate", function ( ... )
-			if not NF.castBar.Icon:IsShown() then 
-				NF.castBar.Icon:Show()
-			end
-		end)
 	end
 
 	if not SavedData["OriElite"] then 
@@ -562,6 +555,12 @@ local function On_NpCreate(namePlate)
 
 	-- 描边
 	NF.healthBar.border:SetVertexColor(0,0,0,.6)
+
+	NF.castBar.around = CreateBackDrop(NF.castBar, NF.castBar, 1) 
+	NF.castBar.Icon.iconborder = CreateBG(NF.castBar.Icon)
+	NF.castBar.Icon.iconborder:SetDrawLayer("OVERLAY", -1)  -- IconLayer = 1
+	NF.castBar.Icon.iconborder:Hide()
+	NF.castBar.around:Hide()
 
 	-- 名字
 	-- NF.name:SetFont(C.NameFont, C.NameTextSize, nil)
@@ -581,12 +580,6 @@ local function On_NpCreate(namePlate)
 		NF.healthBar.value:SetPoint("BOTTOMRIGHT", NF.healthBar, "RIGHT", 0, -4)
 	end
 
-	-- 施法条
-	CreateBackDrop(NF.castBar, NF.castBar, 1) 
-	if not SavedData["OriCast"] then 
-	NF.castBar.Icon.iconborder = CreateBG(NF.castBar.Icon)
-	NF.castBar.Icon.iconborder:SetDrawLayer("OVERLAY", -1)  -- IconLayer = 1
-	end 
 
 	-- 选中高亮
 	-- NF.Tarlight = NF:CreateTexture("targethighlight", "BACKGROUND", nil, -1)
@@ -599,17 +592,12 @@ local function On_NpCreate(namePlate)
 	-- NF.Tarlight:Hide()
 end
 
-
-
-
-
 local function UnregisterNamePlateEvents(unitFrame)
 	unitFrame:UnregisterAllEvents()
 	unitFrame:SetScript("OnEvent", nil)
 end
 
 local function SetUnit(unitFrame, unit)
-	-- print (UnitName(unit, false))
 	unitFrame.unit = unit
 	unitFrame.displayedUnit = unit	 -- For vehicles
 	unitFrame.inVehicle = false
@@ -624,16 +612,13 @@ local function SetUnit(unitFrame, unit)
 end
 
 local function On_NpAdd(unit)
-	-- print ("添加的unit       "..unit)
 	local namePlate = C_NamePlate.GetNamePlateForUnit(unit)
 	local unitFrame = namePlate.UnitFrame
 	SetUnit(unitFrame, unit)
 	On_NpRefreshOnce(unitFrame)
-	-- 创建光环位置框架
 end
 
 local function On_NpRemoved(unit)
-	-- print ("删除的unit      "..unit)
 	local namePlate = C_NamePlate.GetNamePlateForUnit(unit)
 	SetUnit(namePlate.UnitFrame, nil)
 	CastingBarFrame_SetUnit(namePlate.UnitFrame.castBar, nil, false, true)
@@ -647,21 +632,64 @@ function UpdateAllNameplates()
 	end	
 end
 
+local function InitAndCvar()
+	InterfaceOptionsNamesPanelUnitNameplatesMakeLarger:SetValue(1)
+	-- 强制大姓名板, todo 这里可取消esc变色
+	local checkBox = InterfaceOptionsNamesPanelUnitNameplatesMakeLarger
+	function checkBox.setFunc(value)
+		-- NamePlates_UpdateNamePlateOptions()
+	end
+
+	-- local dropdown = InterfaceOptionsNPCNamesDropDown_OnClick
+	-- function dropdown.SetValue(value)
+	-- 	-- body
+	-- end
+
+	-- Show All Name
+	SetCVar("UnitNameNPC", "1");
+	SetCVar("UnitNameFriendlySpecialNPCName", "0");
+	SetCVar("UnitNameHostleNPC", "0");
+	SetCVar("UnitNameInteractiveNPC", "0");
+	SetCVar("ShowQuestUnitCircles", "1");
+
+	-- Large NamePlate 
+	-- SetCVar("NamePlateHorizontalScale", 1.4);
+	-- SetCVar("NamePlateVerticalScale", 2.7);
+	-- NamePlateDriverFrame:UpdateNamePlateOptions();   --变红
+
+	SetCVar("nameplateMaxDistance", G_Distence)
+	SetCVar("nameplateSelectedScale", G_Select)
+	SetCVar("nameplateMinAlpha", G_Alpha)
+	SetCVar("nameplateGlobalScale", G_GlobalScale)
+
+	-- 血条水平堆叠 预设：0.8
+	SetCVar("nameplateOverlapH",  SavedData["GapH"]) 
+	-- 血条垂直堆叠 预设 1.1
+	SetCVar("nameplateOverlapV",  SavedData["GapV"]) 
+
+	--不让血条随距离改变而变小,预设Min 0.8
+	SetCVar("namePlateMinScale", 1) 
+	SetCVar("namePlateMaxScale", 1) 
+		
+	if G_InitFirstLoadedOption then
+		SetCVar("nameplateShowAll", 1)   --显示所有
+		SetCVar("nameplateShowEnemies", 1)   --敌对单位
+		SetCVar("nameplateShowEnemyMinions", 1)   --仆从
+		SetCVar("nameplateShowEnemyMinus", 1)   --杂兵
+
+		-- 堆叠 1 重叠 0
+		SetCVar("nameplateMotion", 1) 
+	end	
+end
+
 local function NamePlates_OnEvent(self, event, ...)
-
-
 	if ( event == "NAME_PLATE_CREATED" ) then
 		local unit = ...
 		On_NpCreate(unit)		
-		-- print ' ------ NAME_PLATE_CREATED'
 
 	elseif ( event == "NAME_PLATE_UNIT_ADDED" ) then
 		local unit = ...
 		On_NpAdd(unit)
-
-		-- if not UnitIsPlayer(namePlate.UnitFrame.unit) then 
-		-- 	RegisterNamePlateEvents(unitFrame)
-		-- end
 
 	elseif ( event == "VARIABLES_LOADED" ) then
 		SetCVar("NamePlateHorizontalScale", 1.4);
@@ -669,7 +697,6 @@ local function NamePlates_OnEvent(self, event, ...)
 		
 	elseif ( event == "DISPLAY_SIZE_CHANGED" ) then  -- 窗口大小改变
 		UpdateAllNameplates()
-		
 
 	elseif ( event == "NAME_PLATE_UNIT_REMOVED" ) then
 		local unit = ...
@@ -681,53 +708,7 @@ local function NamePlates_OnEvent(self, event, ...)
 		UpdateAllNameplates()
 
 	elseif ( event == "PLAYER_ENTERING_WORLD" ) then
-		InterfaceOptionsNamesPanelUnitNameplatesMakeLarger:SetValue(1)
-		-- 强制大姓名板, todo 这里可取消esc变色
-		local checkBox = InterfaceOptionsNamesPanelUnitNameplatesMakeLarger
-		function checkBox.setFunc(value)
-			-- NamePlates_UpdateNamePlateOptions()
-		end
-
-		-- local dropdown = InterfaceOptionsNPCNamesDropDown_OnClick
-		-- function dropdown.SetValue(value)
-		-- 	-- body
-		-- end
-
-		-- Show All Name
-		SetCVar("UnitNameNPC", "1");
-		SetCVar("UnitNameFriendlySpecialNPCName", "0");
-		SetCVar("UnitNameHostleNPC", "0");
-		SetCVar("UnitNameInteractiveNPC", "0");
-		SetCVar("ShowQuestUnitCircles", "1");
-
-		-- Large NamePlate 
-		-- SetCVar("NamePlateHorizontalScale", 1.4);
-		-- SetCVar("NamePlateVerticalScale", 2.7);
-		-- NamePlateDriverFrame:UpdateNamePlateOptions();   --变红
-
-		SetCVar("nameplateMaxDistance", G_Distence)
-		SetCVar("nameplateSelectedScale", G_Select)
-		SetCVar("nameplateMinAlpha", G_Alpha)
-		SetCVar("nameplateGlobalScale", G_GlobalScale)
-
-		-- 血条水平堆叠 预设：0.8
-		SetCVar("nameplateOverlapH",  SavedData["GapH"]) 
-		-- 血条垂直堆叠 预设 1.1
-		SetCVar("nameplateOverlapV",  SavedData["GapV"]) 
-
-		--不让血条随距离改变而变小,预设Min 0.8
-		SetCVar("namePlateMinScale", 1) 
-		SetCVar("namePlateMaxScale", 1) 
-			
-		if G_InitFirstLoadedOption then
-			SetCVar("nameplateShowAll", 1)   --显示所有
-			SetCVar("nameplateShowEnemies", 1)   --敌对单位
-			SetCVar("nameplateShowEnemyMinions", 1)   --仆从
-			SetCVar("nameplateShowEnemyMinus", 1)   --杂兵
-
-			-- 堆叠 1 重叠 0
-			SetCVar("nameplateMotion", 1) 
-		end
+		InitAndCvar()
 	end
 
 end
@@ -777,7 +758,6 @@ local function BoomBall()
 		if id == "120651" then
 			haskey = true
 		end
-		-- On_NpRefreshOnce(unitFrame)
 	end	
 
 	-- 场上存在易爆球
@@ -800,10 +780,10 @@ local function BoomBall()
 end
 
 
-SLASH_REE1 = "/bian"
-SlashCmdList.REE = function()
-	UpdateAllNameplates()
-end
+-- SLASH_REE1 = "/bian"
+-- SlashCmdList.REE = function()
+-- 	UpdateAllNameplates()
+-- end
 
 local boomFrame = CreateFrame("Frame")
 local timei = 0 
