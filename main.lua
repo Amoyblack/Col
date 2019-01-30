@@ -330,17 +330,17 @@ local function SetThinCastingBar(self)
 		self:HookScript("OnUpdate", function ( ... )
 			self.Icon:Show()
 		end)
-		self:HookScript("OnSizeChanged", function ( ... )
-			self.Icon.iconborder:Show()
-			self.around:Show()
-			self:SetHeight(C.CastbarHeight)
-			self.Icon:SetSize(C.CastBarIconSize, C.CastBarIconSize)
-			self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -2, 0)
-			self.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
-			self.BorderShield:SetAtlas("nameplates-InterruptShield")
-			self.BorderShield:SetSize(13, 15)
-			self.BorderShield:SetPoint("CENTER", self, "LEFT", 5,-0)			
-		end)
+		-- self:SetScript("OnSizeChanged", function ( ... )
+		-- 	self.Icon.iconborder:Show()
+		-- 	self.around:Show()
+		-- 	self:SetHeight(C.CastbarHeight)
+		-- 	self.Icon:SetSize(C.CastBarIconSize, C.CastBarIconSize)
+		-- 	self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -2, 0)
+		-- 	self.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
+		-- 	self.BorderShield:SetAtlas("nameplates-InterruptShield")
+		-- 	self.BorderShield:SetSize(13, 15)
+		-- 	self.BorderShield:SetPoint("CENTER", self, "LEFT", 5,-0)			
+		-- end)
 	end
 end
 
@@ -365,6 +365,13 @@ local function SetBarName(unitFrame)
 		r, g, b, a = 1, 0, 0, 1	
 	end
 	unitFrame.name:SetTextColor(r, g, b, a)
+
+	local name, server =  UnitName(unitFrame.unit)
+	if server then 
+		unitFrame.name:SetText(name.."-"..server)
+	else
+		unitFrame.name:SetText(name)
+	end
 
 	if not SavedData["OriName"] then 
 		if SavedData["NameWhite"] then 
