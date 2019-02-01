@@ -189,6 +189,7 @@ local function CreateHealthValueDropDown(fatherframe, anchroframe, x, y)
 			SavedData["DetailType"] = var1
 			UIDropDownMenu_SetText(fatherframe.dropDown, L["Health"]..var2)
 		 	CloseDropDownMenus()
+		 	UpdateAllNameplates()
 		end	
 	end
 end
@@ -250,7 +251,7 @@ local function CreatePanel(frame)
 		frame.ScrollFrame.ScrollBar:SetPoint("BOTTOMRIGHT", frame.ScrollFrame, "BOTTOMRIGHT", 0, 16);
 
 		child = CreateFrame("Frame", nil, frame.ScrollFrame);
-		child:SetSize(595, 1250);
+		child:SetSize(595, 1350);
 
 		child.bg = child:CreateTexture(nil, "BACKGROUND");
 		child.bg:SetAllPoints(true);
@@ -263,6 +264,7 @@ local function CreatePanel(frame)
 		
 		child.Pagename = newFont(16, -16, child, "TOPLEFT", child, "TOPLEFT", L["TitleBasis"], 30)
 		
+		--风格
 		child.Gap1 = newFont(0, -60 , child, "TOPLEFT", child.Pagename, "TOPLEFT", L["Title1"], 22)
 		child.Line1 = newLine(child, child.Gap1, 0, -4)
 		child.OriTexture = newCheckbox(0, -40, child, L["OriBarTexture"], L["OriBarTextureTT"], child.Line1, "OriBar")
@@ -270,20 +272,23 @@ local function CreatePanel(frame)
 		child.OriElite = newCheckbox(360, -40, child, L["OriEliteIcon"], L["OriEliteIconTT"], child.Line1, "OriElite")
 		child.BgCol = newCheckbox(0, -80, child, L["BgCol"], L["BgColTT"], child.Line1, "BarBgCol")
 
+		--Cvars
 		child.Gap2 = newFont(0, -130 , child, "TOPLEFT", child.Gap1, "TOPLEFT", L["Title2"], 22) 
 		child.Line2 = newLine(child, child.Gap2, 0, -4)
+		child.CvarHelp = newHelpBtn(100, 15, child, child.Line2, L["CvarHelp"])
 		child.Select = newSlider(10, -30, "SelectedScale", 1, 2, 1.2, 0.1, L["SelectScale0"], L["SelectScale1"],L["SelectScale"],L["SelectScaleTT"], child.Line2, child, "Select", "%.1f", "nameplateSelectedScale")
 		child.Global = newSlider(200, -30, "GlobalScale", 0.5, 2, 1, 0.1, L["GlobalScale0"], L["GlobalScale1"], L["GlobalScale"], L["GlobalScaleTT"], child.Line2, child, "GlobalScale", "%.1f", "nameplateGlobalScale" )
 		child.Distance = newSlider (390, -30, "Distence", 10, 60, 50, 1, L["Distance0"], L["Distance1"], L["Distance"], L["DistanceTT"], child.Line2, child, "Distence", "%.0f", "nameplateMaxDistance")
-		child.Alpha = newSlider(10, -80, "Alpha", 0.2, 1, 0.8, 0.1, L["Alpha0"], L["Alpha1"], L["Alpha"], L["AlphaTT"], child.Line2, child, "Alpha", "%.1f", "nameplateMinAlpha")
-		child.OverlapV = newSlider(200, -80, "OverlapV", 0.4, 1.2, 0.8, 0.1, L["OverlapV0"], L["OverlapV1"], L["OverlapV"], L["OverlapVTT"], child.Line2, child, "GapV", "%.1f", "nameplateOverlapV")
-		child.OverlapH = newSlider(390, -80, "OverlapH", 0.4, 1.2, 0.8, 0.1, L["OverlapH0"], L["OverlapH1"], L["OverlapH"], L["OverlapHTT"], child.Line2, child, "GapH", "%.1f", "nameplateOverlapH")
+		-- child.Alpha = newSlider(10, -80, "Alpha", 0.2, 1, 0.8, 0.1, L["Alpha0"], L["Alpha1"], L["Alpha"], L["AlphaTT"], child.Line2, child, "Alpha", "%.1f", "nameplateMinAlpha")
+		child.OverlapV = newSlider(10, -80, "OverlapV", 0.4, 1.2, 0.8, 0.1, L["OverlapV0"], L["OverlapV1"], L["OverlapV"], L["OverlapVTT"], child.Line2, child, "GapV", "%.1f", "nameplateOverlapV")
+		child.OverlapH = newSlider(200, -80, "OverlapH", 0.4, 1.2, 0.8, 0.1, L["OverlapH0"], L["OverlapH1"], L["OverlapH"], L["OverlapHTT"], child.Line2, child, "GapH", "%.1f", "nameplateOverlapH")
 
+		--血量
 		child.Gap3 = newFont(0, -163 , child, "TOPLEFT", child.Gap2, "TOPLEFT", L["Title3"], 22) 
 		child.Line3 = newLine(child, child.Gap3, 0, -4)
 		CreateHealthValueDropDown(child, child.Line3, 0, -10)
-		child.ValueHelp = newHelpBtn(240, -23, child, child.Line3, L["ValueHelp"])
 
+		--血条染色
 		child.Gap4 = newFont(0, -90 , child, "TOPLEFT", child.Gap3, "TOPLEFT", L["Title4"], 22) 
 		child.Line4 = newLine(child, child.Gap4, 0, -4)
 		child.Omen3text = newFontSmall(0, -20, child, child.Line4, L["Omen3text"])
@@ -293,13 +298,17 @@ local function CreatePanel(frame)
 		child.KillColText = newFontSmall(280, -70, child, child.Line4, L["SlayColSelect"])
 		CreaeteColBlock(child, child.Line4, 370, -70)
 
+		--姓名
 		child.Gap5 = newFont(0, -160 , child, "TOPLEFT", child.Gap4, "TOPLEFT", L["Title5"], 22)
 		child.Line5 = newLine(child, child.Gap5, 0, -4)
 		child.OriName = newCheckbox(0, -40, child, L["OriName"], L["OriNameTT"], child.Line5, "OriName")
+		child.OriName:HookScript("OnClick", function ( ... ) UpdateAllNameplates() end)
 		child.NameWhite = newCheckbox(0, -80, child, L["WhiteName"], L["WhiteNameTT"], child.Line5, "NameWhite")
+		child.NameWhite:HookScript("OnClick", function ( ... ) UpdateAllNameplates() end)
 		child.NameSize = newSlider(160, -60, "NameSize", 5, 30, 12, 1, L["NameSize0"], L["NameSize1"], L["NameSize"], L["NameSizeTT"], child.Line5, child, "NameSize", "%.0f")
 		child.NameSize:HookScript("OnValueChanged", function ( ... ) UpdateAllNameplates() end)
 
+		--光环
 		child.Gap6 = newFont(0, -140 , child, "TOPLEFT", child.Gap5, "TOPLEFT", L["Title6"], 22) 
 		child.Line6 = newLine(child, child.Gap6, 0, -4)
 		child.Aurashowtext = newFontSmall(0, -20, child, child.Line6, L["AuraText1"])
@@ -309,17 +318,28 @@ local function CreatePanel(frame)
 		child.AuraHelp = newHelpBtn(550, -25, child, child.Line6, L["AuraHelpBtn1"])
 		child.Aurastyletext = newFontSmall(0, -80, child, child.Line6, L["AuraText2"])
 		child.AuraHeight = newSlider(100, -80, "AuraHeight", -30, 50, 20, 1, L["AuraHeight0"], L["AuraHeight1"], L["AuraHeight"], L["AuraHeightTT"], child.Line6, child, "AuraHeight", "%.0f" )
-		child.AuraHeight:HookScript("OnValueChanged", function ( ... ) UpdateAllNameplates() end)
+		child.AuraHeight:HookScript("OnValueChanged", function ( ... ) RefBuff() end)
 		child.AuraNumber = newSlider(280, -80, "pAuraNum", 0, 5, 0, 1, L["AuraNum0"], L["AuraNum1"], L["AuraNum"], L["AuraNumTT"], child.Line6, child, "AuraNum", "%.0f" )
 		child.AuraStyle = newCheckbox(100, -160, child, L["OriAura"],L["OriAuraTT"], child.Line6, "OriAuraSize")
 		child.AuraSize = newSlider(280, -140, "pAuraSize", 15, 40, 20, 1, L["AuraSize0"], L["AuraSize1"], L["AuraSize"], L["AuraSizeTT"], child.Line6, child, "AuraSize", "%.0f" )
+		child.AuraSize:HookScript("OnValueChanged", function ( ... ) RefBuff() end)
 		child.AuraTimer = newCheckbox(100, -220, child, L["Counter"],L["CounterTT"], child.Line6, "AuraTimer")
+		child.AuraTimer:HookScript("OnClick", function ( ... ) RefBuff() end)
 		child.AuraTimerSize = newSlider(280, -200, "pAuraNumSize", 7, 30, 13, 1, L["CounterSize0"], L["CounterSize1"], L["CounterSize"], L["CounterSizeTT"], child.Line6, child, "AuraNumSize", "%.0f" )
+		child.AuraTimerSize:HookScript("OnValueChanged", function ( ... ) RefBuff() end)
 
+		--地下城助手
 		child.Gap7 = newFont(0, -300 , child, "TOPLEFT", child.Gap6, "TOPLEFT", L["Title7"], 22) 
 		child.Line7 = newLine(child, child.Gap7, 0, -4)
 		child.expball = newCheckbox(0, -40, child, L["Exp"], L["ExpTT"], child.Line7, "Expball")
-		child.expballhelp = newHelpBtn(140, -26, child, child.Line7, L["ExpHelpBtn"])
+		child.expballhelp = newHelpBtn(150, -26, child, child.Line7, L["ExpHelpBtn"])
+
+		--其他
+		child.Gap8 = newFont(0, -100 , child, "TOPLEFT", child.Gap7, "TOPLEFT", L["Title8"], 22) 
+		child.Line8 = newLine(child, child.Gap8, 0, -4)
+		child.CastHeight = newSlider(0, -40, "pCastHeight", 5, 20, 5, 1, L["CastHeight0"], L["CastHeight1"], L["CastHeight"], L["CastHeightTT"], child.Line8, child, "CastHeight", "%.0f" )
+		child.SelectAlpha = newSlider(200, -40, "pSelectAlpha", 0.2, 1.0, 1.0, 0.1, L["SelectAlpha0"], L["SelectAlpha1"], L["SelectAlpha"], L["SelectAlphaTT"], child.Line8, child, "SelectAlpha", "%.1f" )
+		child.SelectAlpha:HookScript("OnValueChanged", function ( ... ) UpdateAllNameplates() end)
 
 		child.Version = newFont(-20, 20 , child, "BOTTOMRIGHT", child, "BOTTOMRIGHT", L["Version"]..version, 20) 
 	end		

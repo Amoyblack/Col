@@ -15,15 +15,16 @@ dctLanguageDefault = {
     Title5 = "Name",
     Title6 = "Aura",
     Title7 = "Dungeon Helper",
+    Title8 = "Others",
 
     OriBarTexture = "SourceBarTexture",
-    OriBarTextureTT = "Use BlizzardDefault Bloodbar Texture |cff66CCFF(take effect after /reload)|r",
+    OriBarTextureTT = "Use BlizzardDefault Bloodbar Texture  |cff66CCFFtake effect after /reload|r",
 
     OriCastBar = "SourceCastBar",
-    OriCastBarTT = "Use BlizzardDefault Castbar Style  |cff66CCFF(take effect after /reload)|r",
+    OriCastBarTT = "Use BlizzardDefault Castbar Style   |cff66CCFFtake effect after /reload|r",
 
     OriEliteIcon = "SourceEliteNpcIcon",
-    OriEliteIconTT = "Use BlizzardDefault Icon for Elite Npc  |cff66CCFF(take effect after /reload)|r",
+    OriEliteIconTT = "Use BlizzardDefault Icon for Elite Npc   |cff66CCFFtake effect after /reload|r",
 
     BgCol = "Bloodbar Background Color",
     BgColTT = "Render the bloodbar background color(the empty part of the bloodbar) with the color of the bloodbar itself, not the black",
@@ -37,6 +38,8 @@ dctLanguageDefault = {
     HealthPercentage = "Percentage",
     HealthBothShow = "Value/Percentage",
     HealthNone = "Hide",
+
+    CvarHelp = "CVar can be understood as the presence of some settings on the Blizzard server\n\nThis means that even if you disable the addon,the following CVar settings will continue to take effect",
 
     SelectScale = "SelectScale",
     SelectScale0 = "Not zooming",
@@ -68,8 +71,6 @@ dctLanguageDefault = {
     OverlapH1 = "far",
     OverlapHTT = "Horizontal overlap between multiple blood bars",
 
-    ValueHelp = "In order to keep the interface neat and tidy\nonly the bloodbar of the units in the battle show the detail blood value.",
-
     SlayLine = "Slayline(%)",
     SlayLine0 = "close",
     SlayLine1 = "high slayline",
@@ -80,10 +81,10 @@ dctLanguageDefault = {
     SlayCol = "|cFFFFD700 SlayColor(Click choose): |r",
 
     OriName = "SourceNameStyle",
-    OriNameTT = "Name color and font size are based on Blizzard's source style    ".."|cff66CCFFtake effect after /reload|r ",
+    OriNameTT = "Name color and font size are based on Blizzard's source style",
 
     WhiteName = "White Name",
-    WhiteNameTT = "When the color of the bloodbar is increased, it is recommended to use white to display the global name to keep the interface neat and tidy. (does not take effect when the source name style is turned on.)    ".."|cff66CCFFtake effect after /reload|r ",
+    WhiteNameTT = "When the color of the bloodbar is increased, it is recommended to use white to display the global name to keep the interface neat and tidy. (does not take effect when the source name style is turned on.)",
 
     NameSize = "NameFont Size",
     NameSize0 = "small",
@@ -91,13 +92,13 @@ dctLanguageDefault = {
     NameSizeTT = "The name font size (does not take effect when the source name style is turned on.)",
 
     AuraText1 = "Auras need to show:",
-    AuraHelpBtn1 = "BlizzardDefault means the auras show even without this addon \n\nWhitelist means the auras you set in the WhiteList Page \n\nThe options are not mutually exclusive, select as needed\n\nbtw:Whitelists also affect personal resourse bar's auras\nIt means you can oversee auras by add it into WhiteList\nSometimes it can replace TMW/WA in the aspect of Auras Oversee",
+    AuraHelpBtn1 = "The auras of the whitelist will also be displayed on the personal resource bar\n\nTake advantage of it that can monitor Skill Buffs/Items etc..\n\nSuch as the number of Mage's icicles stored ; Bloodlust duration; Trinket trigger, etc.",
 
     AuraDeault = "BlzDefault",
     AuraDeaultTT = "Auras that Blizzard default displaying",
 
     AuraWL = "WhiteList",
-    AuraWLTT = "Auras setted by user through the WhiteList",
+    AuraWLTT = "Auras setted by the WhiteList",
 
     AuraOnlyMe = "My Auras Only",
     AuraOnlyMeTT = "Show the auras from me and my pet only ",
@@ -115,7 +116,7 @@ dctLanguageDefault = {
     AuraNumTT = "Max number of the auras can display",
 
     OriAura = "SourceAuraStyle",
-    OriAuraTT = "Use Blizzard default auras's style rather than a customizable square icon style",
+    OriAuraTT = "Use Blizzard default auras's style rather than a customizable square icon style   |cff66CCFFtake affect after /reload|r",
 
     AuraSize = "AuraSize",
     AuraSize0 = "small",
@@ -140,6 +141,16 @@ dctLanguageDefault = {
     Exp = "Explosive Helper",
     ExpTT = "When there are explosive balls on the field, the bloodbar of all other units will be automatically hidden until there is no explosive ball on the field.",
     ExpHelpBtn = "Slightly high cpu usage, it is recommended to close when not in use",
+
+    CastHeight = "Castbar Width",
+    CastHeight0 = "narrow" ,
+    CastHeight1 = "wide",
+    CastHeightTT = "This item does not take effect when the Source Castbar is turned on.",
+
+    SelectAlpha = "Transparency",
+    SelectAlpha0 = "transparency" ,
+    SelectAlpha1 = "opaque",
+    SelectAlphaTT = "Transparency of non-current target's Nameplate",
 
     UpdateInfo = "Detected that you have updated the version, all settings have been reset to default values",
     UpdateVersion = "Current Version",

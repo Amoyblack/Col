@@ -17,6 +17,7 @@ ns.L = {
     Title5 = "姓名",
     Title6 = "光环",
     Title7 = "地下城助手",
+    Title8 = "其他",
 
     OriBarTexture = "源生材质",
     OriBarTextureTT = "启用源生的血条材质   |cff66CCFF重载生效|r",
@@ -39,6 +40,8 @@ ns.L = {
     HealthPercentage = "百分比",
     HealthBothShow = "数值/百分比",
     HealthNone = "不显示",
+
+    CvarHelp = "CVar可以理解为存在暴雪服务器上的一些设置\n\n这意味着即使你禁用该插件，如下CVar设置仍会继续生效",
 
     SelectScale = "选中缩放",
     SelectScale0 = "不放大",
@@ -70,8 +73,6 @@ ns.L = {
     OverlapH1 = "远",
     OverlapHTT = "多个血条之间的水平间距",
 
-    ValueHelp = "为了保持界面清爽与整洁,只对战斗中的单位显示具体血量",
-
     SlayLine = "斩杀线(%)",
     SlayLine0 = "关",
     SlayLine1 = "高血限",
@@ -82,10 +83,10 @@ ns.L = {
     SlayCol = "|cFFFFD700 斩杀颜色(点击选择)： |r",
 
     OriName = "源生姓名样式",
-    OriNameTT = "姓名颜色与字体大小均采用暴雪源生样式    ".."|cff66CCFF重载生效|r ",
+    OriNameTT = "姓名颜色与字体大小均采用暴雪源生样式",
 
     WhiteName = "全局白色姓名",
-    WhiteNameTT = "当血条颜色增多后, 推荐使用白色显示全局姓名以保持界面统一与清爽 (开启源生样式时此项不生效)    ".."|cff66CCFF重载生效|r ",
+    WhiteNameTT = "当血条颜色增多后, 推荐使用白色显示全局姓名以保持界面统一与清爽 (开启源生样式时此项不生效)",
 
     NameSize = "字体大小",
     NameSize0 = "小",
@@ -93,13 +94,13 @@ ns.L = {
     NameSizeTT = "血条名字的字体大小 (开启源生样式时此项不生效)",
 
     AuraText1 = "需要显示的光环 :",
-    AuraHelpBtn1 = "系统默认指不开插件也会显示的光环 \n\n白名单指玩家单独配置的光环 \n\n各选项并不互斥，根据实际需要勾选\n\n注:白名单同样作用于个人资源条\n这意味着可以通过白名单来配置技能\n监视，一定程度上可替代Tmw/Wa等",
+    AuraHelpBtn1 = "白名单配置的光环也会显示在个人资源条上\n\n善加利用可以监视 技能Buff/物品之类的 触发\n\n如法师的冰刺层数；嗜血持续时间；饰品触发等",
 
     AuraDeault = "系统默认",
-    AuraDeaultTT = "游戏默认的光环显示策略",
+    AuraDeaultTT = "暴雪默认显示的一些光环",
 
     AuraWL = "白名单",
-    AuraWLTT = "玩家手动配置的光环显示策略",
+    AuraWLTT = "手动配置在白名单中的光环",
 
     AuraOnlyMe = "只检测我释放的",
     AuraOnlyMeTT = "只检测来源于我和我的宠物的光环",
@@ -117,7 +118,7 @@ ns.L = {
     AuraNumTT = "最大光环显示数量",
 
     OriAura = "源生光环样式",
-    OriAuraTT = "使用源生光环样式，取消勾选以正方形效果显示",
+    OriAuraTT = "使用源生光环样式，取消勾选以正方形效果显示  |cff66CCFF重载生效|r",
 
     AuraSize = "光环大小",
     AuraSize0 = "小",
@@ -142,6 +143,16 @@ ns.L = {
     Exp = "易爆球助手",
     ExpTT = "场上有易爆球时会自动隐藏其他所有单位的血条,直到场上没有易爆球为止",
     ExpHelpBtn = "稍高cpu占用,不用时建议关闭",
+
+    CastHeight = "施法条宽度",
+    CastHeight0 = "窄" ,
+    CastHeight1 = "宽",
+    CastHeightTT = "开启源生施法条时该项不生效",
+
+    SelectAlpha = "透明度",
+    SelectAlpha0 = "透明" ,
+    SelectAlpha1 = "不透明",
+    SelectAlphaTT = "非当前目标的血条透明度",
 
     UpdateInfo = "检测到你已更新版本，所有设置已还原为预设值",
     UpdateVersion = "当前版本",

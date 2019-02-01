@@ -20,7 +20,7 @@ local C = ns.C
 local L = ns.L
 
 DefaultData = {
-	["Version"] = "8.1.030",
+	["Version"] = "8.1.040",
 	["OriBar"] = false,
 	["OriCast"] = false,
 	["OriElite"] = false,
@@ -32,7 +32,7 @@ DefaultData = {
 	["GlobalScale"] = 1.0,
 	["Alpha"] = 0.8,
 	["Distence"] = 45,
-	["GapV"] = 0.6,
+	["GapV"] = 0.8,
 	["GapH"] = 0.6,
 
 	["KillPer"] = 0,
@@ -47,12 +47,15 @@ DefaultData = {
 	["AuraDefault"] = true,
 	["AuraWhite"] = true,
 	["AuraOnlyMe"] = false,
-	["AuraHeight"] = 20,
+	["AuraHeight"] = 30,
 	["AuraNum"] = 4,
-	["OriAuraSize"] = true,
+	["OriAuraSize"] = false,
 	["AuraSize"] = 22, 
 	["AuraTimer"] = false,
 	["AuraNumSize"] = 13,
+
+	["CastHeight"] = 8,
+	["SelectAlpha"] = 1.0,
 
 	["Expball"] = false,
 
@@ -230,34 +233,24 @@ local function GetDetailText(unit)
 
 end
 
+
 local function IsOnKillHealth(unit)
 	local CurHealth = UnitHealth(unit)
 	local MaxHealth = UnitHealthMax(unit)
 	return ((CurHealth/MaxHealth) < SavedData["KillPer"]/100);	
 end
 
--- Highlight / 高亮
-local function SetSelectionHighlight(unitFrame)
+
+local function IsPlayerself(unitFrame)
 	local unit = unitFrame.unit
-	if UnitIsUnit(unit, "target") and not UnitIsUnit(unit, "player") then
-		-- 高亮材质
-		-- unitFrame.Tarlight:Show()
-		-- 中央高光
-		--print (UnitName(unit))  name-server
-		unitFrame.selectionHighlight:Show()
-		unitFrame.selectionHighlight:SetVertexColor(1,1,1)
-		-- unitFrame.name:Show()
-		-- unitFrame.name:SetText(GetUnitName(unitFrame.unit))
-		-- 边框
-		unitFrame.healthBar.border:SetVertexColor(1,1,1,.6)
-	else
-		-- 高亮材质
-		-- unitFrame.Tarlight:Hide()
-		unitFrame.selectionHighlight:Hide()
-		-- 边框
-		unitFrame.healthBar.border:SetVertexColor(0,0,0,.6)
+	if unit then 
+		if (UnitIsPlayer(unit) and (GetUnitName(unit) == UnitName("player"))) then
+			return true
+		end
 	end
+	return false
 end
+
 
 -- elseif only patch one
 local function SetBarColor(frame)
@@ -267,6 +260,7 @@ local function SetBarColor(frame)
 	local _, _, _, _, _, id = strsplit("-", guid or "") 
 	local r, g, b, a = 0, 1, 0, .8
 
+	if IsPlayerself(frame) then return end
 	-- 玩家
 	if UnitIsPlayer(unit) then
 		local _, englishClass = UnitClass(unit)
@@ -304,43 +298,91 @@ local function SetBarColor(frame)
 	end
 end
 
+
 -- hooksecurefunc("CompactUnitFrame_OnUpdate", function(frame)
 -- 	print 'gui'
 -- end) 
 
+-- Highlight / 高亮
+local function SetSelectionHighlight(unitFrame)
+	local unit = unitFrame.unit
+	if UnitIsUnit(unit, "target") and not UnitIsUnit(unit, "player") then
+		-- 高亮材质
+		-- unitFrame.Tarlight:Show()
+		-- 中央高光
+		--print (UnitName(unit))  name-server
+		unitFrame.selectionHighlight:Show()
+		unitFrame.selectionHighlight:SetVertexColor(1,1,1)
+		-- unitFrame.name:Show()
+		-- unitFrame.name:SetText(GetUnitName(unitFrame.unit))
+		-- 边框
+		unitFrame.healthBar.border:SetVertexColor(1,1,1,.6)
+
+		unitFrame:SetAlpha(1)
+		unitFrame.castBar.Icon:SetAlpha(1)
+	else
+		-- 高亮材质
+		-- unitFrame.Tarlight:Hide()
+		unitFrame.selectionHighlight:Hide()
+		-- 边框
+		unitFrame.healthBar.border:SetVertexColor(0,0,0,.6)
+		if not IsPlayerself(unitFrame) then 
+			unitFrame:SetAlpha(SavedData["SelectAlpha"])
+		end
+		unitFrame.castBar.Icon:SetAlpha(SavedData["SelectAlpha"])
+	end
+end
+
+
 --血条数值
 local function SetBloodValue(unitFrame)
+	if IsPlayerself(unitFrame) then 
+		unitFrame.healthBar.value:Hide()
+		return 
+	end
+
 	unitFrame.healthBar.value:Show()
 	unitFrame.healthBar.value:SetText(GetDetailText(unitFrame.unit))
 end
 
 
 -- 窄施法条
-local function SetThinCastingBar(self)
+local function SetThinCastingBar(self, unitFrame)
 	if not SavedData["OriCast"] then
-		self.Icon.iconborder:Show()
-		self.around:Show()
-		self:SetHeight(C.CastbarHeight)
-		self.Icon:SetSize(C.CastBarIconSize, C.CastBarIconSize)
-		self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -2, 0)
-		self.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
-		self.BorderShield:SetAtlas("nameplates-InterruptShield")
-		self.BorderShield:SetSize(13, 15)
-		self.BorderShield:SetPoint("CENTER", self, "LEFT", 5,-0)
-		self:HookScript("OnUpdate", function ( ... )
-			self.Icon:Show()
-		end)
-		-- self:SetScript("OnSizeChanged", function ( ... )
-		-- 	self.Icon.iconborder:Show()
-		-- 	self.around:Show()
-		-- 	self:SetHeight(C.CastbarHeight)
-		-- 	self.Icon:SetSize(C.CastBarIconSize, C.CastBarIconSize)
-		-- 	self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -2, 0)
-		-- 	self.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
-		-- 	self.BorderShield:SetAtlas("nameplates-InterruptShield")
-		-- 	self.BorderShield:SetSize(13, 15)
-		-- 	self.BorderShield:SetPoint("CENTER", self, "LEFT", 5,-0)			
-		-- end)
+		if not self.ThinCast then 
+				self.Icon.iconborder:Show()
+				self.around:Show()
+				self:SetHeight(SavedData["CastHeight"])
+				self.Icon:SetSize(SavedData["CastHeight"] + 13, SavedData["CastHeight"] + 13)
+				self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -2, 0)
+				self.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
+				self.BorderShield:SetAtlas("nameplates-InterruptShield")
+				self.BorderShield:SetSize(13, 15)
+				self.BorderShield:SetPoint("CENTER", self, "LEFT", 5,-0)
+
+				self:HookScript("OnEvent", function ( ... )
+					self.Icon:Show()
+					if UnitIsUnit(unitFrame.unit, "target") and not UnitIsUnit(unitFrame.unit, "player") then  
+						self.Icon:SetAlpha(1)
+					else
+						self.Icon:SetAlpha(SavedData["SelectAlpha"])
+					end
+				end)
+				
+				self:SetScript("OnSizeChanged", function ( ... )
+					self.Icon.iconborder:Show()
+					self.around:Show()
+					self:SetHeight(SavedData["CastHeight"])
+					self.Icon:SetSize(SavedData["CastHeight"] + 13, SavedData["CastHeight"] + 13)
+					self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -2, 0)
+					self.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
+					self.BorderShield:SetAtlas("nameplates-InterruptShield")
+					self.BorderShield:SetSize(13, 15)
+					self.BorderShield:SetPoint("CENTER", self, "LEFT", 5,-0)			
+				end)
+
+				self.ThinCast = true
+		end
 	end
 end
 
@@ -353,6 +395,7 @@ local function SetBarTexture(unitFrame)
 		ClassNameplateManaBarFrame:SetStatusBarTexture("Interface\\AddOns\\Col\\media\\bar_knp")		
 	end
 end
+
 
 --名字
 local function SetBarName(unitFrame)
@@ -385,7 +428,7 @@ end
 local function On_NpRefreshOnce(unitFrame)
 	SetBarTexture(unitFrame)
 
-	SetThinCastingBar(unitFrame.castBar)
+	SetThinCastingBar(unitFrame.castBar, unitFrame)
 
 	SetBloodValue(unitFrame)
 	
@@ -397,49 +440,54 @@ local function On_NpRefreshOnce(unitFrame)
 end
 
 
-local function Event_NamePlatesFrame(self, event, ...)
+local function NamePlate_OnEvent(self, event, ...)
 	-- print (event)
 
 
-	local unit = self.displayedUnit
+	local arg1 = ...
 	-- 光环  -----------------------------------------------------------------------
 
 	-- if ( event == "UNIT_AURA" ) then
 	-- 	SetAura(self)
 
 	-- 仇恨 -----------------------------------------------------------------------
-	if (event == "UNIT_THREAT_LIST_UPDATE") then 		
-		SetBarColor(self)
-
-	-- 血量  -----------------------------------------------------------------------
-	elseif (event == "UNIT_HEALTH_FREQUENT") then
-		local CurHealth = UnitHealth(unit)
-		local MaxHealth = UnitHealthMax(unit)
-		self.healthBar:SetMinMaxValues(0,1)
-		self.healthBar:SetValue(CurHealth/MaxHealth)
-		SetBloodValue(self)
-
-		if SavedData["KillPer"] ~= 0 then  -- 检查斩杀线
-			SetBarColor(self)
-		end
-
-	-- 切目标  -----------------------------------------------------------------------
-	elseif (event == "PLAYER_TARGET_CHANGED") then 
+	if (event == "PLAYER_TARGET_CHANGED") then 		
 		SetSelectionHighlight(self)
+	end
+
+	if (arg1 == self.unit or arg1 == self.displayedUnit) then 
+	-- 血量  -----------------------------------------------------------------------
+		if (event == "UNIT_HEALTH_FREQUENT") then
+			local CurHealth = UnitHealth(arg1)
+			local MaxHealth = UnitHealthMax(arg1)
+			self.healthBar:SetMinMaxValues(0,1)
+			self.healthBar:SetValue(CurHealth/MaxHealth)
+			SetBloodValue(self)
+
+			if SavedData["KillPer"] ~= 0 then  -- 检查斩杀线
+				SetBarColor(self)
+			end
+
+		-- 切目标  -----------------------------------------------------------------------
+		elseif (event == "UNIT_THREAT_LIST_UPDATE") then 
+			SetBarColor(self)
+		elseif (event == "UNIT_NAME_UPDATE") then
+			SetBarName(self)
+		end
 	end
 end
 
 local function RegisterNamePlateEvents(unitFrame)
-	unitFrame:UnregisterAllEvents()
-	unitFrame:SetScript("OnEvent", Event_NamePlatesFrame)
 	unitFrame:RegisterEvent("UNIT_THREAT_LIST_UPDATE")
-	-- unitFrame:RegisterEvent("UNIT_HEALTH")
 	unitFrame:RegisterEvent("UNIT_HEALTH_FREQUENT")
 	unitFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
+	unitFrame:RegisterEvent("UNIT_NAME_UPDATE")
+	unitFrame:SetScript("OnEvent", NamePlate_OnEvent)
 	-- unitFrame:RegisterEvent("UNIT_AURA")
+	-- unitFrame:RegisterEvent("UNIT_HEALTH")
 end
 
-local function UpdateBuffs(self, unit, filter, showAll)
+local function UpdateBuffsRS(self, unit, filter, showAll)
 	if SavedData["AuraNum"] == 0 then return end
 	if not self.isActive then
 		for i = 1, BUFF_MAX_DISPLAY do
@@ -464,63 +512,65 @@ local function UpdateBuffs(self, unit, filter, showAll)
 			if buffIndex <= SavedData["AuraNum"] then 
 				local name, texture, count, debuffType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellId, _, _, _, nameplateShowAll = UnitAura(unit, i,filter);
 				if name then 
-					-- print (caster, spellId, name, count, canStealOrPurge)
+						-- print (caster, spellId, name, count, canStealOrPurge)
 
-				-----------------------------------------------------------
-				local flag = false
-				-- 默认过滤器
-				if SavedData["AuraDefault"] then 
-					flag = self:ShouldShowBuff(name, caster, nameplateShowPersonal, nameplateShowAll or showAll, duration) 
-				end
-
-				-- 白名单
-				if SavedData["AuraWhite"] then 
-					if SavedData["DctAura"][spellId] then 
-						flag = true end 
-				end
-
-				-- 只显示我
-				if SavedData["AuraOnlyMe"] then 
-					if not (caster == "player" or caster == "pet") then 
-						flag = false
-					end
-				end
-				-----------------------------------------------------------
-				if (flag) then
-					if (not self.buffList[buffIndex]) then
-						self.buffList[buffIndex] = CreateFrame("Frame", self:GetParent():GetName() .. "Buff" .. buffIndex, self, "NameplateBuffButtonTemplate");
-						self.buffList[buffIndex]:SetMouseClickEnabled(false);
-						self.buffList[buffIndex].layoutIndex = buffIndex;
-						self.buffList[buffIndex].align = "right"
-					end
-					local buff = self.buffList[buffIndex];
-					buff:SetID(i);
-					if not SavedData["OriAuraSize"] then 
-						buff:SetSize(SavedData["AuraSize"],SavedData["AuraSize"])
-						buff.Icon:SetPoint("TOPLEFT",buff,"TOPLEFT", 1, -1)
-						buff.Icon:SetPoint("BOTTOMRIGHT",buff,"BOTTOMRIGHT", -1, 1)
-						buff.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
-					end
-					buff.Icon:SetTexture(texture);
-
-					-- 层数 
-					if (count > 1) then
-						buff.CountFrame.Count:SetText(count);
-						buff.CountFrame.Count:Show();
-					else
-						buff.CountFrame.Count:Hide();
+					-----------------------------------------------------------
+					local flag = false
+					-- 默认过滤器
+					if SavedData["AuraDefault"] then 
+						flag = self:ShouldShowBuff(name, caster, nameplateShowPersonal, nameplateShowAll or showAll, duration) 
 					end
 
-					CooldownFrame_Set(buff.Cooldown, expirationTime - duration, duration, duration > 0, true);
-					buff.Cooldown:SetHideCountdownNumbers(not SavedData["AuraTimer"])
-
-					local regon = buff.Cooldown:GetRegions()
-					if regon.GetText then 
-						regon:SetFont(C.NameFont, SavedData["AuraNumSize"], nil)  --Default : 15 "OUTLINE"
+					-- 白名单
+					if SavedData["AuraWhite"] then 
+						if SavedData["DctAura"][spellId] then 
+							flag = true end 
 					end
 
-					buff:Show();
-					buffIndex = buffIndex + 1;
+					-- 只显示我
+					if SavedData["AuraOnlyMe"] then 
+						if not (caster == "player" or caster == "pet") then 
+							flag = false
+						end
+					end
+					-----------------------------------------------------------
+					if (flag) then
+						if (not self.buffList[buffIndex]) then
+							self.buffList[buffIndex] = CreateFrame("Frame", self:GetParent():GetName() .. "Buff" .. buffIndex, self, "NameplateBuffButtonTemplate");
+							self.buffList[buffIndex]:SetMouseClickEnabled(false);
+							self.buffList[buffIndex].layoutIndex = buffIndex;
+							self.buffList[buffIndex].align = "right";
+							if not SavedData["OriAuraSize"] then 
+								self.buffList[buffIndex]:SetSize(SavedData["AuraSize"],SavedData["AuraSize"])
+								self.buffList[buffIndex].Icon:SetPoint("TOPLEFT",self.buffList[buffIndex],"TOPLEFT", 1, -1)
+								self.buffList[buffIndex].Icon:SetPoint("BOTTOMRIGHT",self.buffList[buffIndex],"BOTTOMRIGHT", -1, 1)
+								self.buffList[buffIndex].Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
+							end
+							self.buffList[buffIndex].Cooldown:SetHideCountdownNumbers(not SavedData["AuraTimer"])
+							local regon = self.buffList[buffIndex].Cooldown:GetRegions()
+							if regon.GetText then 
+								regon:SetFont(C.NameFont, SavedData["AuraNumSize"], nil)  --Default : 15 "OUTLINE"
+							end
+						end
+
+						local buff = self.buffList[buffIndex];
+
+						buff:SetID(i);
+						buff.Icon:SetTexture(texture);
+
+						-- 层数 
+						if (count > 1) then
+							buff.CountFrame.Count:SetText(count);
+							buff.CountFrame.Count:Show();
+						else
+							buff.CountFrame.Count:Hide();
+						end
+
+						CooldownFrame_Set(buff.Cooldown, expirationTime - duration, duration, duration > 0, true);
+
+						buff:Show();
+						buffIndex = buffIndex + 1;
+					end
 				end
 			end
 		end
@@ -533,14 +583,14 @@ local function UpdateBuffs(self, unit, filter, showAll)
 	end
 	self:Layout();
 end
-end
+
 
 
 local function On_NpCreate(namePlate)
 	local NF = namePlate.UnitFrame	
 
-	-- 接管buff模块
-	NF.BuffFrame.UpdateBuffs = UpdateBuffs
+	-- -- 接管buff模块
+	NF.BuffFrame.UpdateBuffs = UpdateBuffsRS
 
 	-- buff位置
 	function NF.BuffFrame:UpdateAnchor()
@@ -569,6 +619,7 @@ local function On_NpCreate(namePlate)
 	NF.castBar.Icon.iconborder:Hide()
 	NF.castBar.around:Hide()
 
+	NF.castBar.iconWhenNoninterruptible = true
 	-- 名字
 	-- NF.name:SetFont(C.NameFont, C.NameTextSize, nil)
 	-- NF.name:SetTextColor(1,1,1)
@@ -608,9 +659,6 @@ local function SetUnit(unitFrame, unit)
 	unitFrame.unit = unit
 	unitFrame.displayedUnit = unit	 -- For vehicles
 	unitFrame.inVehicle = false
-
-	-- if UnitIsPlayer(unit) then return end
-
 	if ( unit ) then
 		RegisterNamePlateEvents(unitFrame)
 	else
@@ -635,7 +683,6 @@ function UpdateAllNameplates()
 	for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
 		local unitFrame = namePlate.UnitFrame
 		On_NpRefreshOnce(unitFrame)
-		unitFrame.BuffFrame:UpdateAnchor()
 	end	
 end
 
@@ -666,7 +713,7 @@ local function InitAndCvar()
 
 	SetCVar("nameplateMaxDistance", G_Distence)
 	SetCVar("nameplateSelectedScale", G_Select)
-	SetCVar("nameplateMinAlpha", G_Alpha)
+	-- SetCVar("nameplateMinAlpha", G_Alpha)
 	SetCVar("nameplateGlobalScale", G_GlobalScale)
 
 	-- 血条水平堆叠 预设：0.8
@@ -691,12 +738,10 @@ end
 
 local function NamePlates_OnEvent(self, event, ...)
 	if ( event == "NAME_PLATE_CREATED" ) then
-		local unit = ...
-		On_NpCreate(unit)		
+		On_NpCreate(...)		
 
 	elseif ( event == "NAME_PLATE_UNIT_ADDED" ) then
-		local unit = ...
-		On_NpAdd(unit)
+		On_NpAdd(...)
 
 	elseif ( event == "VARIABLES_LOADED" ) then
 		SetCVar("NamePlateHorizontalScale", 1.4);
@@ -706,8 +751,7 @@ local function NamePlates_OnEvent(self, event, ...)
 		UpdateAllNameplates()
 
 	elseif ( event == "NAME_PLATE_UNIT_REMOVED" ) then
-		local unit = ...
-		On_NpRemoved(unit)
+		On_NpRemoved(...)
 
 	-- elseif event == "RAID_TARGET_UPDATE" then
 
@@ -735,15 +779,14 @@ NamePlatesFrame:RegisterEvent("UNIT_FACTION")
 NamePlatesFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 
-
-
 SLASH_RELOADUI1 = "/rl"
 SlashCmdList.RELOADUI = ReloadUI
-
--- SLASH_FRAMESTK1 = "/fs"
+	
+-- SLASH_FRAMESTK1 = "/fs"	
 -- SlashCmdList.FRAMESTK = function()
 -- 	LoadAddOn('Blizzard_DebugTools')
 -- 	FrameStackTooltip_Toggle()
+	-- RefBuff()
 -- end
 
 -- SLASH_CPU1 = "/cpu"
@@ -786,12 +829,6 @@ local function BoomBall()
 	end
 end
 
-
--- SLASH_REE1 = "/bian"
--- SlashCmdList.REE = function()
--- 	UpdateAllNameplates()
--- end
-
 local boomFrame = CreateFrame("Frame")
 local timei = 0 
 boomFrame:SetScript("OnUpdate", function (self, elasped)
@@ -802,4 +839,30 @@ boomFrame:SetScript("OnUpdate", function (self, elasped)
 		timei = 0
 	end
 end)
+
+
+--配合gui部分做的界面刷新,不产生任何新逻辑
+------------------------------------------------
+function RefBuff()
+	for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+		local unitFrame = namePlate.UnitFrame
+		unitFrame.BuffFrame:UpdateAnchor()
+		if unitFrame.unit then 
+			local buff = unitFrame.BuffFrame
+			for i = 1, BUFF_MAX_DISPLAY do
+				if buff.buffList[i] then 
+					--光环大小
+					buff.buffList[i]:SetSize(SavedData["AuraSize"], SavedData["AuraSize"])
+					--计时器
+					buff.buffList[i].Cooldown:SetHideCountdownNumbers(not SavedData["AuraTimer"])
+					--计时器大小
+					local regon = buff.buffList[i].Cooldown:GetRegions()
+					if regon.GetText then 
+						regon:SetFont(C.NameFont, SavedData["AuraNumSize"], nil)  --Default : 15 "OUTLINE"
+					end					
+				end
+			end
+		end
+	end	
+end
 
