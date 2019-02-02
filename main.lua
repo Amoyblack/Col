@@ -349,6 +349,8 @@ end
 -- 窄施法条
 local function SetThinCastingBar(self, unitFrame)
 	if not SavedData["OriCast"] then
+		self.iconWhenNoninterruptible = false
+		self.Icon:Show()
 		if not self.ThinCast then 
 				self.Icon.iconborder:Show()
 				self.around:Show()
@@ -361,7 +363,6 @@ local function SetThinCastingBar(self, unitFrame)
 				self.BorderShield:SetPoint("CENTER", self, "LEFT", 5,-0)
 
 				self:HookScript("OnEvent", function ( ... )
-					self.Icon:Show()
 					if UnitIsUnit(unitFrame.unit, "target") and not UnitIsUnit(unitFrame.unit, "player") then  
 						self.Icon:SetAlpha(1)
 					else
