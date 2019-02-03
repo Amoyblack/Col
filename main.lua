@@ -409,6 +409,7 @@ local function SetBarName(unitFrame)
 		r, g, b, a = 1, 0, 0, 1	
 	end
 	unitFrame.name:SetTextColor(r, g, b, a)
+	unitFrame.name:SetFont(C.NameFont, 12, nil)
 
 	local name, server =  UnitName(unitFrame.unit)
 	if server then 
