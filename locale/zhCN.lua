@@ -17,7 +17,7 @@ ns.L = {
     Title5 = "姓名",
     Title6 = "光环",
     Title7 = "地下城助手",
-    Title8 = "其他",
+    Title8 = "其它",
 
     OriBarTexture = "源生材质",
     OriBarTextureTT = "启用源生的血条材质   |cff66CCFF重载生效|r",
@@ -142,7 +142,7 @@ ns.L = {
 
     Exp = "易爆球助手",
     ExpTT = "场上有易爆球时会自动隐藏其他所有单位的血条,直到场上没有易爆球为止",
-    ExpHelpBtn = "稍高cpu占用,不用时建议关闭",
+    ExpHelpBtn = "不用时建议关闭",
 
     CastHeight = "施法条宽度",
     CastHeight0 = "窄" ,
@@ -153,6 +153,12 @@ ns.L = {
     SelectAlpha0 = "透明" ,
     SelectAlpha1 = "不透明",
     SelectAlphaTT = "非当前目标的血条透明度",
+
+    CenterDetail = "血量居中",
+    CenterDetailTT = "居中显示血量   |cff66CCFF重载生效|r",
+
+    Arrow = "选中箭头",
+    ArrowTT = "在选中单位的血条右侧显示一个箭头",
 
     UpdateInfo = "检测到你已更新版本，所有设置已还原为预设值",
     UpdateVersion = "当前版本",

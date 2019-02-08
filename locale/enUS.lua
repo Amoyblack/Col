@@ -140,7 +140,7 @@ dctLanguageDefault = {
 
     Exp = "Explosive Helper",
     ExpTT = "When there are explosive balls on the field, the bloodbar of all other units will be automatically hidden until there is no explosive ball on the field.",
-    ExpHelpBtn = "Slightly high cpu usage, it is recommended to close when not in use",
+    ExpHelpBtn = "it's'recommended to close when you don't use it",
 
     CastHeight = "Castbar Width",
     CastHeight0 = "narrow" ,
@@ -151,6 +151,12 @@ dctLanguageDefault = {
     SelectAlpha0 = "transparency" ,
     SelectAlpha1 = "opaque",
     SelectAlphaTT = "Transparency of non-current target's Nameplate",
+
+    CenterDetail = "Center Blood Value",
+    CenterDetailTT = "Percentage/Value shows on the center of blood bars   |cff66CCFFtake effect after /reload|r",
+
+    Arrow = "Selected Arrow",
+    ArrowTT = "Display an arrow to the right of the blood bar of the selected unit",
 
     UpdateInfo = "Detected that you have updated the version, all settings have been reset to default values",
     UpdateVersion = "Current Version",

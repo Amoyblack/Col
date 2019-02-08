@@ -100,7 +100,7 @@ end
 local function newLine(createframe, anchroframe, offx, offy)
 	local line = createframe:CreateTexture(nil, "BACKGROUND")
 	line:SetColorTexture(.4,.4,.4,.8);
-	line:SetSize(570, 1)
+	line:SetSize(570, 1.5)
 	line:SetPoint("BOTTOMLEFT", anchroframe, "BOTTOMLEFT", offx, offy)
 	return line
 end
@@ -287,6 +287,7 @@ local function CreatePanel(frame)
 		child.Gap3 = newFont(0, -163 , child, "TOPLEFT", child.Gap2, "TOPLEFT", L["Title3"], 22) 
 		child.Line3 = newLine(child, child.Gap3, 0, -4)
 		CreateHealthValueDropDown(child, child.Line3, 0, -10)
+		child.CenterDetail = newCheckbox(250, -35, child, L["CenterDetail"], L["CenterDetailTT"], child.Line3, "CenterDetail")
 
 		--血条染色
 		child.Gap4 = newFont(0, -90 , child, "TOPLEFT", child.Gap3, "TOPLEFT", L["Title4"], 22) 
@@ -337,10 +338,12 @@ local function CreatePanel(frame)
 		--其他
 		child.Gap8 = newFont(0, -100 , child, "TOPLEFT", child.Gap7, "TOPLEFT", L["Title8"], 22) 
 		child.Line8 = newLine(child, child.Gap8, 0, -4)
-		child.CastHeight = newSlider(0, -40, "pCastHeight", 5, 20, 5, 1, L["CastHeight0"], L["CastHeight1"], L["CastHeight"], L["CastHeightTT"], child.Line8, child, "CastHeight", "%.0f" )
+		child.CastHeight = newSlider(0, -40, "pCastHeight", 5, 12, 5, 1, L["CastHeight0"], L["CastHeight1"], L["CastHeight"], L["CastHeightTT"], child.Line8, child, "CastHeight", "%.0f" )
 		child.SelectAlpha = newSlider(200, -40, "pSelectAlpha", 0.2, 1.0, 1.0, 0.1, L["SelectAlpha0"], L["SelectAlpha1"], L["SelectAlpha"], L["SelectAlphaTT"], child.Line8, child, "SelectAlpha", "%.1f" )
 		child.SelectAlpha:HookScript("OnValueChanged", function ( ... ) UpdateAllNameplates() end)
-
+		child.Arrow = newCheckbox(400, -60, child, L["Arrow"], L["ArrowTT"], child.Line8, "ShowArrow")
+		child.Arrow:HookScript("OnClick", function ( ... ) UpdateAllNameplates() end)
+		
 		child.Version = newFont(-20, 20 , child, "BOTTOMRIGHT", child, "BOTTOMRIGHT", L["Version"]..version, 20) 
 	end		
 end

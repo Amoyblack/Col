@@ -20,10 +20,10 @@ local C = ns.C
 local L = ns.L
 
 DefaultData = {
-	["Version"] = "8.1.041",
-	["OriBar"] = false,
-	["OriCast"] = false,
-	["OriElite"] = false,
+	["Version"] = "8.1.042",
+	["OriBar"] = true,
+	["OriCast"] = true,
+	["OriElite"] = true,
 	["BarBgCol"] = false,
 
 	["DetailType"] = 2,
@@ -40,9 +40,9 @@ DefaultData = {
 	["KillRGBg"] = 0.75,
 	["KillRGBb"] = 0.15,
 
-	["OriName"] = false,
+	["OriName"] = true,
 	["NameWhite"] = true,
-	["NameSize"] = 12,
+	["NameSize"] = 14,
 
 	["AuraDefault"] = true,
 	["AuraWhite"] = true,
@@ -56,6 +56,8 @@ DefaultData = {
 
 	["CastHeight"] = 8,
 	["SelectAlpha"] = 1.0,
+	["CenterDetail"] = true,
+	["ShowArrow"] = false,
 
 	["Expball"] = false,
 
@@ -228,7 +230,7 @@ local function GetDetailText(unit)
 		return fCur
 
 	elseif iType == 4 then --数值/百分比
-		return fCur.."/"..fPer
+		return fCur.." / "..fPer
 	end
 
 end
@@ -269,7 +271,7 @@ local function SetBarColor(frame)
 
 	-- 灰名
 	elseif IsTapDenied(frame) then
-		r, g, b, a = .5, .5, .5 , .8
+		r, g, b, a = .8, .8, .8 , 1
 
 	-- 易爆球
 	elseif (id == "120651") then 
@@ -307,8 +309,11 @@ end
 local function SetSelectionHighlight(unitFrame)
 	local unit = unitFrame.unit
 	if UnitIsUnit(unit, "target") and not UnitIsUnit(unit, "player") then
-		-- 高亮材质
-		-- unitFrame.Tarlight:Show()
+		if SavedData["ShowArrow"] then 
+			unitFrame.healthBar.curTarget:Show()
+		else
+			unitFrame.healthBar.curTarget:Hide()
+		end
 		-- 中央高光
 		--print (UnitName(unit))  name-server
 		unitFrame.selectionHighlight:Show()
@@ -321,8 +326,7 @@ local function SetSelectionHighlight(unitFrame)
 		unitFrame:SetAlpha(1)
 		unitFrame.castBar.Icon:SetAlpha(1)
 	else
-		-- 高亮材质
-		-- unitFrame.Tarlight:Hide()
+		unitFrame.healthBar.curTarget:Hide()
 		unitFrame.selectionHighlight:Hide()
 		-- 边框
 		unitFrame.healthBar.border:SetVertexColor(0,0,0,.6)
@@ -401,15 +405,16 @@ end
 --名字
 local function SetBarName(unitFrame)
 	local r,g,b,a = 1,1,1,1
-	-- 黄名
-	if UnitReaction(unitFrame.unit, "player") == 4 then --中立
+	if IsTapDenied(unitFrame) then --灰名
+		r, g, b, a = .6, .6, .6, 1
+	elseif UnitReaction(unitFrame.unit, "player") == 4 then --中立
 		r, g, b, a = 1, 1, 0, 1
-	-- 红名
 	elseif UnitReaction(unitFrame.unit, "player") <= 3 then  --敌对
 		r, g, b, a = 1, 0, 0, 1	
 	end
+
 	unitFrame.name:SetTextColor(r, g, b, a)
-	unitFrame.name:SetFont(C.NameFont, 12, nil)
+	unitFrame.name:SetFont(C.NameFont, 16, nil)
 
 	local name, server =  UnitName(unitFrame.unit)
 	if server then 
@@ -634,22 +639,18 @@ local function On_NpCreate(namePlate)
 	NF.healthBar.value:SetShadowOffset(.5,-.5)
 	NF.healthBar.value:SetTextColor(1,1,1)
 	NF.healthBar.value:Hide()
-	if C.CenterDetail then
+	if SavedData["CenterDetail"] then
 		NF.healthBar.value:SetPoint("BOTTOM", NF.healthBar, "CENTER", 0, -4)
 	else
 		NF.healthBar.value:SetPoint("BOTTOMRIGHT", NF.healthBar, "RIGHT", 0, -4)
 	end
 
-
-	-- 选中高亮
-	-- NF.Tarlight = NF:CreateTexture("targethighlight", "BACKGROUND", nil, -1)
-	-- NF.Tarlight:SetTexture("Interface\\AddOns\\Col\\media\\light")
-	-- NF.Tarlight:SetPoint("BOTTOMLEFT", NF.healthBar, "LEFT", 7, 6)
-	-- NF.Tarlight:SetPoint("BOTTOMRIGHT", NF.healthBar, "RIGHT", -7, 13)
-	-- NF.Tarlight:SetVertexColor(0, 0.65, 1, 0.9)
-	-- NF.Tarlight:SetTexCoord(0, 1, 1, 0)
-	-- NF.Tarlight:SetBlendMode("ADD")
-	-- NF.Tarlight:Hide()
+	-- 箭头
+	NF.healthBar.curTarget = NF.healthBar:CreateTexture("ArrowH", "OVERLAY")
+	NF.healthBar.curTarget:SetSize(50, 50)
+	NF.healthBar.curTarget:SetTexture("Interface\\AddOns\\Col\\media\\arrorH")
+	NF.healthBar.curTarget:SetPoint("LEFT", NF.healthBar, "RIGHT", 0, 0)
+	NF.healthBar.curTarget:Hide()
 end
 
 local function UnregisterNamePlateEvents(unitFrame)

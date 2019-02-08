@@ -5,7 +5,6 @@ ns.C = {}
 local C = ns.C
 
 C.NameFont = STANDARD_TEXT_FONT		--名字字体 NameFont
-C.CenterDetail = false              --居中显示血量与百分比  Percentage/Value shows on the center of blood bars
 
 -- 仇恨颜色  Threat Color
 -- 参数 r,g,b  格式: (255,0,255) --> (1,0,1)
