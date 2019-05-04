@@ -42,9 +42,9 @@ dctLanguageDefault = {
     CvarHelp = "CVar can be understood as the presence of some settings on the Blizzard server. \n\nThis means that even you disable this addon, the following CVar settings will continue effect.",
 
     SelectScale = "Select Scale",
-    SelectScale0 = "Disable scale",
-    SelectScale1 = "Enable scale",
-    SelectScaleTT = "Scale targeting Nameplate.",
+    SelectScale0 = "smaller",
+    SelectScale1 = "bigger",
+    SelectScaleTT = "Scale Selected Nameplate.",
 
     Alpha = "Fade out",
     Alpha0 = "Enable fade out",
@@ -52,50 +52,50 @@ dctLanguageDefault = {
     AlphaTT = "Fade out Nameplates outside more then 10 yards.",
 
     Distance = "Display Range",
-    Distance0 = "close",
+    Distance0 = "near",
     Distance1 = "far",
-    DistanceTT = "How many yards to show Nameplates.",
+    DistanceTT = "How many yards far away to show Nameplates.",
 
     GlobalScale = "Global Scale",
     GlobalScale0 = "smaller",
     GlobalScale1 = "bigger",
-    GlobalScaleTT = "The Global Scale of Nameplates",
+    GlobalScaleTT = "The Global Scale for Nameplates",
 
     OverlapV = "Vertical Overlap",
-    OverlapV0 = "close",
-    OverlapV1 = "far",
+    OverlapV0 = "tight",
+    OverlapV1 = "relax",
     OverlapVTT = "Vertical overlap between multiple Nameplates",
 
     OverlapH = "Horizontal Overlap",
-    OverlapH0 = "close",
-    OverlapH1 = "far",
+    OverlapH0 = "tight",
+    OverlapH1 = "relax",
     OverlapHTT = "Horizontal overlap between multiple Nameplates",
 
     SlayLine = "Execute (%)",
-    SlayLine0 = "close",
-    SlayLine1 = "high Execute",
+    SlayLine0 = "Disable",
+    SlayLine1 = "high",
     SlayLineTT = "Set a Execute value, 0 means Disable",
 
     SlayColtext = "Execute Color:",
     SlayColSelect = "Color: ",
-    SlayCol = "|cFFFFD700 Click choose: |r",
+    SlayCol = "|cFFFFD700 Click to choose: |r",
 
     OriName = "Source Name Style",
     OriNameTT = "Use Blizzard's source Name color and font size style.",
 
-    WhiteName = "White Name",
-    WhiteNameTT = "When the color of the bloodbar is increased, it is recommended to use white to display the global name to keep the interface neat and tidy. (does not take effect when the source name style is turned on.)",
+    WhiteName = "White Colored Name",
+    WhiteNameTT = "Colored all nameplate's name as white, it will make nameplates neat, much better to see when many nameplates on the screen. (Won't enable when you're using Source Name Style)",
 
-    NameSize = "NameFont Size",
-    NameSize0 = "small",
-    NameSize1 = "large",
-    NameSizeTT = "The name font size (does not take effect when the source name style is turned on.)",
+    NameSize = "Name Font Size",
+    NameSize0 = "smaller",
+    NameSize1 = "larger",
+    NameSizeTT = "Name font size. (Won't enable when you're using Source Name Style)",
 
     AuraText1 = "Auras need to show:",
-    AuraHelpBtn1 = "The auras of the whitelist will also be displayed on the personal resource bar\n\nTake advantage of it that can monitor Skill Buffs/Items etc..\n\nSuch as the number of Mage's icicles stored ; Bloodlust duration; Trinket trigger, etc.",
+    AuraHelpBtn1 = "Aura whitelist will also be displayed on Personal Resource Bar. \n\nTake advantage of it that can monitor Skill Buffs/Items etc..\n\nSuch as the number of Mage's icicles stored ; Bloodlust duration; Trinket trigger, etc.",
 
-    AuraDeault = "BlzDefault",
-    AuraDeaultTT = "Auras that Blizzard default displaying",
+    AuraDeault = "Default list",
+    AuraDeaultTT = "Default aura whitelist by Blizzard",
 
     AuraWL = "WhiteList",
     AuraWLTT = "Auras setted by the WhiteList",
@@ -115,7 +115,7 @@ dctLanguageDefault = {
     AuraNum1 = "many",
     AuraNumTT = "Max number of the auras can display",
 
-    OriAura = "SourceAuraStyle",
+    OriAura = "Source Aura style",
     OriAuraTT = "Use Blizzard default auras's style rather than a customizable square icon style   |cff66CCFFtake affect after /reload|r",
 
     AuraSize = "AuraSize",
