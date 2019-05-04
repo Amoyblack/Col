@@ -131,21 +131,21 @@ dctLanguageDefault = {
     CounterSize1 = "big",
     CounterSizeTT = "Aura timer counter text size",
 
-    AuraInfo = "Whitelist not only affects the auras on Nameplates, but also Personal Resourse Bar. \n\nAuras means the debuff/buff from Skill, Item, Azerit, Scenes ..etc",
-    AuraHelpBtn2 = "Input an aura ID \n\nAdd button can add it to Whitelist, Remove button can remove it from Whitelist\n\nCurrently supports up to 20 auras",
+    AuraInfo = "Whitelist dosn't only affects the auras on Nameplates, but also Personal Resourse Bar.",
+    AuraHelpBtn2 = "Add an aura ID \n\n Remeber click Add button after you key-in an ID.\n\nCurrently supports up to 20 auras.",
     AuraID = "|cFFFFD700 Aura ID |r",
     AuraIDTT = "Aura ID:",
     AddBtn = "Add--> ",
     RemoveBtn = " Remove<--",
 
     Exp = "Explosive Helper",
-    ExpTT = "When there're explosive balls spawn, all of other nameplates will be hidden until there is no more explosive ball alive.",
+    ExpTT = "When Explosives spawn, all of other nameplates will be hidden until there is no more Explosives alive.",
     ExpHelpBtn = "Suggest disable this option when you don't use it",
 
     CastHeight = "Castbar Width",
     CastHeight0 = "narrow" ,
     CastHeight1 = "wide",
-    CastHeightTT = "This item does not take effect when the Source Castbar is turned on.",
+    CastHeightTT = "Won't enable when you're using Source Castbar style",
 
     SelectAlpha = "Transparency",
     SelectAlpha0 = "transparency" ,
@@ -153,7 +153,7 @@ dctLanguageDefault = {
     SelectAlphaTT = "Transparency of non-current target's Nameplate",
 
     CenterDetail = "Text in Center",
-    CenterDetailTT = "Show health value in nameplate center.   |cff66CCFFneed /reload|r",
+    CenterDetailTT = "Show health value in nameplate center.   |cff66CCFFNeed /reload|r",
 
     Arrow = "Selected Arrow",
     ArrowTT = "Display an arrow at nameplate right when you selected a unit",
