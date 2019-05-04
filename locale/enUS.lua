@@ -18,16 +18,16 @@ dctLanguageDefault = {
     Title8 = "Others",
 
     OriBarTexture = "Source StatusBar Texture",
-    OriBarTextureTT = "Use Blizzard's Default StatusBar Texture.  |cff66CCFFNeed /reload|r",
+    OriBarTextureTT = "Use Default StatusBar Texture by Blizzard.  |cff66CCFFNeed /reload|r",
 
     OriCastBar = "Source CastBar",
-    OriCastBarTT = "Use Blizzard's Default Castbar Style.   |cff66CCFFNeed /reload|r",
+    OriCastBarTT = "Use Default Castbar Style Blizzard.   |cff66CCFFNeed /reload|r",
 
     OriEliteIcon = "Source Elite NPC Icon",
-    OriEliteIconTT = "Use Blizzard's Default Icon for Elite NPC.   |cff66CCFFNeed /reload|r",
+    OriEliteIconTT = "Use Default Icon for Elite NPC by Blizzard.   |cff66CCFFNeed /reload|r",
 
     BgCol = "HealthBar Background Color",
-    BgColTT = "Draw health bar background (loss health part) as a multiplier basic on health bar color, instead black background.",
+    BgColTT = "Draw health bar background (health loss part) as a multiplier color which basic on health bar color, instead black background.",
 
     Omen3text = "Threat Color",
     Omen3 = "Enable Threat Color",
@@ -81,7 +81,7 @@ dctLanguageDefault = {
     SlayCol = "|cFFFFD700 Click to choose: |r",
 
     OriName = "Source Name Style",
-    OriNameTT = "Use Blizzard's source Name color and font size style.",
+    OriNameTT = "Use source Name color and font size style by Blizzard.",
 
     WhiteName = "White Colored Name",
     WhiteNameTT = "Colored all nameplate's name as white, it will make nameplates neat, much better to see when many nameplates on the screen. (Won't enable when you're using Source Name Style)",
