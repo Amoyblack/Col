@@ -139,8 +139,8 @@ dctLanguageDefault = {
     RemoveBtn = "Remove<--",
 
     Exp = "Explosive Helper",
-    ExpTT = "When there are explosive balls on the field, the bloodbar of all other units will be automatically hidden until there is no explosive ball on the field.",
-    ExpHelpBtn = "it's'recommended to close when you don't use it",
+    ExpTT = "When there're explosive balls spawn, all of other nameplates will be hidden until there is no more explosive ball alive.",
+    ExpHelpBtn = "Suggest disable this option when you don't use it",
 
     CastHeight = "Castbar Width",
     CastHeight0 = "narrow" ,
@@ -152,13 +152,13 @@ dctLanguageDefault = {
     SelectAlpha1 = "opaque",
     SelectAlphaTT = "Transparency of non-current target's Nameplate",
 
-    CenterDetail = "Center Blood Value",
-    CenterDetailTT = "Percentage/Value shows on the center of blood bars   |cff66CCFFtake effect after /reload|r",
+    CenterDetail = "Text in Center",
+    CenterDetailTT = "Show health value in nameplate center.   |cff66CCFFneed /reload|r",
 
     Arrow = "Selected Arrow",
-    ArrowTT = "Display an arrow to the right of the blood bar of the selected unit",
+    ArrowTT = "Display an arrow at nameplate right when you selected a unit",
 
-    UpdateInfo = "Detected that you have updated the version, all settings have been reset to default values",
+    UpdateInfo = "Detected that you have updated to newest version, all settings have been reset to default values",
     UpdateVersion = "Current Version",
 }
 
