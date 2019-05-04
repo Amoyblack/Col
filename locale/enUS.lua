@@ -42,8 +42,8 @@ dctLanguageDefault = {
     CvarHelp = "CVar can be understood as the presence of some settings on the Blizzard server. \n\nThis means that even you disable this addon, the following CVar settings will continue effect.",
 
     SelectScale = "Select Scale",
-    SelectScale0 = "smaller",
-    SelectScale1 = "bigger",
+    SelectScale0 = "small",
+    SelectScale1 = "big",
     SelectScaleTT = "Scale Selected Nameplate.",
 
     Alpha = "Fade out",
@@ -57,8 +57,8 @@ dctLanguageDefault = {
     DistanceTT = "How many yards far away to show Nameplates.",
 
     GlobalScale = "Global Scale",
-    GlobalScale0 = "smaller",
-    GlobalScale1 = "bigger",
+    GlobalScale0 = "small",
+    GlobalScale1 = "big",
     GlobalScaleTT = "The Global Scale for Nameplates",
 
     OverlapV = "Vertical Overlap",
@@ -73,7 +73,7 @@ dctLanguageDefault = {
 
     SlayLine = "Execute (%)",
     SlayLine0 = "Disable",
-    SlayLine1 = "high",
+    SlayLine1 = "Max",
     SlayLineTT = "Set a Execute value, 0 means Disable",
 
     SlayColtext = "Execute Color:",
@@ -87,56 +87,56 @@ dctLanguageDefault = {
     WhiteNameTT = "Colored all nameplate's name as white, it will make nameplates neat, much better to see when many nameplates on the screen. (Won't enable when you're using Source Name Style)",
 
     NameSize = "Name Font Size",
-    NameSize0 = "smaller",
-    NameSize1 = "larger",
+    NameSize0 = "small",
+    NameSize1 = "large",
     NameSizeTT = "Name font size. (Won't enable when you're using Source Name Style)",
 
     AuraText1 = "Auras need to show:",
-    AuraHelpBtn1 = "Aura whitelist will also be displayed on Personal Resource Bar. \n\nTake advantage of it that can monitor Skill Buffs/Items etc..\n\nSuch as the number of Mage's icicles stored ; Bloodlust duration; Trinket trigger, etc.",
+    AuraHelpBtn1 = "Aura whitelist will also be displayed on Personal Resource Bar. \n\nCan monitor skill/item buff etc. if you wnat. \n\nSuch as Mage's icicles stored,Bloodlust duration and Trinket trigger.",
 
     AuraDeault = "Default list",
-    AuraDeaultTT = "Default aura whitelist by Blizzard",
+    AuraDeaultTT = "Default aura whitelist by Blizzard.",
 
     AuraWL = "WhiteList",
-    AuraWLTT = "Auras setted by the WhiteList",
+    AuraWLTT = "add spell by edit Whitelist.",
 
-    AuraOnlyMe = "My Auras Only",
-    AuraOnlyMeTT = "Show the auras from me and my pet only ",
+    AuraOnlyMe = "Self Only",
+    AuraOnlyMeTT = "Show only auras cast by self or pets.",
 
     AuraText2 = "Auras Style: ",
 
-    AuraHeight = "AuraHeight",
-    AuraHeight0 = "low",
-    AuraHeight1 = "high",
-    AuraHeightTT = "The height between the bloodbar and the auras",
+    AuraHeight = "Aura space",
+    AuraHeight0 = "tight",
+    AuraHeight1 = "relax",
+    AuraHeightTT = "The space between Health bar and aura frame",
 
-    AuraNum = "AuraNumber",
-    AuraNum0 = "Don't Show",
-    AuraNum1 = "many",
-    AuraNumTT = "Max number of the auras can display",
+    AuraNum = "Aura Number",
+    AuraNum0 = "Hide",
+    AuraNum1 = "max",
+    AuraNumTT = "how many aura display.",
 
-    OriAura = "Source Aura style",
-    OriAuraTT = "Use Blizzard default auras's style rather than a customizable square icon style   |cff66CCFFtake affect after /reload|r",
+    OriAura = "Source Icon style",
+    OriAuraTT = "Use rectangle icon style by Blizzard, instead a customizable square icon style.   |cff66CCFFNeed /reload|r",
 
-    AuraSize = "AuraSize",
-    AuraSize0 = "small",
-    AuraSize1 = "big",
-    AuraSizeTT = "Aura icons Zooming (Not change Blizzard default auras' style icon size)",
+    AuraSize = "Aura Size",
+    AuraSize0 = "smaller",
+    AuraSize1 = "bigger",
+    AuraSizeTT = "Aura icons size (Won't enable when you're using Source Icon style)",
 
-    Counter = "Turn on Timer",
-    CounterTT = "Show auras's timer",
+    Counter = "Enable Timer",
+    CounterTT = "Show aura timer",
 
-    CounterSize = "Timer Size",
+    CounterSize = "Timer Text Size",
     CounterSize0 = "small",
     CounterSize1 = "big",
-    CounterSizeTT = "Zooming of the timer counter",
+    CounterSizeTT = "Aura timer counter text size",
 
-    AuraInfo = "Whitelist not only affects the auras on blood bars, but also personal resourse bar \n\nAuras means the debuff/buff from Skill, Item, Azerit, Scenes ..etc",
+    AuraInfo = "Whitelist not only affects the auras on Nameplates, but also Personal Resourse Bar. \n\nAuras means the debuff/buff from Skill, Item, Azerit, Scenes ..etc",
     AuraHelpBtn2 = "Input an aura ID \n\nAdd button can add it to Whitelist, Remove button can remove it from Whitelist\n\nCurrently supports up to 20 auras",
     AuraID = "|cFFFFD700 Aura ID |r",
     AuraIDTT = "Aura ID:",
-    AddBtn = "Add-->",
-    RemoveBtn = "Remove<--",
+    AddBtn = "Add--> ",
+    RemoveBtn = " Remove<--",
 
     Exp = "Explosive Helper",
     ExpTT = "When there're explosive balls spawn, all of other nameplates will be hidden until there is no more explosive ball alive.",
