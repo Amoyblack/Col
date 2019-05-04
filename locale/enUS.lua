@@ -2,36 +2,36 @@
 local _, ns = ...
 
 dctLanguageDefault = {
-    MenuBasis = "Basis",
+    MenuBasis = "General",
     MenuWhiteList = "WhiteList",
-    TitleBasis = "RsPlates Nameplate - Basis Options",
-    TitleWhiteList = "Edit WhiteList",
+    TitleBasis = "RsPlates Nameplate - General Options",
+    TitleWhiteList = "WhiteList Editor",
     Version = "Version - ",
 
     Title1 = "Style",
     Title2 = "CVars",
-    Title3 = "Blood Value",
-    Title4 = "Bar Color",
+    Title3 = "Health Text",
+    Title4 = "Colors",
     Title5 = "Name",
-    Title6 = "Aura",
+    Title6 = "Auras",
     Title7 = "Dungeon Helper",
     Title8 = "Others",
 
-    OriBarTexture = "SourceBarTexture",
-    OriBarTextureTT = "Use BlizzardDefault Bloodbar Texture  |cff66CCFFtake effect after /reload|r",
+    OriBarTexture = "Source StatusBar Texture",
+    OriBarTextureTT = "Use Blizzard's Default StatusBar Texture.  |cff66CCFFNeed /reload|r",
 
-    OriCastBar = "SourceCastBar",
-    OriCastBarTT = "Use BlizzardDefault Castbar Style   |cff66CCFFtake effect after /reload|r",
+    OriCastBar = "Source CastBar",
+    OriCastBarTT = "Use Blizzard's Default Castbar Style.   |cff66CCFFNeed /reload|r",
 
-    OriEliteIcon = "SourceEliteNpcIcon",
-    OriEliteIconTT = "Use BlizzardDefault Icon for Elite Npc   |cff66CCFFtake effect after /reload|r",
+    OriEliteIcon = "Source Elite NPC Icon",
+    OriEliteIconTT = "Use Blizzard's Default Icon for Elite NPC.   |cff66CCFFNeed /reload|r",
 
-    BgCol = "Bloodbar Background Color",
-    BgColTT = "Render the bloodbar background color(the empty part of the bloodbar) with the color of the bloodbar itself, not the black",
+    BgCol = "HealthBar Background Color",
+    BgColTT = "Draw health bar background (loss health part) as a multiplier basic on health bar color, instead black background.",
 
-    Omen3text = "ThreatColor",
-    Omen3 = "Turn on ThreatColor",
-    Omen3TT = "Different threat will change the color of blood bars:\n\n|cff1AB3E9blue|r:low threat, safe \n|cff661AE9purple|r:high threat,OT soon\n|cffE91AE9red|r:extre high threat, already OT(gain threat)",
+    Omen3text = "Threat Color",
+    Omen3 = "Enable Threat Color",
+    Omen3TT = "Show threat Status as different color.\n\n|cff1AB3E9Blue|r: low threat, safe \n|cff661AE9Purple|r: high threat,OT soon\n|cffE91AE9red|r:extre high threat, already OT(gain threat)",
 
     Health = "Blood : ",
     HealthValue = "Value",
