@@ -4,8 +4,8 @@ local _, ns = ...
 dctLanguageDefault = {
     MenuBasis = "General",
     MenuWhiteList = "WhiteList",
-    TitleBasis = "RsPlates Nameplate - General Options",
-    TitleWhiteList = "WhiteList Editor",
+    TitleBasis = "RsPlates - General Options",
+    TitleWhiteList = "WhiteList Spell Editor",
     Version = "Version - ",
 
     Title1 = "Style",
@@ -17,21 +17,21 @@ dctLanguageDefault = {
     Title7 = "Dungeon Helper",
     Title8 = "Others",
 
-    OriBarTexture = "Source StatusBar Texture",
-    OriBarTextureTT = "Use Default StatusBar Texture by Blizzard.  |cff66CCFFNeed /reload|r",
+    OriBarTexture = "Source Bar Texture",
+    OriBarTextureTT = "Use Default StatusBar Texture by Blizzard. |cff66CCFFNeed /reload.|r",
 
     OriCastBar = "Source CastBar",
-    OriCastBarTT = "Use Default Castbar Style Blizzard.   |cff66CCFFNeed /reload|r",
+    OriCastBarTT = "Use Default Castbar Style Blizzard. |cff66CCFFNeed /reload.|r",
 
     OriEliteIcon = "Source Elite NPC Icon",
-    OriEliteIconTT = "Use Default Icon for Elite NPC by Blizzard.   |cff66CCFFNeed /reload|r",
+    OriEliteIconTT = "Use Default Icon for Elite NPC by Blizzard. |cff66CCFFNeed /reload.|r",
 
     BgCol = "HealthBar Background Color",
-    BgColTT = "Draw health bar background (health loss part) as a multiplier color which basic on health bar color, instead black background.",
+    BgColTT = "Draw HealthBar background (health loss part) as a multiplier color which basic on HealthBar color, instead black background.",
 
-    Omen3text = "Threat Color",
+    Omen3text = "Threat",
     Omen3 = "Enable Threat Color",
-    Omen3TT = "Show threat Status as different color.\n\n|cff1AB3E9Blue|r: low threat, safe. \n|cff661AE9Purple|r: high threat, will OT soon. \n|cffE91AE9Red|r: high threat, gain threat/OT already.",
+    Omen3TT = "Show threat Status as different color.\n\n|cff1AB3E9Blue|r: low threat, safe.\n|cff661AE9Purple|r: higher threat than tank but didn't aggro.\n|cffE91AE9Red|r: aggro.",
 
     Health = "Health Text",
     HealthValue = "Value",
@@ -76,7 +76,7 @@ dctLanguageDefault = {
     SlayLine1 = "Max",
     SlayLineTT = "Set a Execute value, 0 means Disable",
 
-    SlayColtext = "Execute Color:",
+    SlayColtext = "Execute",
     SlayColSelect = "Color: ",
     SlayCol = "|cFFFFD700 Click to choose: |r",
 
@@ -92,18 +92,18 @@ dctLanguageDefault = {
     NameSizeTT = "Name font size. (Won't enable when you're using Source Name Style)",
 
     AuraText1 = "Auras need to show:",
-    AuraHelpBtn1 = "Aura whitelist will also be displayed on Personal Resource Bar. \n\nCan monitor skill/item buff etc. if you wnat. \n\nSuch as Mage's icicles stored,Bloodlust duration and Trinket trigger.",
+    AuraHelpBtn1 = "Aura whitelist will also be displayed on Personal Resource Bar. You can monitor skill/item buff etc if you need, such as Mage's icicles stored, Bloodlust duration, Trinket trigger or other else.",
 
     AuraDeault = "Default list",
     AuraDeaultTT = "Default aura whitelist by Blizzard.",
 
     AuraWL = "WhiteList",
-    AuraWLTT = "add spell by edit Whitelist.",
+    AuraWLTT = "Custom whitelist. Edit additional spell id in whitelist editor.",
 
     AuraOnlyMe = "Self Only",
     AuraOnlyMeTT = "Show only auras cast by self or pets.",
 
-    AuraText2 = "Auras Style: ",
+    AuraText2 = "Auras Style",
 
     AuraHeight = "Aura space",
     AuraHeight0 = "tight",
@@ -113,15 +113,15 @@ dctLanguageDefault = {
     AuraNum = "Aura Number",
     AuraNum0 = "Hide",
     AuraNum1 = "max",
-    AuraNumTT = "how many aura display.",
+    AuraNumTT = "How many aura display.",
 
     OriAura = "Source Icon style",
-    OriAuraTT = "Use rectangle icon style by Blizzard, instead a customizable square icon style.   |cff66CCFFNeed /reload|r",
+    OriAuraTT = "Use rectangle icon style by Blizzard, instead a custom square icon style. |cff66CCFFNeed /reload.|r",
 
-    AuraSize = "Aura Size",
+    AuraSize = "Icon Size",
     AuraSize0 = "smaller",
     AuraSize1 = "bigger",
-    AuraSizeTT = "Aura icons size (Won't enable when you're using Source Icon style)",
+    AuraSizeTT = "Aura icons size (Won't enable when you're using Source Icon style).",
 
     Counter = "Enable Timer",
     CounterTT = "Show aura timer",
@@ -129,36 +129,36 @@ dctLanguageDefault = {
     CounterSize = "Timer Text Size",
     CounterSize0 = "small",
     CounterSize1 = "big",
-    CounterSizeTT = "Aura timer counter text size",
+    CounterSizeTT = "Aura timer text size",
 
-    AuraInfo = "Whitelist dosn't only affects the auras on Nameplates, but also Personal Resourse Bar.",
-    AuraHelpBtn2 = "Add an aura ID \n\n Remeber click Add button after you key-in an ID.\n\nCurrently supports up to 20 auras.",
-    AuraID = "|cFFFFD700 Aura ID |r",
-    AuraIDTT = "Aura ID:",
-    AddBtn = "Add--> ",
-    RemoveBtn = " Remove<--",
+    AuraInfo = "Whitelist won't only affects the auras on Nameplates, but also Personal Resourse Bar.",
+    AuraHelpBtn2 = "Add Spell ID \n\nRemeber click Add button after you key-in.\n\nCurrently supports max to 20 auras.",
+    AuraID = "|cFFFFD700Spell ID|r",
+    AuraIDTT = "Spell ID:",
+    AddBtn = "Add-->",
+    RemoveBtn = "<--Remove",
 
     Exp = "Explosive Helper",
     ExpTT = "When Explosives spawn, all of other nameplates will be hidden until there is no more Explosives alive.",
-    ExpHelpBtn = "Suggest disable this option when you don't use it",
+    ExpHelpBtn = "Suggest disable this option when you don't use it.",
 
     CastHeight = "Castbar Width",
     CastHeight0 = "narrow" ,
     CastHeight1 = "wide",
-    CastHeightTT = "Won't enable when you're using Source Castbar style",
+    CastHeightTT = "Won't enable when you're using Source Castbar style.",
 
     SelectAlpha = "Transparency",
     SelectAlpha0 = "transparency" ,
     SelectAlpha1 = "opaque",
-    SelectAlphaTT = "Transparency of non-current target's Nameplate",
+    SelectAlphaTT = "Transparency of non-current target's Nameplates.",
 
     CenterDetail = "Text in Center",
-    CenterDetailTT = "Show health value in nameplate center.   |cff66CCFFNeed /reload|r",
+    CenterDetailTT = "Show health value in nameplate center. |cff66CCFFNeed /reload.|r",
 
     Arrow = "Selected Arrow",
-    ArrowTT = "Display an arrow at nameplate right when you selected a unit",
+    ArrowTT = "Display an arrow at nameplate right on target unit.",
 
-    UpdateInfo = "Detected that you have updated to newest version, all settings have been reset to default values",
+    UpdateInfo = "Have detected that you've updated to newest version, all settings have been reset to default values.",
     UpdateVersion = "Current Version",
 }
 
