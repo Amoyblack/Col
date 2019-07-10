@@ -1,7 +1,7 @@
-﻿## Interface: 80100
+﻿## Interface: 80200
 ## Title: |cff66CCFFRS|rPlates
 ## Version: R1.0
-## Author: Amoy@埃德萨拉
+## Author: Amoy@埃德萨拉 (Thanks for the localization part of EK)
 ## Notes: RsPlates
 ## Notes-zhCN: 源生轻量姓名板
 ## SavedVariables: SavedData
@@ -9,9 +9,10 @@
 
 locale\zhCN.lua
 locale\enUS.lua
+locale\zhTW.lua
+
 locale\default.lua
 
-##locale\zhTW.lua
 ##locale\ruRU.lua
 
 config.lua
