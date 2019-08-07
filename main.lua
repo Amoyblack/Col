@@ -20,7 +20,7 @@ local C = ns.C
 local L = ns.L
 
 DefaultData = {
-	["Version"] = "8.2.002",
+	["Version"] = "8.2.003",
 	["OriBar"] = false,
 	["OriCast"] = true,
 	["OriElite"] = true,
@@ -498,10 +498,12 @@ local function NamePlate_OnEvent(self, event, ...)
 		elseif (event == "UNIT_NAME_UPDATE") then
 			SetBarName(self)
 		elseif (event == "UNIT_MAXHEALTH") then
-			CompactUnitFrame_UpdateHealPrediction(self)
 			local CurHealth = UnitHealth(arg1)
+			local MaxHealth = UnitHealthMax(arg1)
+			self.healthBar:SetMinMaxValues(0, MaxHealth)
 			self.healthBar:SetValue(CurHealth)
 			SetBloodText(self)			
+			CompactUnitFrame_UpdateHealPrediction(self)
 		end
 	end
 end
