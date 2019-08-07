@@ -70,7 +70,7 @@ local myGUI = {}
 
 
 myGUI.frame1 = CreateFrame("Frame", "MainGUI", InterfaceOptionsFrame)
-myGUI.frame1.name = '|cff66CCFFRS P|r '..L["MenuBasis"]
+myGUI.frame1.name = '|cff00FF7FRS P|r '..L["MenuBasis"]
 
 
 

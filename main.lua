@@ -20,13 +20,13 @@ local C = ns.C
 local L = ns.L
 
 DefaultData = {
-	["Version"] = "8.2.001",
+	["Version"] = "8.2.002",
 	["OriBar"] = false,
-	["OriCast"] = false,
-	["OriElite"] = false,
+	["OriCast"] = true,
+	["OriElite"] = true,
 	["BarBgCol"] = false,
 
-	["DetailType"] = 2,
+	["DetailType"] = 1,
 	["Omen3"] = false,
 	["Select"] = 1,
 	["GlobalScale"] = 1.0,
@@ -42,7 +42,7 @@ DefaultData = {
 
 	["OriName"] = true,
 	["NameWhite"] = true,
-	["NameSize"] = 14,
+	["NameSize"] = 12,
 
 	["AuraDefault"] = true,
 	["AuraWhite"] = true,
@@ -99,12 +99,14 @@ function loadFrame:OnEvent(event, arg1)
 		-- 代码库与玩家存储的配置长度不一样时，直接更新
 		if (table_leng(SavedData) ~= table_leng(DefaultData)) then 
 			SavedData = DefaultData
+			G_InitFirstLoadedOption = true
 			print ("|cffFFD700---RsPlates : "..L["UpdateInfo"].." |r")
 			print ("|cffFFD700---".. L["UpdateVersion"]..": |r"..SavedData["Version"] ) 
 		-- 长度一样，但版本号不同
 
 		elseif SavedData["Version"] ~= DefaultData["Version"] then 
 			SavedData = DefaultData
+			G_InitFirstLoadedOption = true
 			print ("|cffFFD700---RsPlates : "..L["UpdateInfo"].." |r")	
 			print ("|cffFFD700---".. L["UpdateVersion"]..": |r"..SavedData["Version"] ) 		
 		end
@@ -339,7 +341,7 @@ end
 
 
 --血条数值
-local function SetBloodValue(unitFrame)
+local function SetBloodText(unitFrame)
 	if IsPlayerself(unitFrame) then 
 		unitFrame.healthBar.value:Hide()
 		return 
@@ -395,9 +397,9 @@ end
 --血条材质
 local function SetBarTexture(unitFrame)
 	if not SavedData["OriBar"] then 
-		unitFrame.healthBar:SetStatusBarTexture("Interface\\AddOns\\Col\\media\\bar_knp")
-		unitFrame.castBar:SetStatusBarTexture("Interface\\AddOns\\Col\\media\\bar_knp")	
-		ClassNameplateManaBarFrame:SetStatusBarTexture("Interface\\AddOns\\Col\\media\\bar_knp")		
+		unitFrame.healthBar:SetStatusBarTexture("Interface\\AddOns\\Col\\media\\bar_rs")
+		unitFrame.castBar:SetStatusBarTexture("Interface\\AddOns\\Col\\media\\bar_rs")	
+		ClassNameplateManaBarFrame:SetStatusBarTexture("Interface\\AddOns\\Col\\media\\bar_rs")		
 	end
 end
 
@@ -414,7 +416,7 @@ local function SetBarName(unitFrame)
 	end
 
 	unitFrame.name:SetTextColor(r, g, b, a)
-	unitFrame.name:SetFont(C.NameFont, 16, nil)
+	unitFrame.name:SetFont(C.NameFont, 12, nil)
 
 	local name, server =  UnitName(unitFrame.unit)
 	if server then 
@@ -437,7 +439,7 @@ local function On_NpRefreshOnce(unitFrame)
 
 	SetThinCastingBar(unitFrame.castBar, unitFrame)
 
-	SetBloodValue(unitFrame)
+	SetBloodText(unitFrame)
 	
 	SetSelectionHighlight(unitFrame)
 
@@ -462,14 +464,29 @@ local function NamePlate_OnEvent(self, event, ...)
 		SetSelectionHighlight(self)
 	end
 
+	if (event == "UNIT_ABSORB_AMOUNT_CHANGED") then 	
+		CompactUnitFrame_UpdateHealPrediction(self)
+	end
+
+	-- if (event == "UNIT_HEAL_ABSORB_AMOUNT_CHANGED") then 	
+	-- 	CompactUnitFrame_UpdateHealPrediction(self)
+	-- end
+
+	-- if (event == "UNIT_HEAL_PREDICTION") then 	
+	-- 	CompactUnitFrame_UpdateHealPrediction(self)
+	-- end
+
+
 	if (arg1 == self.unit or arg1 == self.displayedUnit) then 
 	-- 血量  -----------------------------------------------------------------------
 		if (event == "UNIT_HEALTH_FREQUENT") then
+			CompactUnitFrame_UpdateHealPrediction(self)
 			local CurHealth = UnitHealth(arg1)
-			local MaxHealth = UnitHealthMax(arg1)
-			self.healthBar:SetMinMaxValues(0,1)
-			self.healthBar:SetValue(CurHealth/MaxHealth)
-			SetBloodValue(self)
+			-- local MaxHealth = UnitHealthMax(arg1)
+			-- self.healthBar:SetMinMaxValues(0,1)
+			-- self.healthBar:SetValue(CurHealth/MaxHealth)
+			self.healthBar:SetValue(CurHealth)
+			SetBloodText(self)
 
 			if SavedData["KillPer"] ~= 0 then  -- 检查斩杀线
 				SetBarColor(self)
@@ -480,6 +497,11 @@ local function NamePlate_OnEvent(self, event, ...)
 			SetBarColor(self)
 		elseif (event == "UNIT_NAME_UPDATE") then
 			SetBarName(self)
+		elseif (event == "UNIT_MAXHEALTH") then
+			CompactUnitFrame_UpdateHealPrediction(self)
+			local CurHealth = UnitHealth(arg1)
+			self.healthBar:SetValue(CurHealth)
+			SetBloodText(self)			
 		end
 	end
 end
@@ -489,6 +511,12 @@ local function RegisterNamePlateEvents(unitFrame)
 	unitFrame:RegisterEvent("UNIT_HEALTH_FREQUENT")
 	unitFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
 	unitFrame:RegisterEvent("UNIT_NAME_UPDATE")
+	unitFrame:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
+
+	unitFrame:RegisterEvent("UNIT_MAXHEALTH")
+
+	-- unitFrame:RegisterEvent("UNIT_HEAL_ABSORB_AMOUNT_CHANGED")
+	-- unitFrame:RegisterEvent("UNIT_HEAL_PREDICTION")
 	unitFrame:SetScript("OnEvent", NamePlate_OnEvent)
 	-- unitFrame:RegisterEvent("UNIT_AURA")
 	-- unitFrame:RegisterEvent("UNIT_HEALTH")
@@ -609,13 +637,13 @@ local function On_NpCreate(namePlate)
 	end
 
 	-- todo 吸收模块暂做屏蔽
-	NF.healthBar.totalAbsorbOverlay:SetAlpha(0)
-	NF.healthBar.totalAbsorb:SetAlpha(0)
-	NF.healthBar.myHealAbsorb:SetAlpha(0)
-	NF.healthBar.myHealPrediction:SetAlpha(0)
-	NF.healthBar.otherHealPrediction:SetAlpha(0)
-	NF.healthBar.overAbsorbGlow:SetAlpha(0)
-	NF.healthBar.overHealAbsorbGlow:SetAlpha(0)
+	-- NF.healthBar.totalAbsorbOverlay:SetAlpha(0)
+	-- NF.healthBar.totalAbsorb:SetAlpha(0)
+	-- NF.healthBar.myHealAbsorb:SetAlpha(0)
+	-- NF.healthBar.myHealPrediction:SetAlpha(0)
+	-- NF.healthBar.otherHealPrediction:SetAlpha(0)
+	-- NF.healthBar.overAbsorbGlow:SetAlpha(0)
+	-- NF.healthBar.overHealAbsorbGlow:SetAlpha(0)
 
 	-- 描边
 	NF.healthBar.border:SetVertexColor(0,0,0,.6)
@@ -728,7 +756,9 @@ local function InitAndCvar()
 	SetCVar("namePlateMinScale", 1) 
 	SetCVar("namePlateMaxScale", 1) 
 		
+	-- 首次使用或更新后的首次登陆加载
 	if G_InitFirstLoadedOption then
+		-- V所开启的姓名版类型
 		SetCVar("nameplateShowAll", 1)   --显示所有
 		SetCVar("nameplateShowEnemies", 1)   --敌对单位
 		SetCVar("nameplateShowEnemyMinions", 1)   --仆从
@@ -736,6 +766,11 @@ local function InitAndCvar()
 
 		-- 堆叠 1 重叠 0
 		SetCVar("nameplateMotion", 1) 
+
+		-- 遮挡姓名版透明度与  个人资源条 显示逻辑
+		SetCVar("NameplatePersonalShowInCombat", 1)
+		SetCVar("NameplatePersonalShowWithTarget", 1)
+		SetCVar("nameplateOccludedAlphaMult", 0.2)
 	end	
 end
 
