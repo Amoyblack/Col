@@ -4,7 +4,7 @@
 ## Author: Amoy@埃德萨拉 (Thanks for the localization part of EK)
 ## Notes: RsPlates
 ## Notes-zhCN: 源生轻量姓名板
-## SavedVariablesPerCharacter: SavedData
+## SavedVariables: SavedData
 
 
 locale\zhCN.lua

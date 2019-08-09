@@ -20,7 +20,7 @@ local C = ns.C
 local L = ns.L
 
 DefaultData = {
-	["Version"] = "8.2.003",
+	["Version"] = "8.2.004",
 	["OriBar"] = false,
 	["OriCast"] = true,
 	["OriElite"] = true,
