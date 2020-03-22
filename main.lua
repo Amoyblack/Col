@@ -20,7 +20,7 @@ local C = ns.C
 local L = ns.L
 
 DefaultData = {
-	["Version"] = "8.3.001",
+	["Version"] = "8.3.002",
 	["OriBar"] = true,
 	["OriCast"] = true,
 	["OriElite"] = true,
@@ -729,8 +729,8 @@ local function UnregisterNamePlateEvents(unitFrame)
 end
 
 local function SetUnit(unitFrame, unit)
-	unitFrame.unit = unit                 --todo: Dont do this !! for now, find another way 
-	unitFrame.displayedUnit = unit	 -- For vehicles
+	-- unitFrame.unit = unit                 --todo: Dont do this !! for now, find another way 
+	-- unitFrame.displayedUnit = unit	 -- For vehicles
 	-- unitFrame.inVehicle = false
 	if ( unit ) then
 		RegisterNamePlateEvents(unitFrame)
