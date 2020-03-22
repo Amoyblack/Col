@@ -996,6 +996,7 @@ local _G, WorldFrame = _G, WorldFrame
 local TooltipFrame = CreateFrame("GameTooltip", "ThreatPlates_Tooltip", nil, "GameTooltipTemplate")
 
 local QuestList, QuestIDs, QuestsToUpdate = {}, {}, {}
+local PlayerName = UnitName("player")
 
 
 function IsQuestUnit(unit, create_watcher)
@@ -1015,7 +1016,7 @@ function IsQuestUnit(unit, create_watcher)
   for i = 3, TooltipFrame:NumLines() do
     local line = _G["ThreatPlates_TooltipTextLeft" .. i]  --obj
     local text = line:GetText()
-    -- print (text)
+    -- print (i, text)
     local text_r, text_g, text_b = line:GetTextColor()
 
 
