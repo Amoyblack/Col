@@ -1,9 +1,12 @@
-﻿## Interface: 80200
+﻿## Interface: 80300
 ## Title: |cff00FF7FRSP|rlates
 ## Version: R1.0
 ## Author: Amoy@埃德萨拉 (Thanks for the localization part of EK)
 ## Notes: RsPlates
 ## Notes-zhCN: 源生轻量姓名板
+## Notes-zhTW: 源生輕量姓名版
+## Notes-enUS: A Neat Nameplates 
+
 ## SavedVariables: SavedData
 
 

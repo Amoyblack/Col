@@ -20,8 +20,8 @@ local C = ns.C
 local L = ns.L
 
 DefaultData = {
-	["Version"] = "8.2.004",
-	["OriBar"] = false,
+	["Version"] = "8.3.001",
+	["OriBar"] = true,
 	["OriCast"] = true,
 	["OriElite"] = true,
 	["BarBgCol"] = false,
@@ -42,13 +42,13 @@ DefaultData = {
 
 	["OriName"] = true,
 	["NameWhite"] = true,
-	["NameSize"] = 12,
+	["NameSize"] = 15,
 
 	["AuraDefault"] = true,
 	["AuraWhite"] = true,
 	["AuraOnlyMe"] = false,
 	["AuraHeight"] = 30,
-	["AuraNum"] = 4,
+	["AuraNum"] = 2,
 	["OriAuraSize"] = false,
 	["AuraSize"] = 22, 
 	["AuraTimer"] = false,
@@ -76,10 +76,7 @@ DefaultData = {
 	[179057]= true, --混沌
 	[217832]= true, --dh禁锢
 	[102359]= true, --群缠绕
-
-	[205473]= true, --冰刺
-
-}
+				}
 }
 
 
@@ -303,9 +300,25 @@ local function SetBarColor(frame)
 end
 
 
--- hooksecurefunc("CompactUnitFrame_OnUpdate", function(frame)
--- 	print 'gui'
--- end) 
+
+local function SetUnitQuestState(unitFrame)
+	local unit = unitFrame.unit
+	local inInstance, instanceType = IsInInstance()
+	if not inInstance then
+		if IsQuestUnit(unit) then
+			unitFrame.healthBar.questIcon:Show()
+			return
+		end	
+	end
+	unitFrame.healthBar.questIcon:Hide()
+end
+
+local function UpdateAllUnitQuestState()
+	for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+		local unitFrame = namePlate.UnitFrame
+		SetUnitQuestState(unitFrame)
+	end
+end
 
 -- Highlight / 高亮
 local function SetSelectionHighlight(unitFrame)
@@ -332,7 +345,9 @@ local function SetSelectionHighlight(unitFrame)
 		unitFrame.selectionHighlight:Hide()
 		-- 边框
 		unitFrame.healthBar.border:SetVertexColor(0,0,0,.6)
-		if not IsPlayerself(unitFrame) then 
+		if UnitIsUnit(unit, "player") then 
+			unitFrame:SetAlpha(1)
+		else
 			unitFrame:SetAlpha(SavedData["SelectAlpha"])
 		end
 		unitFrame.castBar.Icon:SetAlpha(SavedData["SelectAlpha"])
@@ -352,11 +367,24 @@ local function SetBloodText(unitFrame)
 end
 
 
+
+
+
+--  不是一个对象  所以self.Icon 并没拿到对应的姓名版对象
+-- local function CastbarEvent(self, ...)
+-- 	self.Icon:SetShown(true)
+-- 	print '111111'
+-- 	-- body
+-- end
+-- CastingBarFrame:SetScript("OnEvent", CastbarEvent)
+-- CastingBarFrame:RegisterEvent("UNIT_SPELLCAST_START")
+
 -- 窄施法条
 local function SetThinCastingBar(self, unitFrame)
 	if not SavedData["OriCast"] then
-		self.iconWhenNoninterruptible = false
-		self.Icon:Show()
+
+		-- self.iconWhenNoninterruptible = false    ---Dont do this, TAINT!!!
+		-- self.Icon:SetShown(true)
 		if not self.ThinCast then 
 				self.Icon.iconborder:Show()
 				self.around:Show()
@@ -368,11 +396,15 @@ local function SetThinCastingBar(self, unitFrame)
 				self.BorderShield:SetSize(13, 15)
 				self.BorderShield:SetPoint("CENTER", self, "LEFT", 5,-0)
 
-				self:HookScript("OnEvent", function ( ... )
+				self:HookScript("OnEvent", function (self, event,  ... )
 					if UnitIsUnit(unitFrame.unit, "target") and not UnitIsUnit(unitFrame.unit, "player") then  
 						self.Icon:SetAlpha(1)
 					else
 						self.Icon:SetAlpha(SavedData["SelectAlpha"])
+					end
+
+					if event == "UNIT_SPELLCAST_START" then
+						self.Icon:SetShown(true)
 					end
 				end)
 				
@@ -416,7 +448,7 @@ local function SetBarName(unitFrame)
 	end
 
 	unitFrame.name:SetTextColor(r, g, b, a)
-	unitFrame.name:SetFont(C.NameFont, 12, nil)
+	unitFrame.name:SetFont(C.NameFont, 15, nil)
 
 	local name, server =  UnitName(unitFrame.unit)
 	if server then 
@@ -446,6 +478,8 @@ local function On_NpRefreshOnce(unitFrame)
 	SetBarColor(unitFrame)
 
 	SetBarName(unitFrame)
+
+	SetUnitQuestState(unitFrame)
 end
 
 
@@ -655,8 +689,14 @@ local function On_NpCreate(namePlate)
 	NF.castBar.Icon.iconborder:SetDrawLayer("OVERLAY", -1)  -- IconLayer = 1
 	NF.castBar.Icon.iconborder:Hide()
 	NF.castBar.around:Hide()
+	-- NF.castBar.iconWhenNoninterruptible = true           --- cause TAINT !!
 
-	NF.castBar.iconWhenNoninterruptible = true
+	NF.healthBar.questIcon = NF.healthBar:CreateTexture("QuestIcon", "OVERLAY")
+	NF.healthBar.questIcon:SetSize(30, 30)
+	NF.healthBar.questIcon:SetTexture("Interface\\AddOns\\Col\\media\\questQuestion")
+	NF.healthBar.questIcon:SetPoint("CENTER", NF.healthBar, "CENTER", 0, 45)
+	NF.healthBar.questIcon:SetVertexColor(.96, .85 , .1)
+	NF.healthBar.questIcon:Hide()
 	-- 名字
 	-- NF.name:SetFont(C.NameFont, C.NameTextSize, nil)
 	-- NF.name:SetTextColor(1,1,1)
@@ -689,9 +729,9 @@ local function UnregisterNamePlateEvents(unitFrame)
 end
 
 local function SetUnit(unitFrame, unit)
-	unitFrame.unit = unit
+	unitFrame.unit = unit                 --todo: Dont do this !! for now, find another way 
 	unitFrame.displayedUnit = unit	 -- For vehicles
-	unitFrame.inVehicle = false
+	-- unitFrame.inVehicle = false
 	if ( unit ) then
 		RegisterNamePlateEvents(unitFrame)
 	else
@@ -906,3 +946,158 @@ function RefBuff()
 	end	
 end
 
+
+
+
+----------------------------------------------------
+---- Quest Function Copied From TPTP(Threat Plates)
+----------------------------------------------------
+
+local QUEST_OBJECTIVE_PARSER_LEFT = function(text)
+  local current, goal, objective_name = string.match(text,"^(%d+)/(%d+)( .*)$")
+  return objective_name, current, goal
+end
+
+local QUEST_OBJECTIVE_PARSER_RIGHT = function(text)
+  return string.match(text,"^(.*: )(%d+)/(%d+)$")
+end
+
+local PARSER_QUEST_OBJECTIVE_BACKUP = function(text)
+  local current, goal, objective_name = string.match(text,"^(%d+)/(%d+)( .*)$")
+
+  if not objective_name then
+    objective_name, current, goal = string.match(text,"^(.*: )(%d+)/(%d+)$")
+  end
+
+  return objective_name, current, goal
+end
+
+local STANDARD_QUEST_OBJECTIVE_PARSER = {
+  -- x/y Objective
+  enUS = QUEST_OBJECTIVE_PARSER_LEFT,
+  -- enGB = enGB clients return enUS
+  esMX = QUEST_OBJECTIVE_PARSER_LEFT,
+  ptBR = QUEST_OBJECTIVE_PARSER_LEFT,
+  itIT = QUEST_OBJECTIVE_PARSER_LEFT,
+  koKR = QUEST_OBJECTIVE_PARSER_LEFT,
+  zhTW = QUEST_OBJECTIVE_PARSER_LEFT,
+  zhCN = QUEST_OBJECTIVE_PARSER_LEFT,
+
+  -- Objective: x/y
+  deDE = QUEST_OBJECTIVE_PARSER_RIGHT,
+  frFR = QUEST_OBJECTIVE_PARSER_RIGHT,
+  esES = QUEST_OBJECTIVE_PARSER_RIGHT,
+  ruRU = QUEST_OBJECTIVE_PARSER_RIGHT,
+}
+
+local QuestObjectiveParser = STANDARD_QUEST_OBJECTIVE_PARSER[GetLocale()] or PARSER_QUEST_OBJECTIVE_BACKUP
+
+local _G, WorldFrame = _G, WorldFrame
+local TooltipFrame = CreateFrame("GameTooltip", "ThreatPlates_Tooltip", nil, "GameTooltipTemplate")
+
+local QuestList, QuestIDs, QuestsToUpdate = {}, {}, {}
+
+
+function IsQuestUnit(unit, create_watcher)
+  if not unit then return false, false, nil end
+
+  local unitGUID = UnitGUID(unit)
+  local quest_title
+  -- local unit_name
+  local quest_player = true
+  local quest_progress = false
+
+  -- Read quest information from tooltip. Thanks to Kib: QuestMobs AddOn by Tosaido.
+  TooltipFrame:SetOwner(WorldFrame, "ANCHOR_NONE")
+  --TooltipFrame:SetUnit(unitid)
+  TooltipFrame:SetHyperlink("unit:" .. unitGUID)
+
+  for i = 3, TooltipFrame:NumLines() do
+    local line = _G["ThreatPlates_TooltipTextLeft" .. i]  --obj
+    local text = line:GetText()
+    -- print (text)
+    local text_r, text_g, text_b = line:GetTextColor()
+
+
+    -- print ("Line: |" .. text .. "|")
+    -- print ("  => ", text_r, text_g, text_b)
+    if text_r > 0.99 and text_g > 0.82 and text_b == 0 then
+      -- A line with this color is either the quest title or a player name (if on a group quest, but always after the quest title)
+      if quest_title then
+        quest_player = (text == PlayerName)
+        -- unit_name = text
+      else
+        quest_title = text
+
+      end
+    elseif quest_title and quest_player then
+      local objective_name, current, goal
+      local objective_type = false
+
+      -- Set quest_title to false again, otherwise a second quest in the tooltip will not be found (first if statement will
+      -- check for quest_player only as quest_title is still set to the first quest
+      quest_title = false
+
+      -- Check if area / progress quest
+      if string.find(text, "%%") then
+        objective_name, current, goal = string.match(text, "^(.*) %(?(%d+)%%%)?$")
+        objective_type = "area"
+        --print (unit_name, "=> ", "Area: |" .. text .. "|", objective_name, current, goal)
+      else
+        -- Standard x/y /pe quest
+        objective_name, current, goal = QuestObjectiveParser(text)
+        --print (unit_name, "=> ", "Standard: |" .. text .. "|", objective_name, current, goal, "|")
+      end
+
+      if objective_name then
+        current = tonumber(current)
+
+        if objective_type then
+          goal = 100
+        else
+          goal = tonumber(goal)
+        end
+
+        -- Note: "progressbar" type quest (area quest) progress cannot get via the API, so for this tooltips
+        -- must be used. That's also the reason why their progress is not cached.
+
+        -- local Quests = QuestList
+        -- if Quests[quest_title] then
+        --   local quest_objective = Quests[quest_title].objectives[objective_name]
+        --   if quest_objective then
+        --     current = quest_objective.current
+        --     goal = quest_objective.goal
+        --     objective_type = quest_objective.type
+        --   end
+        -- end
+
+        -- A unit may be target of more than one quest, the quest indicator should be show if at least one quest is not completed.
+        if current and goal then
+        	-- print (current, goal, objective_name)
+          if (current ~= goal) then
+            return true, 1, { current = current, goal = goal, type = objective_type }
+          end
+        else
+          -- Line after quest title with quest information, so we can stop here
+          return false
+        end
+      end
+    end
+  end
+
+  return false
+end
+
+local function Quest_Event(self, event, ...)	-- self <--QuestEventFrame 
+	local arg = ...
+	if event == "UNIT_QUEST_LOG_CHANGED" then
+		local inInstance, instanceType = IsInInstance()
+		if not inInstance then 
+			UpdateAllUnitQuestState()
+		end
+	end
+end
+
+local QuestEventFrame = CreateFrame("Frame")
+QuestEventFrame:RegisterEvent("UNIT_QUEST_LOG_CHANGED")
+QuestEventFrame:SetScript("OnEvent", Quest_Event)
