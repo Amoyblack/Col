@@ -83,7 +83,7 @@ ns.L = {
     SlayCol = "|cFFFFD700 斩杀颜色(点击选择)： |r",
 
     OriName = "源生姓名样式",
-    OriNameTT = "姓名颜色与字体大小均采用暴雪源生样式",
+    OriNameTT = "姓名颜色与字体大小均采用暴雪源生样式 |cff66CCFF重载生效|r",
 
     WhiteName = "全局白色姓名",
     WhiteNameTT = "当血条颜色增多后, 推荐使用白色显示全局姓名以保持界面统一与清爽 (开启源生样式时此项不生效)",

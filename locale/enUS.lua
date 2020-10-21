@@ -81,7 +81,7 @@ dctLanguageDefault = {
     SlayCol = "|cFFFFD700 Click to choose: |r",
 
     OriName = "Source Name Style",
-    OriNameTT = "Use source Name color and font size style by Blizzard.",
+    OriNameTT = "Use source Name color and font size style by Blizzard. |cff66CCFFNeed /reload.|r",
 
     WhiteName = "White Colored Name",
     WhiteNameTT = "Colored all nameplate's name as white, it will make nameplates neat, much better to see when many nameplates on the screen. (Won't enable when you're using Source Name Style)",

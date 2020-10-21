@@ -20,7 +20,7 @@ local C = ns.C
 local L = ns.L
 
 DefaultData = {
-	["Version"] = "8.3.002",
+	["Version"] = "9.0.001",
 	["OriBar"] = true,
 	["OriCast"] = true,
 	["OriElite"] = true,
@@ -41,8 +41,8 @@ DefaultData = {
 	["KillRGBb"] = 0.15,
 
 	["OriName"] = true,
-	["NameWhite"] = true,
-	["NameSize"] = 15,
+	["NameWhite"] = false,
+	["NameSize"] = 12,
 
 	["AuraDefault"] = true,
 	["AuraWhite"] = true,
@@ -161,7 +161,7 @@ end
 
 -- 带毛框幕布背景
 local function CreateBackDrop(parent, anchor, a)
-    local frame = CreateFrame("Frame", nil, parent)
+    local frame = CreateFrame("Frame", nil, parent, "BackdropTemplate")
 
 	local flvl = parent:GetFrameLevel()
 	if flvl - 1 >= 0 then frame:SetFrameLevel(flvl-1) end
@@ -438,17 +438,19 @@ end
 
 --名字
 local function SetBarName(unitFrame)
-	local r,g,b,a = 1,1,1,1
-	if IsTapDenied(unitFrame) then --灰名
-		r, g, b, a = .6, .6, .6, 1
-	elseif UnitReaction(unitFrame.unit, "player") == 4 then --中立
-		r, g, b, a = 1, 1, 0, 1
-	elseif UnitReaction(unitFrame.unit, "player") <= 3 then  --敌对
-		r, g, b, a = 1, 0, 0, 1	
-	end
+	if SavedData["OriName"] then return end
 
-	unitFrame.name:SetTextColor(r, g, b, a)
-	unitFrame.name:SetFont(C.NameFont, 15, nil)
+	-- local r,g,b,a = 1,1,1,1
+	-- if IsTapDenied(unitFrame) then --灰名
+	-- 	r, g, b, a = .6, .6, .6, 1
+	-- elseif UnitReaction(unitFrame.unit, "player") == 4 then --中立
+	-- 	r, g, b, a = 1, 1, 0, 1
+	-- elseif UnitReaction(unitFrame.unit, "player") <= 3 then  --敌对
+	-- 	r, g, b, a = 1, 0, 0, 1	
+	-- end
+
+	-- unitFrame.name:SetTextColor(r, g, b, a)
+	-- unitFrame.name:SetFont(C.NameFont, 12, nil)
 
 	local name, server =  UnitName(unitFrame.unit)
 	if server then 
@@ -457,12 +459,10 @@ local function SetBarName(unitFrame)
 		unitFrame.name:SetText(name)
 	end
 
-	if not SavedData["OriName"] then 
-		if SavedData["NameWhite"] then 
-			unitFrame.name:SetTextColor(1,1,1)
-		end
-		unitFrame.name:SetFont(C.NameFont, SavedData["NameSize"], nil)
+	if SavedData["NameWhite"] then 
+		unitFrame.name:SetTextColor(1,1,1)
 	end
+	unitFrame.name:SetFont(C.NameFont, SavedData["NameSize"], nil)
 end
 
 ---手动设置一次需要设置的
@@ -513,7 +513,7 @@ local function NamePlate_OnEvent(self, event, ...)
 
 	if (arg1 == self.unit or arg1 == self.displayedUnit) then 
 	-- 血量  -----------------------------------------------------------------------
-		if (event == "UNIT_HEALTH_FREQUENT") then
+		if (event == "UNIT_HEALTH") then
 			CompactUnitFrame_UpdateHealPrediction(self)
 			local CurHealth = UnitHealth(arg1)
 			-- local MaxHealth = UnitHealthMax(arg1)
@@ -544,7 +544,7 @@ end
 
 local function RegisterNamePlateEvents(unitFrame)
 	unitFrame:RegisterEvent("UNIT_THREAT_LIST_UPDATE")
-	unitFrame:RegisterEvent("UNIT_HEALTH_FREQUENT")
+	unitFrame:RegisterEvent("UNIT_HEALTH")
 	unitFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
 	unitFrame:RegisterEvent("UNIT_NAME_UPDATE")
 	unitFrame:RegisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
@@ -655,21 +655,18 @@ local function UpdateBuffsRS(self, unit, filter, showAll)
 	self:Layout();
 end
 
-
-
-local function On_NpCreate(namePlate)
-	local NF = namePlate.UnitFrame	
-
-	-- -- 接管buff模块
-	NF.BuffFrame.UpdateBuffs = UpdateBuffsRS
+local function CreateUIObj(unitFrame)
+	-- 接管buff模块 
+	unitFrame.BuffFrame.UpdateBuffs = UpdateBuffsRS
 
 	-- buff位置
-	function NF.BuffFrame:UpdateAnchor()
+	function unitFrame.BuffFrame:UpdateAnchor()
 		self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, SavedData["AuraHeight"]);
 	end
 
+	-- 精英图标
 	if not SavedData["OriElite"] then 
-		NF.ClassificationFrame:Hide()
+		unitFrame.ClassificationFrame:Hide()
 	end
 
 	-- todo 吸收模块暂做屏蔽
@@ -682,21 +679,15 @@ local function On_NpCreate(namePlate)
 	-- NF.healthBar.overHealAbsorbGlow:SetAlpha(0)
 
 	-- 描边
-	NF.healthBar.border:SetVertexColor(0,0,0,.6)
+	unitFrame.healthBar.border:SetVertexColor(0,0,0,.6)
 
-	NF.castBar.around = CreateBackDrop(NF.castBar, NF.castBar, 1) 
-	NF.castBar.Icon.iconborder = CreateBG(NF.castBar.Icon)
-	NF.castBar.Icon.iconborder:SetDrawLayer("OVERLAY", -1)  -- IconLayer = 1
-	NF.castBar.Icon.iconborder:Hide()
-	NF.castBar.around:Hide()
-	-- NF.castBar.iconWhenNoninterruptible = true           --- cause TAINT !!
+	unitFrame.castBar.around = CreateBackDrop(unitFrame.castBar, unitFrame.castBar, 1) 
+	unitFrame.castBar.Icon.iconborder = CreateBG(unitFrame.castBar.Icon)
+	unitFrame.castBar.Icon.iconborder:SetDrawLayer("OVERLAY", -1)  -- IconLayer = 1
+	unitFrame.castBar.Icon.iconborder:Hide()
+	unitFrame.castBar.around:Hide()
+	-- unitFrame.castBar.iconWhenNoninterruptible = true           --- cause TAINT !!
 
-	NF.healthBar.questIcon = NF.healthBar:CreateTexture("QuestIcon", "OVERLAY")
-	NF.healthBar.questIcon:SetSize(30, 30)
-	NF.healthBar.questIcon:SetTexture("Interface\\AddOns\\Col\\media\\questQuestion")
-	NF.healthBar.questIcon:SetPoint("CENTER", NF.healthBar, "CENTER", 0, 45)
-	NF.healthBar.questIcon:SetVertexColor(.96, .85 , .1)
-	NF.healthBar.questIcon:Hide()
 	-- 名字
 	-- NF.name:SetFont(C.NameFont, C.NameTextSize, nil)
 	-- NF.name:SetTextColor(1,1,1)
@@ -704,24 +695,44 @@ local function On_NpCreate(namePlate)
 	-- NF.name:SetShadowOffset(.5,-.5)
 
 	-- 血量
-	NF.healthBar.value = createtext(NF.healthBar, "OVERLAY", 10, nil, "CENTER")
-	NF.healthBar.value:SetShadowColor(0,0,0,1)
-	NF.healthBar.value:SetShadowOffset(.5,-.5)
-	NF.healthBar.value:SetTextColor(1,1,1)
-	NF.healthBar.value:Hide()
-	if SavedData["CenterDetail"] then
-		NF.healthBar.value:SetPoint("BOTTOM", NF.healthBar, "CENTER", 0, -4)
-	else
-		NF.healthBar.value:SetPoint("BOTTOMRIGHT", NF.healthBar, "RIGHT", 0, -4)
+	if not unitFrame.healthBar.value then 
+		unitFrame.healthBar.value = createtext(unitFrame.healthBar, "OVERLAY", 11, "OUTLINE", "CENTER")
+		unitFrame.healthBar.value:SetShadowColor(0,0,0,1)
+		unitFrame.healthBar.value:SetShadowOffset(0.5,-0.5)
+		unitFrame.healthBar.value:SetTextColor(1,1,1)
+		unitFrame.healthBar.value:Hide()
+		if SavedData["CenterDetail"] then
+			unitFrame.healthBar.value:SetPoint("BOTTOM", unitFrame.healthBar, "CENTER", 0, -4)
+		else
+			unitFrame.healthBar.value:SetPoint("BOTTOMRIGHT", unitFrame.healthBar, "RIGHT", 0, -4)
+		end
 	end
 
 	-- 箭头
-	NF.healthBar.curTarget = NF.healthBar:CreateTexture("ArrowH", "OVERLAY")
-	NF.healthBar.curTarget:SetSize(50, 50)
-	NF.healthBar.curTarget:SetTexture("Interface\\AddOns\\Col\\media\\arrorH")
-	NF.healthBar.curTarget:SetPoint("LEFT", NF.healthBar, "RIGHT", 0, 0)
-	NF.healthBar.curTarget:Hide()
+	if not unitFrame.healthBar.curTarget then
+		unitFrame.healthBar.curTarget = unitFrame.healthBar:CreateTexture("ArrowH", "OVERLAY")
+		unitFrame.healthBar.curTarget:SetSize(50, 50)
+		unitFrame.healthBar.curTarget:SetTexture("Interface\\AddOns\\Col\\media\\arrorH")
+		unitFrame.healthBar.curTarget:SetPoint("LEFT", unitFrame.healthBar, "RIGHT", 0, 0)
+		unitFrame.healthBar.curTarget:Hide()
+	end
+
+	-- 任务
+	if not unitFrame.healthBar.questIcon then 
+		unitFrame.healthBar.questIcon = unitFrame.healthBar:CreateTexture("QuestIcon", "OVERLAY")
+		unitFrame.healthBar.questIcon:SetSize(30, 30)
+		unitFrame.healthBar.questIcon:SetTexture("Interface\\AddOns\\Col\\media\\questQuestion")
+		unitFrame.healthBar.questIcon:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, 45)
+		unitFrame.healthBar.questIcon:SetVertexColor(.96, .85 , .1)
+		unitFrame.healthBar.questIcon:Hide()
+	end
+
 end
+
+
+-- local function On_NpCreate(namePlate)
+-- 	return nil
+-- end
 
 local function UnregisterNamePlateEvents(unitFrame)
 	unitFrame:UnregisterAllEvents()
@@ -742,6 +753,7 @@ end
 local function On_NpAdd(unit)
 	local namePlate = C_NamePlate.GetNamePlateForUnit(unit)
 	local unitFrame = namePlate.UnitFrame
+	CreateUIObj(unitFrame)
 	SetUnit(unitFrame, unit)
 	On_NpRefreshOnce(unitFrame)
 end
@@ -818,7 +830,7 @@ end
 
 local function NamePlates_OnEvent(self, event, ...)
 	if ( event == "NAME_PLATE_CREATED" ) then
-		On_NpCreate(...)		
+		-- On_NpCreate(...)		
 
 	elseif ( event == "NAME_PLATE_UNIT_ADDED" ) then
 		On_NpAdd(...)
@@ -831,7 +843,7 @@ local function NamePlates_OnEvent(self, event, ...)
 		UpdateAllNameplates()
 
 	elseif ( event == "NAME_PLATE_UNIT_REMOVED" ) then
-		On_NpRemoved(...)
+		-- On_NpRemoved(...)
 
 	-- elseif event == "RAID_TARGET_UPDATE" then
 
@@ -848,9 +860,9 @@ end
 local NamePlatesFrame = CreateFrame("Frame", "NamePlatesFrame", UIParent)
 NamePlatesFrame:SetScript("OnEvent", NamePlates_OnEvent)
 NamePlatesFrame:RegisterEvent("VARIABLES_LOADED")
-NamePlatesFrame:RegisterEvent("NAME_PLATE_CREATED")
+-- NamePlatesFrame:RegisterEvent("NAME_PLATE_CREATED")
 NamePlatesFrame:RegisterEvent("NAME_PLATE_UNIT_ADDED")
-NamePlatesFrame:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
+-- NamePlatesFrame:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
 -- NamePlatesFrame:RegisterEvent("CVAR_UPDATE")
 NamePlatesFrame:RegisterEvent("DISPLAY_SIZE_CHANGED")
 -- NamePlatesFrame:RegisterEvent("RAID_TARGET_UPDATE")
