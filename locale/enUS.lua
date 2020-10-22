@@ -158,6 +158,9 @@ dctLanguageDefault = {
     Arrow = "Selected Arrow",
     ArrowTT = "Display an arrow at nameplate right on target unit.",
 
+    StolenBuff = "Extra display canStealOrPurge BUFF",
+    StolenBuffTT = "Highlight the buff that can be stolen or purged on the right side of the unit health bar",
+
     UpdateInfo = "Have detected that you've updated to newest version, all settings have been reset to default values.",
     UpdateVersion = "Current Version",
 }

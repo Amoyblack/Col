@@ -20,7 +20,7 @@ local C = ns.C
 local L = ns.L
 
 DefaultData = {
-	["Version"] = "9.0.001",
+	["Version"] = "9.0.020",
 	["OriBar"] = true,
 	["OriCast"] = true,
 	["OriElite"] = true,
@@ -47,7 +47,7 @@ DefaultData = {
 	["AuraDefault"] = true,
 	["AuraWhite"] = true,
 	["AuraOnlyMe"] = false,
-	["AuraHeight"] = 30,
+	-- ["AuraHeight"] = 30,
 	["AuraNum"] = 2,
 	["OriAuraSize"] = false,
 	["AuraSize"] = 22, 
@@ -55,9 +55,10 @@ DefaultData = {
 	["AuraNumSize"] = 13,
 
 	["CastHeight"] = 8,
-	["SelectAlpha"] = 1.0,
-	["CenterDetail"] = true,
+	["UnSelectAlpha"] = 1.0,
+	["CenterDetail"] = false,
 	["ShowArrow"] = false,
+	["ShowStolenBuff"] = true,
 
 	["Expball"] = false,
 
@@ -160,15 +161,20 @@ local function CreateBG(frame)
 end
 
 -- 带毛框幕布背景
-local function CreateBackDrop(parent, anchor, a)
+local function CreateBackDrop(parent, anchor, a, offsize)
+	-- 模拟默认参数
+	if offsize == nil then
+		offsize = 3
+	end
+
     local frame = CreateFrame("Frame", nil, parent, "BackdropTemplate")
 
 	local flvl = parent:GetFrameLevel()
 	if flvl - 1 >= 0 then frame:SetFrameLevel(flvl-1) end
 
 	frame:ClearAllPoints()
-    frame:SetPoint("TOPLEFT", anchor, "TOPLEFT", -3, 3)
-    frame:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", 3, -3)
+    frame:SetPoint("TOPLEFT", anchor, "TOPLEFT", -offsize, offsize)
+    frame:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", offsize, -offsize)
 
     frame:SetBackdrop(
     	{
@@ -177,9 +183,12 @@ local function CreateBackDrop(parent, anchor, a)
     insets = {left = 3, right = 3, top = 3, bottom = 3}	--内材与外材插入空隙
 		}
 	)
-	if a then
+	if a == 1 then
 		frame:SetBackdropColor(.2, .2, .2, 1)  --内材颜色
 		frame:SetBackdropBorderColor(0, 0, 0)  --外材颜色
+	elseif a == 2 then 
+		frame:SetBackdropColor(.5, .5, .5, 1)  --内材颜色
+		frame:SetBackdropBorderColor(1, 1, 1)  --外材颜色
 	end
 
     return frame
@@ -255,42 +264,48 @@ end
 
 -- elseif only patch one
 local function SetBarColor(frame)
-
 	local unit = frame.unit
 	local guid = UnitGUID(frame.unit)
 	local _, _, _, _, _, id = strsplit("-", guid or "") 
 	local r, g, b, a = 0, 1, 0, .8
 
+	local _, threatStatus = UnitDetailedThreatSituation("player", unit)
+
 	if IsPlayerself(frame) then return end
-	-- 玩家
+	-- 1 玩家
 	if UnitIsPlayer(unit) then
 		local _, englishClass = UnitClass(unit)
 		local classColor = Ccolors[englishClass]
 		r, g, b, a = classColor.r , classColor.g, classColor.b, 1
 
-	-- 灰名
+	-- 2 灰名
 	elseif IsTapDenied(frame) then
 		r, g, b, a = .8, .8, .8 , 1
 
-	-- 易爆球
+	-- 3 易爆球
 	elseif (id == "120651") then 
 		r, g, b, a = .2, 1, .2, 1
 
-	-- 斩杀
+	-- 4 斩杀
 	elseif IsOnKillHealth(unit) then
 		r, g, b, a = SavedData["KillRGBr"], SavedData["KillRGBg"], SavedData["KillRGBb"], 1
 
-	-- 仇恨
-	elseif IsOnThreatList(frame.unit) and SavedData["Omen3"] then 
-		r, g, b = IsOnThreatList(frame.unit)
+	-- 5 与玩家处于战斗状态
+	elseif threatStatus then 
+		if SavedData["Omen3"] then
+			r, g, b = IsOnThreatList(frame.unit)
+		else
+			r, g, b, a = 1, 0, 0, 1
+		end
 
-	-- 黄名
-	elseif UnitReaction(frame.unit, "player") == 4 then --中立
-		r, g, b, a = 1, 1, 0, 1
+	-- 6 与玩家非战斗状态
+	elseif not threatStatus then 
+		if UnitReaction(frame.unit, "player") == 4 then --中立
+			r, g, b, a = 1, 1, 0, 1
+		elseif UnitReaction(frame.unit, "player") <= 3 then
+			r, g, b, a = 1, 0, 0, 1
+		end
 
-	-- 红名
-	elseif UnitReaction(frame.unit, "player") <= 3 then  --敌对
-		r, g, b, a = 1, 0, 0, 1
 	end
 
 	frame.healthBar:SetStatusBarColor(r, g, b, 1)
@@ -348,9 +363,9 @@ local function SetSelectionHighlight(unitFrame)
 		if UnitIsUnit(unit, "player") then 
 			unitFrame:SetAlpha(1)
 		else
-			unitFrame:SetAlpha(SavedData["SelectAlpha"])
+			unitFrame:SetAlpha(SavedData["UnSelectAlpha"])
 		end
-		unitFrame.castBar.Icon:SetAlpha(SavedData["SelectAlpha"])
+		unitFrame.castBar.Icon:SetAlpha(SavedData["UnSelectAlpha"])
 	end
 end
 
@@ -400,7 +415,7 @@ local function SetThinCastingBar(self, unitFrame)
 					if UnitIsUnit(unitFrame.unit, "target") and not UnitIsUnit(unitFrame.unit, "player") then  
 						self.Icon:SetAlpha(1)
 					else
-						self.Icon:SetAlpha(SavedData["SelectAlpha"])
+						self.Icon:SetAlpha(SavedData["UnSelectAlpha"])
 					end
 
 					if event == "UNIT_SPELLCAST_START" then
@@ -438,19 +453,37 @@ end
 
 --名字
 local function SetBarName(unitFrame)
+	-- 颜色
+	
+	local unit = unitFrame.unit
+	local _, threatStatus = UnitDetailedThreatSituation("player", unit)
+
+	if IsPlayerself(unitFrame) then return end
+	-- 1 玩家
+	if UnitIsPlayer(unit) then
+		local _, englishClass = UnitClass(unit)
+		local classColor = Ccolors[englishClass]
+		r, g, b, a = classColor.r , classColor.g, classColor.b, 1
+
+	-- 2 灰名
+	elseif IsTapDenied(unitFrame) then
+		r, g, b, a = .8, .8, .8 , 1
+
+	-- 3 与玩家处于战斗状态
+	elseif threatStatus then 
+			r, g, b, a = 1, 0, 0, 1
+	
+	-- 6 与玩家非战斗状态
+	elseif not threatStatus then 
+		if UnitReaction(unitFrame.unit, "player") == 4 then --中立
+			r, g, b, a = 1, 1, 0, 1
+		elseif UnitReaction(unitFrame.unit, "player") <= 3 then
+			r, g, b, a = 1, 0, 0, 1
+		end
+	end
+	unitFrame.name:SetTextColor(r,g,b,a)
+	
 	if SavedData["OriName"] then return end
-
-	-- local r,g,b,a = 1,1,1,1
-	-- if IsTapDenied(unitFrame) then --灰名
-	-- 	r, g, b, a = .6, .6, .6, 1
-	-- elseif UnitReaction(unitFrame.unit, "player") == 4 then --中立
-	-- 	r, g, b, a = 1, 1, 0, 1
-	-- elseif UnitReaction(unitFrame.unit, "player") <= 3 then  --敌对
-	-- 	r, g, b, a = 1, 0, 0, 1	
-	-- end
-
-	-- unitFrame.name:SetTextColor(r, g, b, a)
-	-- unitFrame.name:SetFont(C.NameFont, 12, nil)
 
 	local name, server =  UnitName(unitFrame.unit)
 	if server then 
@@ -480,20 +513,14 @@ local function On_NpRefreshOnce(unitFrame)
 	SetBarName(unitFrame)
 
 	SetUnitQuestState(unitFrame)
+
+	RefBuff()
 end
 
 
 local function NamePlate_OnEvent(self, event, ...)
-	-- print (event)
-
 
 	local arg1 = ...
-	-- 光环  -----------------------------------------------------------------------
-
-	-- if ( event == "UNIT_AURA" ) then
-	-- 	SetAura(self)
-
-	-- 仇恨 -----------------------------------------------------------------------
 	if (event == "PLAYER_TARGET_CHANGED") then 		
 		SetSelectionHighlight(self)
 	end
@@ -512,7 +539,7 @@ local function NamePlate_OnEvent(self, event, ...)
 
 
 	if (arg1 == self.unit or arg1 == self.displayedUnit) then 
-	-- 血量  -----------------------------------------------------------------------
+		-- 血量  
 		if (event == "UNIT_HEALTH") then
 			CompactUnitFrame_UpdateHealPrediction(self)
 			local CurHealth = UnitHealth(arg1)
@@ -526,11 +553,14 @@ local function NamePlate_OnEvent(self, event, ...)
 				SetBarColor(self)
 			end
 
-		-- 切目标  -----------------------------------------------------------------------
+		-- 仇恨变化  
 		elseif (event == "UNIT_THREAT_LIST_UPDATE") then 
 			SetBarColor(self)
+			SetBarName(self)
+		-- 名字更新
 		elseif (event == "UNIT_NAME_UPDATE") then
 			SetBarName(self)
+		-- 最大血量变化
 		elseif (event == "UNIT_MAXHEALTH") then
 			local CurHealth = UnitHealth(arg1)
 			local MaxHealth = UnitHealthMax(arg1)
@@ -564,6 +594,8 @@ local function UpdateBuffsRS(self, unit, filter, showAll)
 		for i = 1, BUFF_MAX_DISPLAY do
 			if (self.buffList[i]) then
 				self.buffList[i]:Hide();
+			else
+				break;
 			end
 		end
 		return;
@@ -572,20 +604,54 @@ local function UpdateBuffsRS(self, unit, filter, showAll)
 	self.unit = unit;
 	self.filter = filter;
 	self:UpdateAnchor();
+	
 	if filter == "NONE" then
 		for i, buff in ipairs(self.buffList) do
 			buff:Hide();
 		end
 	else
-		-- Some buffs may be filtered out, use this to create the buff frames.
+		
 		local buffIndex = 1;
-		for i = 1, BUFF_MAX_DISPLAY do
-			if buffIndex <= SavedData["AuraNum"] then 
-				local name, texture, count, debuffType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellId, _, _, _, nameplateShowAll = UnitAura(unit, i,filter);
-				if name then 
-						-- print (caster, spellId, name, count, canStealOrPurge)
+		local StolenBuffNum = 0
+		local StolenBuffTextur = nil
+		local StolenDuration = 0
+		local StolenExpiration = 0
 
-					-----------------------------------------------------------
+		-- 检测该单位的全部Aura(目前 BUFF_MAX_DISPLAY = 32)
+		for i = 1, BUFF_MAX_DISPLAY do
+			-- 先检测 可偷取/驱散增益 BUFF, 用于自定的StolenFrame UI 显示
+			local name, texture, count, debuffType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellId, _, _, _, nameplateShowAll = UnitAura(unit, i, 'HELPFUL')
+			if name then 
+				-- print( name, canStealOrPurge )
+				if canStealOrPurge then 
+					StolenBuffNum = StolenBuffNum + 1
+					StolenBuffTextur = texture
+					StolenExpiration = expirationTime
+					StolenDuration = duration
+				end
+				
+			end
+
+			-- 单位的全部BUFF检测完毕时，看是否有可偷取/可驱散的
+			if i == BUFF_MAX_DISPLAY then
+				local namePlate = C_NamePlate.GetNamePlateForUnit(self.unit)
+				Np_Frame = namePlate.UnitFrame
+				-- print( StolenBuffNum )
+				if StolenBuffNum >= 1 then 
+					if SavedData["ShowStolenBuff"] then 
+						Np_Frame.StolenFrame.Texture:SetTexture(StolenBuffTextur)
+						Np_Frame.StolenFrame:Show()
+						Np_Frame.StolenFrame.Cooldown:SetCooldown(StolenExpiration - StolenDuration, StolenDuration)
+					end
+				else
+					Np_Frame.StolenFrame:Hide()
+				end
+			end
+			
+			-- 再检测 减益DEBUFF, 用于源生buff位置显示, 源码涉及 NamePlateDriverMixin:OnUnitAuraUpdate 里filter逻辑
+			local name, texture, count, debuffType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellId, _, _, _, nameplateShowAll = UnitAura(unit, i, filter)
+			if name then 
+				if buffIndex <= SavedData["AuraNum"] then 
 					local flag = false
 					-- 默认过滤器
 					if SavedData["AuraDefault"] then 
@@ -604,10 +670,11 @@ local function UpdateBuffsRS(self, unit, filter, showAll)
 							flag = false
 						end
 					end
-					-----------------------------------------------------------
+					
 					if (flag) then
 						if (not self.buffList[buffIndex]) then
-							self.buffList[buffIndex] = CreateFrame("Frame", self:GetParent():GetName() .. "Buff" .. buffIndex, self, "NameplateBuffButtonTemplate");
+							-- self.buffList[buffIndex] = CreateFrame("Frame", self:GetParent():GetName() .. "Buff" .. buffIndex, self, "NameplateBuffButtonTemplate");
+							self.buffList[buffIndex] = CreateFrame("Frame", nil, self, "NameplateBuffButtonTemplate");
 							self.buffList[buffIndex]:SetMouseClickEnabled(false);
 							self.buffList[buffIndex].layoutIndex = buffIndex;
 							self.buffList[buffIndex].align = "right";
@@ -656,12 +723,31 @@ local function UpdateBuffsRS(self, unit, filter, showAll)
 end
 
 local function CreateUIObj(unitFrame)
-	-- 接管buff模块 
+	-- 接管buff模块 new func
 	unitFrame.BuffFrame.UpdateBuffs = UpdateBuffsRS
 
-	-- buff位置
-	function unitFrame.BuffFrame:UpdateAnchor()
-		self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, SavedData["AuraHeight"]);
+	-- buff位置，暴雪已修正
+	-- function unitFrame.BuffFrame:UpdateAnchor()
+	-- 	self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, SavedData["AuraHeight"]);
+	-- end
+
+	-- 偷取/驱散buff模块 new ui
+	if not unitFrame.StolenFrame then 
+		unitFrame.StolenFrame = CreateFrame("Frame", nil, unitFrame.healthBar)
+		unitFrame.StolenFrame:SetSize(25, 25)
+		unitFrame.StolenFrame:SetPoint("LEFT", unitFrame.healthBar, "RIGHT", 10, 0)
+		unitFrame.StolenFrame:Hide()
+		
+		unitFrame.StolenFrame.Texture = unitFrame.StolenFrame:CreateTexture(nil, "OVERLAY")
+		unitFrame.StolenFrame.Texture:SetAllPoints()
+		-- unitFrame.StolenFrame.Texture:SetTexture(606550)
+
+		unitFrame.StolenFrame.around = CreateBackDrop(unitFrame.StolenFrame, unitFrame.StolenFrame, 2) 
+
+		unitFrame.StolenFrame.Cooldown = CreateFrame("Cooldown", nil, unitFrame.StolenFrame, "CooldownFrameTemplate")
+		unitFrame.StolenFrame.Cooldown:SetAllPoints()
+		unitFrame.StolenFrame.Cooldown:SetReverse(true)
+		unitFrame.StolenFrame.Cooldown:SetHideCountdownNumbers(true)
 	end
 
 	-- 精英图标
@@ -678,23 +764,22 @@ local function CreateUIObj(unitFrame)
 	-- NF.healthBar.overAbsorbGlow:SetAlpha(0)
 	-- NF.healthBar.overHealAbsorbGlow:SetAlpha(0)
 
-	-- 描边
-	unitFrame.healthBar.border:SetVertexColor(0,0,0,.6)
 
-	unitFrame.castBar.around = CreateBackDrop(unitFrame.castBar, unitFrame.castBar, 1) 
+	-- 血条绘边界色
+	unitFrame.healthBar.border:SetVertexColor(0,0,0,.6)
+	
+
+	-- 窄施法条 描边 new ui
+	if not unitFrame.castBar.around then 
+		unitFrame.castBar.around = CreateBackDrop(unitFrame.castBar, unitFrame.castBar, 1, 2) 
+		unitFrame.castBar.around:Hide()
+	end
 	unitFrame.castBar.Icon.iconborder = CreateBG(unitFrame.castBar.Icon)
 	unitFrame.castBar.Icon.iconborder:SetDrawLayer("OVERLAY", -1)  -- IconLayer = 1
 	unitFrame.castBar.Icon.iconborder:Hide()
-	unitFrame.castBar.around:Hide()
 	-- unitFrame.castBar.iconWhenNoninterruptible = true           --- cause TAINT !!
 
-	-- 名字
-	-- NF.name:SetFont(C.NameFont, C.NameTextSize, nil)
-	-- NF.name:SetTextColor(1,1,1)
-	-- NF.name:SetShadowColor(0,0,0,1)
-	-- NF.name:SetShadowOffset(.5,-.5)
-
-	-- 血量
+	-- 血量 new ui
 	if not unitFrame.healthBar.value then 
 		unitFrame.healthBar.value = createtext(unitFrame.healthBar, "OVERLAY", 11, "OUTLINE", "CENTER")
 		unitFrame.healthBar.value:SetShadowColor(0,0,0,1)
@@ -708,7 +793,7 @@ local function CreateUIObj(unitFrame)
 		end
 	end
 
-	-- 箭头
+	-- 箭头 new ui
 	if not unitFrame.healthBar.curTarget then
 		unitFrame.healthBar.curTarget = unitFrame.healthBar:CreateTexture("ArrowH", "OVERLAY")
 		unitFrame.healthBar.curTarget:SetSize(50, 50)
@@ -716,8 +801,8 @@ local function CreateUIObj(unitFrame)
 		unitFrame.healthBar.curTarget:SetPoint("LEFT", unitFrame.healthBar, "RIGHT", 0, 0)
 		unitFrame.healthBar.curTarget:Hide()
 	end
-
-	-- 任务
+ 
+	-- 任务 new ui
 	if not unitFrame.healthBar.questIcon then 
 		unitFrame.healthBar.questIcon = unitFrame.healthBar:CreateTexture("QuestIcon", "OVERLAY")
 		unitFrame.healthBar.questIcon:SetSize(30, 30)
@@ -943,8 +1028,13 @@ function RefBuff()
 			local buff = unitFrame.BuffFrame
 			for i = 1, BUFF_MAX_DISPLAY do
 				if buff.buffList[i] then 
-					--光环大小
-					buff.buffList[i]:SetSize(SavedData["AuraSize"], SavedData["AuraSize"])
+					if not SavedData["OriAuraSize"] then 
+						--光环大小
+						buff.buffList[i]:SetSize(SavedData["AuraSize"], SavedData["AuraSize"])
+						buff.buffList[i].Icon:SetPoint("TOPLEFT",buff.buffList[i],"TOPLEFT", 1, -1)
+						buff.buffList[i].Icon:SetPoint("BOTTOMRIGHT",buff.buffList[i],"BOTTOMRIGHT", -1, 1)
+						buff.buffList[i].Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
+					end
 					--计时器
 					buff.buffList[i].Cooldown:SetHideCountdownNumbers(not SavedData["AuraTimer"])
 					--计时器大小

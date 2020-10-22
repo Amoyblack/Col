@@ -160,6 +160,9 @@ ns.L = {
     Arrow = "选中箭头",
     ArrowTT = "在选中单位的血条右侧显示一个箭头",
 
+    StolenBuff = "额外显示可驱散/偷取BUFF",
+    StolenBuffTT = "在单位血条右侧高亮显示可偷取或驱散的BUFF",
+
     UpdateInfo = "检测到你已更新版本，所有设置已还原为预设值",
     UpdateVersion = "当前版本",
 }

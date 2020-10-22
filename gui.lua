@@ -251,7 +251,7 @@ local function CreatePanel(frame)
 		frame.ScrollFrame.ScrollBar:SetPoint("BOTTOMRIGHT", frame.ScrollFrame, "BOTTOMRIGHT", 0, 16);
 
 		child = CreateFrame("Frame", nil, frame.ScrollFrame);
-		child:SetSize(595, 1350);
+		child:SetSize(595, 1400);
 
 		child.bg = child:CreateTexture(nil, "BACKGROUND");
 		child.bg:SetAllPoints(true);
@@ -318,9 +318,9 @@ local function CreatePanel(frame)
 		child.AuraMe = newCheckbox(330, -40, child, L["AuraOnlyMe"],L["AuraOnlyMeTT"], child.Line6, "AuraOnlyMe")
 		child.AuraHelp = newHelpBtn(550, -25, child, child.Line6, L["AuraHelpBtn1"])
 		child.Aurastyletext = newFontSmall(0, -80, child, child.Line6, L["AuraText2"])
-		child.AuraHeight = newSlider(100, -80, "AuraHeight", -30, 50, 20, 1, L["AuraHeight0"], L["AuraHeight1"], L["AuraHeight"], L["AuraHeightTT"], child.Line6, child, "AuraHeight", "%.0f" )
-		child.AuraHeight:HookScript("OnValueChanged", function ( ... ) RefBuff() end)
-		child.AuraNumber = newSlider(280, -80, "pAuraNum", 0, 5, 0, 1, L["AuraNum0"], L["AuraNum1"], L["AuraNum"], L["AuraNumTT"], child.Line6, child, "AuraNum", "%.0f" )
+		-- child.AuraHeight = newSlider(100, -80, "AuraHeight", -30, 50, 20, 1, L["AuraHeight0"], L["AuraHeight1"], L["AuraHeight"], L["AuraHeightTT"], child.Line6, child, "AuraHeight", "%.0f" )
+		-- child.AuraHeight:HookScript("OnValueChanged", function ( ... ) RefBuff() end)
+		child.AuraNumber = newSlider(190, -80, "pAuraNum", 0, 5, 0, 1, L["AuraNum0"], L["AuraNum1"], L["AuraNum"], L["AuraNumTT"], child.Line6, child, "AuraNum", "%.0f" )
 		child.AuraStyle = newCheckbox(100, -160, child, L["OriAura"],L["OriAuraTT"], child.Line6, "OriAuraSize")
 		child.AuraSize = newSlider(280, -140, "pAuraSize", 15, 40, 20, 1, L["AuraSize0"], L["AuraSize1"], L["AuraSize"], L["AuraSizeTT"], child.Line6, child, "AuraSize", "%.0f" )
 		child.AuraSize:HookScript("OnValueChanged", function ( ... ) RefBuff() end)
@@ -339,11 +339,13 @@ local function CreatePanel(frame)
 		child.Gap8 = newFont(0, -100 , child, "TOPLEFT", child.Gap7, "TOPLEFT", L["Title8"], 22) 
 		child.Line8 = newLine(child, child.Gap8, 0, -4)
 		child.CastHeight = newSlider(0, -40, "pCastHeight", 5, 12, 5, 1, L["CastHeight0"], L["CastHeight1"], L["CastHeight"], L["CastHeightTT"], child.Line8, child, "CastHeight", "%.0f" )
-		child.SelectAlpha = newSlider(200, -40, "pSelectAlpha", 0.2, 1.0, 1.0, 0.1, L["SelectAlpha0"], L["SelectAlpha1"], L["SelectAlpha"], L["SelectAlphaTT"], child.Line8, child, "SelectAlpha", "%.1f" )
+		child.SelectAlpha = newSlider(200, -40, "pSelectAlpha", 0.2, 1.0, 1.0, 0.1, L["SelectAlpha0"], L["SelectAlpha1"], L["UnSelectAlpha"], L["SelectAlphaTT"], child.Line8, child, "UnSelectAlpha", "%.1f" )
 		child.SelectAlpha:HookScript("OnValueChanged", function ( ... ) UpdateAllNameplates() end)
 		child.Arrow = newCheckbox(400, -60, child, L["Arrow"], L["ArrowTT"], child.Line8, "ShowArrow")
 		child.Arrow:HookScript("OnClick", function ( ... ) UpdateAllNameplates() end)
 		
+		child.StolenBuff = newCheckbox(0, -120, child, L["StolenBuff"], L["StolenBuffTT"], child.Line8, "ShowStolenBuff")
+
 		child.Version = newFont(-20, 20 , child, "BOTTOMRIGHT", child, "BOTTOMRIGHT", L["Version"]..version, 20) 
 	end		
 end

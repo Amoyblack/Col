@@ -1,7 +1,8 @@
-﻿## Interface: 90001
+## Interface: 90001
 ## Title: |cff00FF7FRS|rPlates
-## Version: R9.0.001
-## Author: Amoy@埃德萨拉 (Thanks for the localization part of EK)
+## Version: R9.0.020
+## Author: Rs
+# (Thanks for the localization  of EK)
 ## Notes: Blizzard Default Nameplate Expanded 
 ## Notes-zhCN: 源生姓名板(血条)增强
 ## Notes-zhTW: 源生姓名板增強
@@ -16,7 +17,7 @@ locale\zhTW.lua
 
 locale\default.lua
 
-##locale\ruRU.lua
+#locale\ruRU.lua
 
 config.lua
 gui.lua
