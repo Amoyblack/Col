@@ -149,10 +149,10 @@ ns.L = {
     CastHeight1 = "寬",
     CastHeightTT = "使用暴雪施法條樣式時，此項不生效。",
 
-    SelectAlpha = "透明度",
-    SelectAlpha0 = "透明" ,
-    SelectAlpha1 = "不透明",
-    SelectAlphaTT = "非當前目標的名條透明度",
+    UnSelectAlpha = "透明度",
+    UnSelectAlpha0 = "透明" ,
+    UnSelectAlpha1 = "不透明",
+    UnSelectAlphaTT = "非當前目標的名條透明度",
 
     CenterDetail = "血量文字置中",
     CenterDetailTT = "置中顯示血量文字，|cff66CCFF重載介面生效|r。",

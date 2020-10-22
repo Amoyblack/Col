@@ -147,10 +147,10 @@ dctLanguageDefault = {
     CastHeight1 = "wide",
     CastHeightTT = "Won't enable when you're using Source Castbar style.",
 
-    SelectAlpha = "Transparency",
-    SelectAlpha0 = "transparency" ,
-    SelectAlpha1 = "opaque",
-    SelectAlphaTT = "Transparency of non-current target's Nameplates.",
+    UnSelectAlpha = "Transparency",
+    UnSelectAlpha0 = "transparency" ,
+    UnSelectAlpha1 = "opaque",
+    UnSelectAlphaTT = "Transparency of non-current target's Nameplates.",
 
     CenterDetail = "Text in Center",
     CenterDetailTT = "Show health value in nameplate center. |cff66CCFFNeed /reload.|r",

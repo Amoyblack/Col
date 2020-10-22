@@ -149,10 +149,10 @@ ns.L = {
     CastHeight1 = "宽",
     CastHeightTT = "开启源生施法条时该项不生效",
 
-    SelectAlpha = "透明度",
-    SelectAlpha0 = "透明" ,
-    SelectAlpha1 = "不透明",
-    SelectAlphaTT = "非当前目标的血条透明度",
+    UnSelectAlpha = "透明度",
+    UnSelectAlpha0 = "透明" ,
+    UnSelectAlpha1 = "不透明",
+    UnSelectAlphaTT = "非当前目标的血条透明度",
 
     CenterDetail = "血量居中",
     CenterDetailTT = "居中显示血量   |cff66CCFF重载生效|r",
