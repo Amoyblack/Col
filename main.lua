@@ -20,7 +20,7 @@ local C = ns.C
 local L = ns.L
 
 DefaultData = {
-	["Version"] = "9.0.021",
+	["Version"] = "9.0.022",
 	["OriBar"] = true,
 	["OriCast"] = true,
 	["OriElite"] = true,
@@ -47,7 +47,7 @@ DefaultData = {
 	["AuraDefault"] = true,
 	["AuraWhite"] = true,
 	["AuraOnlyMe"] = false,
-	-- ["AuraHeight"] = 30,
+	["AuraHeight"] = 30,
 	["AuraNum"] = 2,
 	["OriAuraSize"] = false,
 	["AuraSize"] = 22, 
@@ -727,9 +727,9 @@ local function CreateUIObj(unitFrame)
 	unitFrame.BuffFrame.UpdateBuffs = UpdateBuffsRS
 
 	-- buff位置，暴雪已修正
-	-- function unitFrame.BuffFrame:UpdateAnchor()
-	-- 	self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, SavedData["AuraHeight"]);
-	-- end
+	function unitFrame.BuffFrame:UpdateAnchor()
+		self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, SavedData["AuraHeight"]);
+	end
 
 	-- 偷取/驱散buff模块 new ui
 	if not unitFrame.StolenFrame then 
