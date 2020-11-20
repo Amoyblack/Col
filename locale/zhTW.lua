@@ -163,6 +163,9 @@ ns.L = {
     StolenBuff = "額外顯示可驅散/偷取BUFF",
     StolenBuffTT = "在單位血條右側高亮顯示可偷取或驅散的BUFF",
 
+    QuestIcon = "任務標記",
+    QuestIconTT = "在任務單位血條上顯示標記圖標",
+
     UpdateInfo = "檢測到你已更新版本，所有設定已還原為預設值。",
     UpdateVersion = "目前版本",
 }

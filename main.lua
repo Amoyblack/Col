@@ -20,7 +20,7 @@ local C = ns.C
 local L = ns.L
 
 DefaultData = {
-	["Version"] = "9.0.022",
+	["Version"] = "9.0.200",
 	["OriBar"] = true,
 	["OriCast"] = true,
 	["OriElite"] = true,
@@ -59,6 +59,7 @@ DefaultData = {
 	["CenterDetail"] = false,
 	["ShowArrow"] = false,
 	["ShowStolenBuff"] = true,
+	["ShowQuestIcon"] = true,
 
 	["Expball"] = false,
 
@@ -321,11 +322,14 @@ local function SetUnitQuestState(unitFrame)
 	local inInstance, instanceType = IsInInstance()
 	if not inInstance then
 		if IsQuestUnit(unit) then
-			unitFrame.healthBar.questIcon:Show()
-			return
+			if SavedData["ShowQuestIcon"] then 
+				unitFrame.healthBar.questIcon:Show()
+				return
+			end
 		end	
+		unitFrame.healthBar.questIcon:Hide()
 	end
-	unitFrame.healthBar.questIcon:Hide()
+	
 end
 
 local function UpdateAllUnitQuestState()
@@ -728,7 +732,11 @@ local function CreateUIObj(unitFrame)
 
 	-- buff位置，暴雪已修正
 	function unitFrame.BuffFrame:UpdateAnchor()
-		self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, SavedData["AuraHeight"]);
+		if IsPlayerself(self:GetParent()) then 
+			self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, 20);
+		else
+			self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, SavedData["AuraHeight"]);
+		end
 	end
 
 	-- 偷取/驱散buff模块 new ui

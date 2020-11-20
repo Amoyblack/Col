@@ -345,6 +345,7 @@ local function CreatePanel(frame)
 		child.Arrow:HookScript("OnClick", function ( ... ) UpdateAllNameplates() end)
 		
 		child.StolenBuff = newCheckbox(0, -120, child, L["StolenBuff"], L["StolenBuffTT"], child.Line8, "ShowStolenBuff")
+		child.QuestIcon = newCheckbox(200, -120, child, L["QuestIcon"], L["QuestIconTT"], child.Line8, "ShowQuestIcon")
 
 		child.Version = newFont(-20, 20 , child, "BOTTOMRIGHT", child, "BOTTOMRIGHT", L["Version"]..version, 20) 
 	end		
@@ -524,8 +525,9 @@ myGUI.frame2:SetScript("OnShow", function(frame)
 
 				frame.SpellMouseInfo:SetScript("OnEnter", function(self, button, down)
 					GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-					GameTooltip:SetText(L["AuraIDTT"]..tostring(iSpellID))
-					GameTooltip:AddSpellByID(iSpellID)
+					-- GameTooltip:AddDoubleLine(L["AuraIDTT"], tostring(iSpellID), 1, 1, 0, 1 ,1, 1);
+					GameTooltip:SetSpellByID(iSpellID)
+					GameTooltip:AppendText("   ".."|cff00FF7F"..L["AuraIDTT"]..tostring(iSpellID).."|r")
 					GameTooltip:Show()
 				end)
 				
