@@ -155,8 +155,8 @@ dctLanguageDefault = {
     CenterDetail = "Text in Center",
     CenterDetailTT = "Show health value in nameplate center. |cff66CCFFNeed /reload.|r",
 
-    EastenDetail = "Easten Unit",
-    EastenDetailTT = "K/M unit for 1000/100000 health value",
+    WesternDetail = "Western Unit",
+    WesternDetailTT = "K/M unit for 1000/100000 health value",
 
     Arrow = "Selected Arrow",
     ArrowTT = "Display an arrow at nameplate right on target unit.",

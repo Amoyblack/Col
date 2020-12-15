@@ -20,7 +20,7 @@ local C = ns.C
 local L = ns.L
 
 DefaultData = {
-	["Version"] = "9.0.201",
+	["Version"] = "9.0.202",
 	["OriBar"] = true,
 	["OriCast"] = true,
 	["OriElite"] = true,
@@ -57,7 +57,7 @@ DefaultData = {
 	["CastHeight"] = 8,
 	["UnSelectAlpha"] = 1.0,
 	["CenterDetail"] = false,
-	["EastenDetail"] = false,
+	["WesternDetail"] = false,
 	["ShowArrow"] = false,
 	["ShowStolenBuff"] = true,
 	["ShowQuestIcon"] = true,
@@ -228,7 +228,7 @@ local function GetDetailText(unit)
 	local fPer = string.format("%.0f",(CurHealth/MaxHealth*100)).."%"
 	local fCur = nil 
 
-	if SavedData["EastenDetail"] then
+	if SavedData["WesternDetail"] then
 		if CurHealth > 1000 and CurHealth<1000000 then
 			fCur = string.format("%.1f", CurHealth/1000).."K"
 		elseif CurHealth > 1000000  then

@@ -157,8 +157,8 @@ ns.L = {
     CenterDetail = "血量居中",
     CenterDetailTT = "居中显示血量   |cff66CCFF重载生效|r",
 
-    EastenDetail = "西式单位",
-    EastenDetailTT = "使用k,m血量单位",
+    WesternDetail = "西式单位",
+    WesternDetailTT = "使用k,m血量单位",
 
     Arrow = "选中箭头",
     ArrowTT = "在选中单位的血条右侧显示一个箭头",
