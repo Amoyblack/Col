@@ -20,7 +20,7 @@ local C = ns.C
 local L = ns.L
 
 DefaultData = {
-	["Version"] = "9.0.200",
+	["Version"] = "9.0.201",
 	["OriBar"] = true,
 	["OriCast"] = true,
 	["OriElite"] = true,
@@ -57,6 +57,7 @@ DefaultData = {
 	["CastHeight"] = 8,
 	["UnSelectAlpha"] = 1.0,
 	["CenterDetail"] = false,
+	["EastenDetail"] = false,
 	["ShowArrow"] = false,
 	["ShowStolenBuff"] = true,
 	["ShowQuestIcon"] = true,
@@ -226,11 +227,25 @@ local function GetDetailText(unit)
 
 	local fPer = string.format("%.0f",(CurHealth/MaxHealth*100)).."%"
 	local fCur = nil 
-	if CurHealth > 10000 then
-		fCur = string.format("%.1f",CurHealth/10000).."W"
+
+	if SavedData["EastenDetail"] then
+		if CurHealth > 1000 and CurHealth<1000000 then
+			fCur = string.format("%.1f", CurHealth/1000).."K"
+		elseif CurHealth > 1000000  then
+			fCur = string.format("%.1f", CurHealth/1000000).."M" 
+		else 
+			fCur = tostring(CurHealth)
+		end
 	else
-		fCur = tostring(CurHealth)
+		if CurHealth > 10000 and CurHealth < 100000000 then
+			fCur = string.format("%.1f", CurHealth/10000).."W"
+		elseif CurHealth > 100000000 then
+			fCur = string.format("%.1f", CurHealth/100000000).."Y"
+		else
+			fCur = tostring(CurHealth)
+		end
 	end
+
 
 	if iType == 2 then  --百分比
 		return fPer
@@ -461,6 +476,14 @@ local function SetBarName(unitFrame)
 	
 	local unit = unitFrame.unit
 	local _, threatStatus = UnitDetailedThreatSituation("player", unit)
+	local name, server = UnitName(unit)
+
+	if server then
+		unitFrame.name:SetText(name.."-"..server)
+	else
+		unitFrame.name:SetText(name)
+	end
+
 
 	if IsPlayerself(unitFrame) then return end
 	-- 1 玩家
@@ -488,13 +511,6 @@ local function SetBarName(unitFrame)
 	unitFrame.name:SetTextColor(r,g,b,a)
 	
 	if SavedData["OriName"] then return end
-
-	local name, server =  UnitName(unitFrame.unit)
-	if server then 
-		unitFrame.name:SetText(name.."-"..server)
-	else
-		unitFrame.name:SetText(name)
-	end
 
 	if SavedData["NameWhite"] then 
 		unitFrame.name:SetTextColor(1,1,1)

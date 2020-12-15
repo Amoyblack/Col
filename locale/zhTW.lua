@@ -157,6 +157,9 @@ ns.L = {
     CenterDetail = "血量文字置中",
     CenterDetailTT = "置中顯示血量文字，|cff66CCFF重載介面生效|r。",
 
+    EastenDetail = "西式單位",
+    EastenDetailTT = "使用k,m血量單位",
+
     Arrow = "目標箭頭",
     ArrowTT = "在目標的名條右側顯示一個箭頭。",
 

@@ -288,7 +288,9 @@ local function CreatePanel(frame)
 		child.Line3 = newLine(child, child.Gap3, 0, -4)
 		CreateHealthValueDropDown(child, child.Line3, 0, -10)
 		child.CenterDetail = newCheckbox(250, -35, child, L["CenterDetail"], L["CenterDetailTT"], child.Line3, "CenterDetail")
-
+		child.EastenDetail = newCheckbox(390, -35, child, L["EastenDetail"], L["EastenDetailTT"], child.Line3, "EastenDetail")
+		child.EastenDetail:HookScript("OnClick", function ( ... ) UpdateAllNameplates() end)
+		
 		--血条染色
 		child.Gap4 = newFont(0, -90 , child, "TOPLEFT", child.Gap3, "TOPLEFT", L["Title4"], 22) 
 		child.Line4 = newLine(child, child.Gap4, 0, -4)
