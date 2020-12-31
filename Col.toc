@@ -1,6 +1,6 @@
 ## Interface: 90002
 ## Title: |cff00FF7FRS|rPlates
-## Version: R9.0.202
+## Version: R9.0.203
 ## Author: Rs
 # (Thanks for the localization  of EK)
 ## Notes: Blizzard Default Nameplate Expanded 

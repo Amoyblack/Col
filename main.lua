@@ -20,7 +20,7 @@ local C = ns.C
 local L = ns.L
 
 DefaultData = {
-	["Version"] = "9.0.202",
+	["Version"] = "9.0.203",
 	["OriBar"] = true,
 	["OriCast"] = true,
 	["OriElite"] = true,
@@ -102,13 +102,14 @@ function loadFrame:OnEvent(event, arg1)
 			G_InitFirstLoadedOption = true
 			print ("|cffFFD700---RsPlates : "..L["UpdateInfo"].." |r")
 			print ("|cffFFD700---".. L["UpdateVersion"]..": |r"..SavedData["Version"] ) 
-		-- 长度一样，但版本号不同
 
+		-- 长度一样，版本号不同，只更新版本号
 		elseif SavedData["Version"] ~= DefaultData["Version"] then 
-			SavedData = DefaultData
-			G_InitFirstLoadedOption = true
-			print ("|cffFFD700---RsPlates : "..L["UpdateInfo"].." |r")	
-			print ("|cffFFD700---".. L["UpdateVersion"]..": |r"..SavedData["Version"] ) 		
+			SavedData["Version"] = DefaultData["Version"]
+		-- 	SavedData = DefaultData
+		-- 	G_InitFirstLoadedOption = true
+		-- 	print ("|cffFFD700---RsPlates : "..L["UpdateInfo"].." |r")	
+		-- 	print ("|cffFFD700---".. L["UpdateVersion"]..": |r"..SavedData["Version"] ) 		
 		end
  	end
 	-- G_Flat = SavedData["OriBar"]
@@ -335,16 +336,11 @@ end
 local function SetUnitQuestState(unitFrame)
 	local unit = unitFrame.unit
 	local inInstance, instanceType = IsInInstance()
-	if not inInstance then
-		if IsQuestUnit(unit) then
-			if SavedData["ShowQuestIcon"] then 
-				unitFrame.healthBar.questIcon:Show()
-				return
-			end
-		end	
-		unitFrame.healthBar.questIcon:Hide()
-	end
-	
+	if not inInstance and IsQuestUnit(unit) and SavedData["ShowQuestIcon"] then
+		unitFrame.healthBar.questIcon:Show()
+		return
+	end	
+	unitFrame.healthBar.questIcon:Hide()
 end
 
 local function UpdateAllUnitQuestState()
