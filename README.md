@@ -1,4 +1,4 @@
-# $\color{#00FF7F}{RS}$Plates
+# <font color = Green>Rs</font>Plates
 
 [>>>Curseforge - RSPlates<<<](https://www.curseforge.com/wow/addons/rsplates)
 
@@ -7,7 +7,7 @@
 
  
 
-#### $\color{#FF7D00}{Features}$
+#### <font color = Orange>Features</font>
 
 - Two optional blood bars texture
 - Two optional cast bar style
@@ -23,13 +23,13 @@
 - etc... explore by yourself
  
 
-#### $\color{#FF7D00}{Settings}$
+#### <font color = Orange>Setting</font>
 
 - /rs to open Setting interface
 - In-Game Setting interface (ESC - Interface - AddOns - RSPlates)
  
 
-#### $\color{#FF7D00}{Localization}$
+#### <font color = Orange>Localization</font>
 
 - 简体中文 for "zhCN" client
 - 繁體中文 for "zhTW" client
@@ -37,12 +37,12 @@
 - If your language is not listed above and would like to help me add your language such as Russian,Korean so on .  pls let me know
  
 
-#### $\color{#FF7D00}{Additional instructions}$
+#### <font color = Orange>Additional instructions</font>
 
 - The Addon is made based on the style of blizzard <Larger Nameplates>, It's strongly recommended to enable it by [esc - interface - Names - Larger Nameplates]
  
 
-#### $\color{#FF7D00}{Video preview}$
+#### <font color = Orange>Video preview</font>
 
 -  [>>>Limit 2nd Kill Queen Azshara - youtube<<<](https://www.youtube.com/watch?v=AdX0FfnaIO8),< starts at Video 7:53 Warlock SUPREME perspective >
 
