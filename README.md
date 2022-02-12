@@ -2,11 +2,11 @@
 
 魔兽源生血条插件增强插件
 
-## A light, laconic Nameplates Addons based on Blizzard-Source-Nameplates
+### A light, laconic Nameplates Addons based on Blizzard-Source-Nameplates
 
  
 
-## Features
+### Features
 
 Two optional blood bars texture
 Two optional cast bar style
@@ -22,13 +22,13 @@ Explosive Helper, When there are explosive balls on the field, the blood bar of 
 etc... explore by yourself
  
 
-## Settings
+### Settings
 
 /rs to open Setting interface
 In-Game Setting interface (ESC - Interface - AddOns - RSPlates)
  
 
-## Localization
+### Localization
 
 简体中文 for "zhCN" client
 繁體中文 for "zhTW" client
@@ -36,12 +36,12 @@ English for other clients
 If your language is not listed above and would like to help me add your language such as Russian,Korean so on .  pls let me know
  
 
-## Additional instructions
+### Additional instructions
 
 The Addon is made based on the style of blizzard <Larger Nameplates>, It's strongly recommended to enable it by [esc - interface - Names - Larger Nameplates]
  
-## Video preview
+### Video preview
 
 < starts at Video 7:53 Warlock SUPREME perspective >
 
-Limit 2nd Kill Queen Azshara - youtube
+[Limit 2nd Kill Queen Azshara - youtube]:https://www.youtube.com/watch?v=AdX0FfnaIO8
