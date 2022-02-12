@@ -44,5 +44,5 @@
 
 #### Video preview
 
-- < starts at Video 7:53 Warlock SUPREME perspective >(Limit 2nd Kill Queen Azshara - youtube)
+-  [Limit 2nd Kill Queen Azshara - youtube](https://www.youtube.com/watch?v=AdX0FfnaIO8),< starts at Video 7:53 Warlock SUPREME perspective >
 
