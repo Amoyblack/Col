@@ -46,3 +46,15 @@
 
 -  [Limit 2nd Kill Queen Azshara - youtube](https://www.youtube.com/watch?v=AdX0FfnaIO8),< starts at Video 7:53 Warlock SUPREME perspective >
 
+#### ScreenShots  
+![1](https://media.forgecdn.net/attachments/244/41/abc.png) 
+
+![2](https://media.forgecdn.net/attachments/244/42/bc.png) 
+
+![3](https://media.forgecdn.net/attachments/259/58/7mq5-dwltz15t3csi5-a4.png) 
+
+![4](https://media.forgecdn.net/attachments/259/57/7mq5-552hz1wt1ksg5-dq.png) 
+
+![5](https://media.forgecdn.net/attachments/242/484/zzz.png) 
+
+![6](https://media.forgecdn.net/attachments/242/483/kkk.png) 
