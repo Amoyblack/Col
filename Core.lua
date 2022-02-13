@@ -380,13 +380,16 @@ function rs.HookBlizzedFunc()
     end
 
     -- 血条姓名更新
-    if RSPlatesDB["NameWhite"] then 
-        hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
-            if frame.name then 
+    hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
+        if frame.name then 
+            if RSPlatesDB["NameWhite"] then 
                 frame.name:SetVertexColor(1, 1, 1)
             end
-        end)
-    end
+            if RSPlatesDB["NameSizeEnable"] then 
+                frame.name:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["NameSize"], nil)
+            end
+        end
+    end)
 
     -- 血量显示
     hooksecurefunc("CompactUnitFrame_UpdateHealth", function(frame)

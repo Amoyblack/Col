@@ -68,8 +68,13 @@ rs.V.zhcn = {
 
 
     WhiteName = "全局白色姓名",
-    WhiteNameTT = "当血条颜色增多后, 推荐使用白色显示全局姓名以保持界面整洁   |cff66CCFF重载生效|r",
+    WhiteNameTT = "当血条颜色增多后, 推荐使用白色显示全局姓名以保持界面整洁   |cff66CCFF关闭时需要重载界面生效|r",
 
+    ChangeNameSizeEnable = "调整名字大小",
+    ChangeNameSizeEnableTT = "关闭时需要重载界面生效",
+
+    NameSize = "名字大小",
+    NameSizeTT = "关闭时需要重载界面生效",
 
     AuraText1 = "需要显示的光环",
 
@@ -170,8 +175,8 @@ rs.V.zhcn = {
     MarginCol3 = "\n位置于 .../_retail_/Interface/AddOns/Col，删除Col文件夹即可",
     MarginCol4 = "\n删除旧版本插件目录后此提示将自动关闭, 新旧共存会引发冲突与bug",
 
-    MiniMapLeftBtn = "左键: 打开设置界面",
-    MiniMapRightBtn = "右键: Bug反馈",
+    MiniMapLeftBtn = "|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:13:11:0:3:512:720:12:66:311:422|t : 打开设置界面",
+    MiniMapRightBtn = "|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:13:11:0:-1:512:512:12:66:333:411|t : Bug反馈",
 
     MiniMapEnable = "显示小地图按钮",
     MiniMapEnableTT = "在使用MinimapButtonBag等地图按钮整合插件时可能需要重载才会生效",

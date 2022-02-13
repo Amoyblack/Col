@@ -272,11 +272,34 @@ options.args.basic = {
             type = "group",
             inline = true,
             order = 4,
+            set = function (info, value) 
+                if RSPlatesDB[info[#info]] ~= nil then 
+                    RSPlatesDB[info[#info]] = value 
+                end 
+                rs.UpdateAllNameplatesOnce()
+            end,
             args = {
                 NameWhite = {
                     name = L["WhiteName"],
                     desc = L["WhiteNameTT"],
                     type = "toggle",
+                    order = 10,
+                },
+                NameSizeEnable = {
+                    name = L["ChangeNameSizeEnable"],
+                    desc = L["ChangeNameSizeEnableTT"],
+                    type = "toggle",
+                    order = 11,
+                },
+                NameSize = {
+                    name = L["NameSize"],
+                    desc = L["NameSizeTT"],
+                    type = "range",
+                    order = 12,
+                    min = 5,
+                    max = 30,
+                    step = 1,
+                    disabled = function() return not RSPlatesDB["NameSizeEnable"] end,
                 },
             }
         },
@@ -512,7 +535,7 @@ options.args.cvars = {
                     desc = L["GlobalScaleTT"],
                     type = "range",
                     order = 12,
-                    min = 1,
+                    min = 0.5,
                     max = 2,
                     step  = 0.1,
                 }, 
@@ -521,7 +544,7 @@ options.args.cvars = {
                     desc = L["DistanceTT"],
                     type = "range",
                     order = 13,
-                    min = 1,
+                    min = 10,
                     max = 60,
                     step  = 1,
                 }, 
@@ -1009,6 +1032,14 @@ function rs.UpdateAllNameplatesOnce()
 	for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
 		local unitFrame = namePlate.UnitFrame
 		rs.On_NpRefreshOnce(unitFrame)
+        if unitFrame.name then 
+            if RSPlatesDB["NameWhite"] then 
+                unitFrame.name:SetVertexColor(1, 1, 1)
+            end
+            if RSPlatesDB["NameSizeEnable"] then 
+                unitFrame.name:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["NameSize"], nil)
+            end
+        end
 	end	
 end
 

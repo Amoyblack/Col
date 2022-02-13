@@ -4,7 +4,7 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "9.1.510",
+	["Version"] = "9.1.511",
     ["ShowMiniMapBtn"] = true,
 	["FlatBar"] = false,
 	["NarrowCast"] = false,
@@ -32,6 +32,9 @@ rs.V.DefaultSetting = {
 	["SlayColor"] = {1, .73, .41},
 
 	["NameWhite"] = false,
+    ["NameSizeEnable"] = false,
+    ["NameSize"] = 12,
+
 
 	["AuraNum"] = 3,
 	["AuraDefault"] = true,

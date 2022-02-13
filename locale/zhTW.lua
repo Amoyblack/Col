@@ -68,8 +68,13 @@ rs.V.zhtw = {
 
 
     WhiteName = "全局白色名字",
-    WhiteNameTT = "推薦將全局名字顯示為白色，以便在顯示的名條增多後，保持界面的統一與清爽 ，|cff66CCFF重載介面後生效|r。",
+    WhiteNameTT = "推薦將全局名字顯示為白色，以便在顯示的名條增多後，保持界面的統一與清爽 ，|cff66CCFF關閉時需要重載介面後生效|r。",
 
+    ChangeNameSizeEnable = "調整名字大小",
+    ChangeNameSizeEnableTT = "關閉時需要重載界面生效",
+
+    NameSize = "名字大小",
+    NameSizeTT = "關閉時需要重載界面生效",
 
     AuraText1 = "需要顯示的光環",
 
@@ -169,8 +174,8 @@ rs.V.zhtw = {
     MarginCol3 = "\n位置於 .../_retail_/Interface/AddOns/Col，刪除Col文件夾即可",
     MarginCol4 = "\n刪除舊版本插件目錄後此提示將自動關閉, 新舊共存會引發衝突與bug",
 
-    MiniMapLeftBtn = "左鍵: 打開設置界面",
-    MiniMapRightBtn = "右鍵: Bug反饋",
+    MiniMapLeftBtn = "|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:13:11:0:3:512:720:12:66:311:422|t : 打開設置界面",
+    MiniMapRightBtn = "|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:13:11:0:-1:512:512:12:66:333:411|t : Bug反饋",
 
     MiniMapEnable = "顯示小地圖按鈕",
     MiniMapEnableTT = "在使用MinimapButtonBag類地圖按鈕整合插件時可能需要重載才會生效",

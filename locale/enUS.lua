@@ -68,8 +68,13 @@ rs.V.enus = {
 
 
     WhiteName = "White Colored Name",
-    WhiteNameTT = "Colored all nameplate's name as white, it will make nameplates neat when the color of the blood bar becomes more . |cff66CCFFNeed /reload.|r",
+    WhiteNameTT = "Colored all nameplate's name as white, it will make nameplates neat when the color of the blood bar becomes more . |cff66CCFFNeed to reload UI to take effect when you disable it|r",
 
+    ChangeNameSizeEnable = "Name Size Enable",
+    ChangeNameSizeEnableTT = "Need to reload UI to take effect when you disable it",
+
+    NameSize = "Name Size",
+    NameSizeTT = "Need to reload UI to take effect when you disable it",
 
     AuraText1 = "Auras need to show",
 
@@ -169,8 +174,8 @@ rs.V.enus = {
     MarginCol3 = "\nlocated at .../_retail_/Interface/AddOns/Col，Just delete the <Col> folder",
     MarginCol4 = "\nAfter deleting the plugin directory of the old version, this prompt will be automatically closed, and the coexistence of the old and new versions will cause conflicts and bugs",
 
-    MiniMapLeftBtn = "LeftButton: Open Config",
-    MiniMapRightBtn = "RightButton: Bug Report",
+    MiniMapLeftBtn = "|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:13:11:0:3:512:720:12:66:311:422|t : Open Config",
+    MiniMapRightBtn = "|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:13:11:0:-1:512:512:12:66:333:411|t : Bug Report",
 
     MiniMapEnable = "Minimap Button Enable",
     MiniMapEnableTT = "It may need to ReloadUI to take effect When using MinimapButtonBag or this type of minimap-button-Integrate addons",
