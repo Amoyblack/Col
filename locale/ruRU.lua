@@ -1,8 +1,8 @@
 
-local _, ns = ...
+local _, rs = ...
 
--- if (GetLocale() ~= "ruRU") then return end
 
--- ns.L = {
---     OriBarTexture = "Исходный материал",  
--- }
+
+rs.V.ruru = {
+    -- FlatBarTexture = "Исходный материал",  
+}

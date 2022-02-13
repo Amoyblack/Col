@@ -1,37 +1,40 @@
 
-local _, ns = ...
+local _, rs = ...
 
-dctLanguageDefault = {
+
+
+rs.V.enus = {
+    ReloadUI = "Reload UI",
+
     MenuBasis = "General",
     MenuWhiteList = "WhiteList",
-    TitleBasis = "RsPlates - General Options",
-    TitleWhiteList = "WhiteList Spell Editor",
     Version = "Version - ",
 
     Title1 = "Style",
     Title2 = "CVars",
-    Title3 = "Health Text",
     Title4 = "Colors",
     Title5 = "Name",
     Title6 = "Auras",
     Title7 = "Dungeon Helper",
     Title8 = "Others",
 
-    OriBarTexture = "Source Bar Texture",
-    OriBarTextureTT = "Use Default StatusBar Texture by Blizzard. |cff66CCFFNeed /reload.|r",
+    FlatBarTexture = "Flat Bar Texture",
+    FlatBarTextureTT = "Use flattened bartexture instead of blizzard source texture |cff66CCFFNeed /reload.|r",
 
-    OriCastBar = "Source CastBar",
-    OriCastBarTT = "Use Default Castbar Style Blizzard. |cff66CCFFNeed /reload.|r",
+    NarrowCastBar = "Narrow CastBar",
+    NarrowCastBarTT = "Use narrow castbar style instead of blizzard source style. (It's recommended to use this with Flat texture the same time for better display effect) |cff66CCFFNeed /reload.|r",
 
-    OriEliteIcon = "Source Elite NPC Icon",
-    OriEliteIconTT = "Use Default Icon for Elite NPC by Blizzard. |cff66CCFFNeed /reload.|r",
 
     BgCol = "HealthBar Background Color",
     BgColTT = "Draw HealthBar background (health loss part) as a multiplier color which basic on HealthBar color, instead black background.",
 
-    Omen3text = "Threat",
-    Omen3 = "Enable Threat Color",
-    Omen3TT = "Show threat Status as different color.\n\n|cff1AB3E9Blue|r: low threat, safe.\n|cff661AE9Purple|r: higher threat than tank but didn't aggro.\n|cffE91AE9Red|r: aggro.",
+    Omen3 = "Threat Color Enable",
+    Omen3TT = "Show threat Status as different bar color",
+
+    dpsLowthreat = "DPS Low Threat",
+    dpsGainthreat = "DPS High Threat(OT Soon)",
+    Tankstablethreat = "Tank Stable Threat",
+    Tanklosethreat = "Tank Lose Threat Soon",
 
     Health = "Health Text",
     HealthValue = "Value",
@@ -39,66 +42,42 @@ dctLanguageDefault = {
     HealthBothShow = "Value/Percent",
     HealthNone = "Hide",
 
-    CvarHelp = "CVar can be understood as the presence of some settings on the Blizzard server. \n\nThis means that even you disable this addon, the following CVar settings will continue effect.",
+    CvarEnable = "Enable",
+    CvarEnableTT = "CVar can be understood as some settings on the Blizzard server\n\nRSPlates allows you to easily modify some of them\n\nBut it also means that even if you disable or delete the plugin, the CVar settings will continue to take effect",
 
     SelectScale = "Select Scale",
-    SelectScale0 = "small",
-    SelectScale1 = "big",
     SelectScaleTT = "Scale Selected Nameplate.",
 
-    Alpha = "Fade out",
-    Alpha0 = "Enable fade out",
-    Alpha1 = "Disable fade out",
-    AlphaTT = "Fade out Nameplates outside more then 10 yards.",
 
     Distance = "Display Range",
-    Distance0 = "near",
-    Distance1 = "far",
     DistanceTT = "How many yards far away to show Nameplates.",
 
     GlobalScale = "Global Scale",
-    GlobalScale0 = "small",
-    GlobalScale1 = "big",
     GlobalScaleTT = "The Global Scale for Nameplates",
 
     OverlapV = "Vertical Overlap",
-    OverlapV0 = "tight",
-    OverlapV1 = "relax",
     OverlapVTT = "Vertical overlap between multiple Nameplates",
 
     OverlapH = "Horizontal Overlap",
-    OverlapH0 = "tight",
-    OverlapH1 = "relax",
     OverlapHTT = "Horizontal overlap between multiple Nameplates",
 
-    SlayLine = "Execute (%)",
-    SlayLine0 = "Disable",
-    SlayLine1 = "Max",
-    SlayLineTT = "Set a Execute value, 0 means Disable",
+    SlayLine = "Execute line(%)",
 
-    SlayColtext = "Execute",
-    SlayColSelect = "Color: ",
-    SlayCol = "|cFFFFD700 Click to choose: |r",
+    SlayColtext = "Execute Color Enable",
+    SlayColSelect = "Execute Color",
 
-    OriName = "Source Name Style",
-    OriNameTT = "Use source Name color and font size style by Blizzard. |cff66CCFFNeed /reload.|r",
 
     WhiteName = "White Colored Name",
-    WhiteNameTT = "Colored all nameplate's name as white, it will make nameplates neat, much better to see when many nameplates on the screen. (Won't enable when you're using Source Name Style)",
+    WhiteNameTT = "Colored all nameplate's name as white, it will make nameplates neat when the color of the blood bar becomes more . |cff66CCFFNeed /reload.|r",
 
-    NameSize = "Name Font Size",
-    NameSize0 = "small",
-    NameSize1 = "large",
-    NameSizeTT = "Name font size. (Won't enable when you're using Source Name Style)",
 
-    AuraText1 = "Auras need to show:",
-    AuraHelpBtn1 = "Aura whitelist will also be displayed on Personal Resource Bar. You can monitor skill/item buff etc if you need, such as Mage's icicles stored, Bloodlust duration, Trinket trigger or other else.",
+    AuraText1 = "Auras need to show",
 
     AuraDeault = "Default list",
     AuraDeaultTT = "Default aura whitelist by Blizzard.",
 
     AuraWL = "WhiteList",
-    AuraWLTT = "Custom whitelist. Edit additional spell id in whitelist editor.",
+    AuraWLTT = "The |cff00FF7F<Debuff>|r configured in the whitelist will be displayed on the nameplates other than the player-self, and the |cff00FF7F<Buff>|r will be displayed on the player-self's personal resource bar, which can be used to monitor spells/items's trigger  , buff coverage, etc.",
 
     AuraOnlyMe = "Self Only",
     AuraOnlyMeTT = "Show only auras cast by self or pets.",
@@ -106,50 +85,30 @@ dctLanguageDefault = {
     AuraText2 = "Auras Style",
 
     AuraHeight = "Aura space",
-    AuraHeight0 = "tight",
-    AuraHeight1 = "relax",
     AuraHeightTT = "The space between Health bar and aura frame",
 
     AuraNum = "Aura Number",
-    AuraNum0 = "Hide",
-    AuraNum1 = "max",
-    AuraNumTT = "How many aura display.",
+    AuraNumTT = "How many aura display. 0: not display",
 
-    OriAura = "Source Icon style",
-    OriAuraTT = "Use rectangle icon style by Blizzard, instead a custom square icon style. |cff66CCFFNeed /reload.|r",
+    SquareAura = "Square Aura Icon",
+
 
     AuraSize = "Icon Size",
-    AuraSize0 = "smaller",
-    AuraSize1 = "bigger",
     AuraSizeTT = "Aura icons size (Won't enable when you're using Source Icon style).",
 
     Counter = "Enable Timer",
-    CounterTT = "Show aura timer",
+    CounterTT = "Show aura timer, you need to open the Blizzard built-in display cooldown setting (esc - interface - action bar - display cooldown time), you can turn off this option when you enable other CoolDown plug-ins such as OmniCC",
 
     CounterSize = "Timer Text Size",
-    CounterSize0 = "small",
-    CounterSize1 = "big",
-    CounterSizeTT = "Aura timer text size",
 
-    AuraInfo = "Whitelist won't only affects the auras on Nameplates, but also Personal Resourse Bar.",
-    AuraHelpBtn2 = "Add Spell ID \n\nRemeber click Add button after you key-in.\n\nCurrently supports max to 20 auras.",
-    AuraID = "|cFFFFD700Spell ID|r",
-    AuraIDTT = "Spell ID:",
-    AddBtn = "Add-->",
-    RemoveBtn = "<--Remove",
 
     Exp = "Explosive Helper",
-    ExpTT = "When Explosives spawn, all of other nameplates will be hidden until there is no more Explosives alive.",
-    ExpHelpBtn = "Suggest disable this option when you don't use it.",
+    ExpTT = "When Explosives spawn, all of other nameplates will be hidden until there is no more Explosives alive",
 
     CastHeight = "Castbar Width",
-    CastHeight0 = "narrow" ,
-    CastHeight1 = "wide",
     CastHeightTT = "Won't enable when you're using Source Castbar style.",
 
     UnSelectAlpha = "Transparency",
-    UnSelectAlpha0 = "transparency" ,
-    UnSelectAlpha1 = "opaque",
     UnSelectAlphaTT = "Transparency of non-current target's Nameplates.",
 
     CenterDetail = "Text in Center",
@@ -168,9 +127,51 @@ dctLanguageDefault = {
     QuestIconTT = "Show a mark on the top of the Quest Unit",
 
     UpdateInfo = "Have detected that you've updated to newest version, all settings have been reset to default values.",
-    UpdateVersion = "Current Version",
+    UpdateVersion = "Current Version:  ",
+
+    WhiteListInput = "Enter  Aura ID",
+    WhiteListInputTT = "Enter Aura id to add it to the whitelist, click the aura icon to remove it from the whitelist",
+    WhiteListInputError = "|cffFFD700---RSPlates:|r Please enter the correct AuraID",
+    WhiteListAdd = "|cffFFD700---RSPlates:|r Whitelist added successfully ",
+    WhiteListRemove = "|cffFFD700---RSPlates:|r Whitelist deleted successfully ",
+
+    BlizzardPanelInfo = "|cffFFD700/rs|r   Open Config",
+    BlizzardPanelReportInfo = "Advice/Bug Report: https://www.curseforge.com/wow/addons/rsplates",
+    BlizzardPanelSettingBtn = "Config",
+
+
+
+    BlizzardPanelLargeInfo = "RSPlates is made based on the style of blizzard <Larger Nameplates>\n It's strongly recommended to enable it by [esc - interface - Names - Larger Nameplates]",
+
+    needReload = "|cff66CCFF >> Take effect after reload UI<< |r",
+
+    NpcCOlorTitle = "|cffFFD700- Dye the color of the specified NPC's healthbar|r",
+    NpcInput = "Add NPC",
+    NpcInputTT = "Input <NPC ID> to add, click <NPC> to remove itself",
+    NpcIDInputError = "|cffFFD700---RSPlates:|r Please enter the correct NPC ID",
+    NpcIDAdded = "|cffFFD700---RSPlates:|r NPC successfully added ",
+    NpcIDDeled = "|cffFFD700---RSPlates:|r NPC successfully removed ",
+    NpcIDColorSelectTT = "Choose the color of this kinds of NPC's healthbar",
+
+    NpcAuraTitle = "|cffFFD700- Dye the color of the NPC's healthbar that has specified Aura(buff or debuff) |r",
+    NpcAuraInput = "Add Aura",
+    NpcAuraInputTT = "Input Aura ID to add, click aura icon to remove itself",
+    NpcAuraInputError = "|cffFFD700---RSPlates:|r Please enter the correct Aura ID",
+    NpcAuraAdded = "|cffFFD700---RSPlates:|r Aura successfully added ",
+    NpcAuraDeled = "|cffFFD700---RSPlates:|r Aura successfully added ",
+    NpcAuraColorSelectTT = "Choose the color of the NPC's healthbar that has the aura",
+
+    NpcbarColor = "Healthbar Color",
+    RemoveCheckBoxTT = "|cff00FF7F--- Click to remove ---|r",
+
+    MarginCol1 = "\nSince the new version of RSP has refactored and optimized the performance and structure, you need to manually delete the plugin directory of the old version once",
+    MarginCol2 = "\nDetected that an old version plugin directory currently exists",
+    MarginCol3 = "\nlocated at .../_retail_/Interface/AddOns/Col，Just delete the <Col> folder",
+    MarginCol4 = "\nAfter deleting the plugin directory of the old version, this prompt will be automatically closed, and the coexistence of the old and new versions will cause conflicts and bugs",
+
+    MiniMapLeftBtn = "LeftButton: Open Config",
+    MiniMapRightBtn = "RightButton: Bug Report",
+
+    MiniMapEnable = "Minimap Button Enable",
+    MiniMapEnableTT = "It may need to ReloadUI to take effect When using MinimapButtonBag or this type of minimap-button-Integrate addons",
 }
-
-if (GetLocale() ~= "enUS") then return end
-
-ns.L = dctLanguageDefault

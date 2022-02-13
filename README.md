@@ -1,6 +1,6 @@
-# <font color = Green>RS</font>Plates
+# <font color = Green>Rs</font>Plates
 
-[>>>Curseforge - RSPlates<<<](https://www.curseforge.com/wow/addons/rsplates)
+
 
 
 ##### A light, laconic Nameplates Addons based on Blizzard-Source-Nameplates
@@ -44,5 +44,7 @@
 
 #### <font color = Orange>Video preview</font>
 
--  [>>>Limit 2nd Kill Queen Azshara - youtube<<<](https://www.youtube.com/watch?v=AdX0FfnaIO8),< starts at Video 7:53 Warlock SUPREME perspective >
+-  [Limit 2nd Kill Queen Azshara - youtube](https://www.youtube.com/watch?v=AdX0FfnaIO8) < starts at Video 7:53 Warlock SUPREME perspective >
+
+
 

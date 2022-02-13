@@ -1,0 +1,42 @@
+## Interface: 90105
+## Title: |cff00FF7FRS|rPlates
+## Author: Rs 
+# (Thanks for the localization part of EK)
+## Notes: Blizzard Nameplates Expanded
+## Notes-zhCN: 源生姓名板增强
+## Notes-zhTW: 源生姓名板增強
+## Notes-enUS: Blizzard Nameplates Expanded
+
+
+## SavedVariables: RSPlatesDB
+
+
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Libs\LibDBIcon-1.0\lib.xml
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
+
+
+
+
+Public.lua
+
+locale\zhCN.lua
+locale\enUS.lua
+locale\zhTW.lua
+locale\LangSet.lua
+
+
+DefaultSetting.lua
+
+Core.lua
+Quest.lua
+Aura.lua
+Dungeonhelp.lua
+CVars.lua
+
+ConfigGUI.lua
+
+
