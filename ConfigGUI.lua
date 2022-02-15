@@ -1,7 +1,6 @@
 local addon, rs = ...
 local L = rs.L
 
-local SpellModule = Spell
 local ConfigFrameContainer
 local MarginInfoFrame
 local bugReportFrame
@@ -12,40 +11,6 @@ local AceConfigDialog = LibStub('AceConfigDialog-3.0')
 local AceMap = LibStub("LibDBIcon-1.0")
 
 local MapIconTexture  = "Interface\\AddOns\\RSPlates\\media\\rsicon"
-
-
-function rs.InitMinimapBtn()
-    local savedVarTable = {
-        hide = not RSPlatesDB["ShowMiniMapBtn"],
-        minimapPos = 130,
-        -- radius = 1,
-    }
-    local tabobj = {
-            icon = MapIconTexture,
-            OnClick = function(self, button) 
-                if button == "RightButton" then 
-                    rs.SwitchBugReportWindow()
-                    -- ReloadUI()
-                else
-                    if IsShiftKeyDown() then
-                        rs.SwitchConfigGUI()
-                    else 
-                        rs.SwitchConfigGUI()
-                    end
-                end
-            end,
-            OnTooltipShow = function(tooltip)
-                tooltip:AddLine("|cff00FF7FRS|rPlates")
-                tooltip:AddLine(" ")
-                tooltip:AddLine(L["MiniMapLeftBtn"])
-                tooltip:AddLine(L["MiniMapRightBtn"])
-            end
-        }
-    AceMap:Register(addon, tabobj, savedVarTable)
-end
-
-
-
 
 local options = {
     type = "group",
@@ -502,15 +467,19 @@ options.args.cvars = {
             name = L["CvarEnable"],
             desc = L["CvarEnableTT"],
             type = "toggle",
+            set = function(info, value)
+                if RSPlatesDB[info[#info]] ~= nil then 
+                    RSPlatesDB[info[#info]] = value 
+                end 
+                if value == true then
+                    rs.UpdateCvars()
+                end
+            end
 
         },
-        -- gaplinecvar = {
-        --     type = "description",
-        --     name = " ",
-        --     order = 2,
-        -- } ,
         CvarsSliderGroup = {
             name = "CVars",
+            order = 1,
             type = "group",
             inline = true,
             disabled = function(info) return not RSPlatesDB["EnableCvar"] end,
@@ -520,8 +489,11 @@ options.args.cvars = {
                 end 
                 rs.UpdateCvars()
             end,
+            get = function(info) 
+                return RSPlatesDB[info[#info]]
+            end,
             args = {
-                SelectScale = {
+                nameplateSelectedScale = {
                     name = L["SelectScale"],
                     desc = L["SelectScaleTT"],
                     type = "range",
@@ -530,7 +502,7 @@ options.args.cvars = {
                     max = 2,
                     step  = 0.1,
                 },    
-                GlobalScale = {
+                nameplateGlobalScale = {
                     name = L["GlobalScale"],
                     desc = L["GlobalScaleTT"],
                     type = "range",
@@ -539,7 +511,7 @@ options.args.cvars = {
                     max = 2,
                     step  = 0.1,
                 }, 
-                Distence = {
+                nameplateMaxDistance = {
                     name = L["Distance"],
                     desc = L["DistanceTT"],
                     type = "range",
@@ -548,7 +520,7 @@ options.args.cvars = {
                     max = 60,
                     step  = 1,
                 }, 
-                GapV = {
+                nameplateOverlapV = {
                     name = L["OverlapV"],
                     desc = L["OverlapVTT"],
                     type = "range",
@@ -557,7 +529,7 @@ options.args.cvars = {
                     max = 1.5,
                     step  = 0.1,
                 }, 
-                GapH = {
+                nameplateOverlapH = {
                     name = L["OverlapH"],
                     desc = L["OverlapHTT"],
                     type = "range",
@@ -566,6 +538,94 @@ options.args.cvars = {
                     max = 1.5,
                     step  = 0.1,
                 }, 
+                cvargap1 = {
+                    order = 20,
+                    name = " ",
+                    type = "description",
+                },
+                nameplateShowAll = {
+                    order = 21,
+                    name = L["ShowAllNP"],
+                    desc = L["ShowAllNPTT"],
+                    type = "toggle",
+                    get = function() if RSPlatesDB["nameplateShowAll"] == 1 then return true else return false end end,
+                    set = function(info, value) if value == true then RSPlatesDB["nameplateShowAll"] = 1 else RSPlatesDB["nameplateShowAll"] = 0 end rs.UpdateCvars() end,
+                },
+        
+                nameplateShowFriendlyNPCs = {
+                    order = 22,
+                    name = L["ShowNpcNP"],
+                    desc = L["ShowNpcNPTT"],
+                    type = "toggle",
+                    get = function() if RSPlatesDB["nameplateShowFriendlyNPCs"] == 1 then return true else return false end end,
+                    set = function(info, value) if value == true then RSPlatesDB["nameplateShowFriendlyNPCs"] = 1 else RSPlatesDB["nameplateShowFriendlyNPCs"] = 0 end rs.UpdateCvars() end,
+                },
+            },
+        },
+
+
+    }
+}
+
+options.args.namemode = {
+    order = 5,
+    name = L["Title9"],
+    desc = L["Title9TT"],
+    type = "group",
+    set = function (info, value) 
+        if RSPlatesDB[info[#info]] ~= nil then 
+            RSPlatesDB[info[#info]] = value 
+        end
+        rs.UpdateAllNameplatesOnce() 
+    end,
+    args = {
+        EnableNamemode = {
+            name = L["EnableNamemode"],
+            desc = L["EnableNamemodeTT"],
+            order = 1,
+            type = "toggle",
+        },
+        NamemodeGroup = {
+            name = L["NamemodeGroupTitle"],
+            order = 2,
+            type = "group",
+            inline = true,
+            disabled = function() return not RSPlatesDB["EnableNamemode"] end,
+            args = {
+                NameModeFriendlyPlayer = {
+                    order = 1,
+                    name = L["FriendlyPlayer"],
+                    type = "toggle",
+                },
+                NameModeFriendlyPlayerSize = {
+                    disabled = function() return not RSPlatesDB["NameModeFriendlyPlayer"] end,
+                    order = 2,
+                    name = L["NameModeNameSize"],
+                    type = "range",
+                    min = 8,
+                    max = 25,
+                    step = 1,
+                },
+                NameModeGap1 = {
+                    order = 3,
+                    name = " ",
+                    type = "description",
+                },
+                NameModeFriendlyNpc = {
+                    order = 5,
+                    name = L["FriendlyNpc"],
+                    desc = L["FriendlyNpcTT"],
+                    type = "toggle",
+                },
+                NameModeFriendlyNPCSize = {
+                    disabled = function() return not RSPlatesDB["NameModeFriendlyNpc"] end,
+                    order = 6,
+                    name = L["NameModeNameSize"],
+                    type = "range",
+                    min = 8,
+                    max = 25,
+                    step = 1,
+                },
             }
         }
 
@@ -576,7 +636,7 @@ options.args.auras = {
     name = L["Title6"],
     desc = "Buff / Debuff",
     type = "group",
-    order = 4,
+    order = 6,
     args = {
         auraneedshowlable = {
             name = L["AuraText1"],
@@ -690,7 +750,7 @@ options.args.auras = {
 options.args.auras.args.whitelist = {
     name = L["MenuWhiteList"],
     type = "group",
-    order = 5,
+    order = 8,
     args = {
         whitelistDesc = {
             name = L["AuraWLTT"],
@@ -735,6 +795,36 @@ options.args.auras.args.whitelist = {
     }
 }
 
+function rs.InitMinimapBtn()
+    local savedVarTable = {
+        hide = not RSPlatesDB["ShowMiniMapBtn"],
+        minimapPos = 130,
+        -- radius = 1,
+    }
+    local tabobj = {
+            icon = MapIconTexture,
+            OnClick = function(self, button) 
+                if button == "RightButton" then 
+                    rs.SwitchBugReportWindow()
+                    -- ReloadUI()
+                else
+                    if IsShiftKeyDown() then
+                        rs.SwitchConfigGUI()
+                    else 
+                        rs.SwitchConfigGUI()
+                    end
+                end
+            end,
+            OnTooltipShow = function(tooltip)
+                tooltip:AddLine("|cff00FF7FRS|rPlates")
+                tooltip:AddLine(" ")
+                tooltip:AddLine(L["MiniMapLeftBtn"])
+                tooltip:AddLine(L["MiniMapRightBtn"])
+            end
+        }
+    AceMap:Register(addon, tabobj, savedVarTable)
+end
+
 
 AceRegis:RegisterOptionsTable(addon, options, false)
 AceRegis:NotifyChange(addon);
@@ -766,14 +856,14 @@ function rs.SwitchConfigGUI(page)
 end
 
 
-local RsGameTooltipTemp
-RsGameTooltipTemp = CreateFrame("GameTooltip", "RSNPCID", UIParent, "GameTooltipTemplate")
-RsGameTooltipTemp:SetOwner(UIParent, "ANCHOR_NONE")
+local RSNpcIDTooltip
+RSNpcIDTooltip = CreateFrame("GameTooltip", "RSNPCID", UIParent, "GameTooltipTemplate")
+RSNpcIDTooltip:SetOwner(UIParent, "ANCHOR_NONE")
 
 function rs.GetNameByNpcID(iNpcID)
     -- SetOwer May Release once 
-    RsGameTooltipTemp:SetOwner(UIParent, "ANCHOR_NONE")
-    RsGameTooltipTemp:SetHyperlink(format("unit:Creature-0-0-0-0-%d", iNpcID))
+    RSNpcIDTooltip:SetOwner(UIParent, "ANCHOR_NONE")
+    RSNpcIDTooltip:SetHyperlink(format("unit:Creature-0-0-0-0-%d", iNpcID))
 
     if RSNPCIDTextLeft1 and RSNPCIDTextLeft1.GetText then 
         local name = RSNPCIDTextLeft1:GetText()
@@ -825,43 +915,43 @@ end
 -- Npc光环
 function rs.RefDungeonAuraPanel()
     local node = options.args.dungeon.args.AuraGroup.args.AuraColorGroup
-    local v = 1 
     node.args = {}
     for i, k in pairs(RSPlatesDB["DctColorAura"]) do 
-        local spellMixin = SpellModule:CreateFromSpellID(i)
-        spellMixin:ContinueOnSpellLoad(function()
             local sAuraID = tostring(i)
             local iconname, _, icon = GetSpellInfo(i)
-            local spellDes = spellMixin:GetSpellDescription(i)
+            local spellDes = GetSpellDescription(i)
+            if spellDes == "" then
+                spellDes = L["GetSpellDesFailInfo"]
+            end
             local des = format("AuraID: %s\n\n%s", sAuraID, spellDes)
-            node.args[sAuraID.."DungeonAuraPanelName"] = {
+            node.args["group"..sAuraID] = {
+                type = "group",
+                name = "",
+                inline = true,
+                args = {
+
+                }
+            }
+            node.args["group"..sAuraID].args[sAuraID.."DungeonAuraPanelName"] = {
                 type = "toggle",
                 desc = format("%s\n\n%s", des, L["RemoveCheckBoxTT"]),
                 width = "double",
-                order = v,
                 name = iconname,
                 image = icon,
+                order = 1,
                 set = function(info,value) RSPlatesDB["DctColorAura"][i] = nil rs.RefDungeonAuraPanel() 
                     print(L["NpcAuraDeled"]..iconname)
                 end 
             }
-            v = v + 1
-            node.args[sAuraID.."DungeonAuraPanelColor"] = {
+            node.args["group"..sAuraID].args[sAuraID.."DungeonAuraPanelColor"] = {
                 type = "color",
                 name = L["NpcbarColor"],
+                order = 2,
                 desc = L["NpcAuraColorSelectTT"],
                 width = "half",
-                order = v,
                 get = function(info) return RSPlatesDB["DctColorAura"][i][1], RSPlatesDB["DctColorAura"][i][2], RSPlatesDB["DctColorAura"][i][3] end,
                 set = function(info,r,g,b,a) RSPlatesDB["DctColorAura"][i] = {r-r%0.01, g-g%0.01, b-b%0.01} end,
             }
-            v = v + 1
-            node.args[sAuraID.."DungeonAuraPanelgapline"] = {
-                type = "description",
-                name = " ",
-                order = v,
-            }  
-        end)
     end
 
 end
@@ -872,29 +962,28 @@ function rs.RefWhitelistAuraPanel()
     local node = options.args.auras.args.whitelist.args.whitelisticongroup 
     node.args = {} 
     for i, v in pairs(RSPlatesDB["DctAura"]) do 
-        local spellMixin = SpellModule:CreateFromSpellID(i)
-        spellMixin:ContinueOnSpellLoad(function()
-            local sAuraID = tostring(i)
-            local iconname, _, icon = GetSpellInfo(i)
-            local spellDes = spellMixin:GetSpellDescription(i)
-            local des = format("AuraID: %s\n\n%s", sAuraID, spellDes)
-            -- tode node.args. sAuraID  not work
-            node.args[sAuraID.."WhitelistAuraPanel"] = {
-                name = iconname,
-                type = "toggle",
-                image = icon,
-                desc = format("%s\n\n%s", des, L["RemoveCheckBoxTT"]),
-                set = function(info, value)
-                    if RSPlatesDB["DctAura"][i] then 
-                        RSPlatesDB["DctAura"][i] = nil
-                        print(L["WhiteListRemove"]..iconname)
-                    end
-                    rs.RefWhitelistAuraPanel()
+        local sAuraID = tostring(i)
+        local iconname, _, icon = GetSpellInfo(i)
+        local spellDes = GetSpellDescription(i)
+        if spellDes == "" then
+            spellDes = L["GetSpellDesFailInfo"]
+        end
+        local des = format("AuraID: %s\n\n%s", sAuraID, spellDes)
+        -- tode node.args. sAuraID  not work
+        node.args[sAuraID.."WhitelistAuraPanel"] = {
+            name = iconname,
+            type = "toggle",
+            image = icon,
+            desc = format("%s\n\n%s", des, L["RemoveCheckBoxTT"]),
+            set = function(info, value)
+                if RSPlatesDB["DctAura"][i] then 
+                    RSPlatesDB["DctAura"][i] = nil
+                    print(L["WhiteListRemove"]..iconname)
                 end
-            }
-        end)
+                rs.RefWhitelistAuraPanel()
+            end
+        }
     end
-
 end
 
 
@@ -1032,6 +1121,7 @@ function rs.UpdateAllNameplatesOnce()
 	for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
 		local unitFrame = namePlate.UnitFrame
 		rs.On_NpRefreshOnce(unitFrame)
+        rs.SetNameMode(unitFrame)
         if unitFrame.name then 
             if RSPlatesDB["NameWhite"] then 
                 unitFrame.name:SetVertexColor(1, 1, 1)

@@ -131,3 +131,17 @@ function rs.GetTrueNum(table)
 	return i
 end 
 
+function rs.GetMarginDB(OldDB)
+    local NewDB = rs.table_copy(rs.V.DefaultSetting)
+    if rs.V.DefaultSetting["ForceUpdate"] then 
+        return NewDB, true
+    else
+        for k, v in pairs(NewDB) do 
+            if OldDB[k] then 
+                NewDB[k] = OldDB[k]
+            end
+        end
+        NewDB["Version"] = rs.V.DefaultSetting["Version"]
+        return NewDB, false
+    end
+end

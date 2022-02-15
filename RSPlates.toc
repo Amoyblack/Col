@@ -36,6 +36,7 @@ Quest.lua
 Aura.lua
 Dungeonhelp.lua
 CVars.lua
+NameMode.lua
 
 ConfigGUI.lua
 

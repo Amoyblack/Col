@@ -55,10 +55,17 @@ end
 
 function rs.CreateUIObj(unitFrame)
 
+    local unit = unitFrame.unit 
+    if not unit then return end
+
+    local namePlate = C_NamePlate.GetNamePlateForUnit(unit)
+    if not namePlate then return end 
+
 	unitFrame.BuffFrame.UpdateBuffs = rs.UpdateBuffsOri
 	unitFrame.BuffFrame.UpdateAnchor = rs.UpdateAnchor
 
 	if not unitFrame.rsed then 
+
 		-- 施法条毛玻璃边 
 		unitFrame.castBar.castBG = rs.CreateBackDrop(unitFrame.castBar, unitFrame.castBar, 1) 
 
@@ -69,11 +76,12 @@ function rs.CreateUIObj(unitFrame)
 		if not RSPlatesDB["NarrowCast"] then 
 			unitFrame.castBar.Icon.iconborder:Hide()
 			unitFrame.castBar.castBG:Hide()
+        else
+            unitFrame.RaidTargetFrame:SetPoint("RIGHT", -170, -10)
 		end
-		
+
 
 		-- 血量
-		-- unitFrame.healthBar.value = rs.createtext(unitFrame.healthBar, "OVERLAY", 11, "THICKOUTLINE", "CENTER")
 		unitFrame.healthBar.value = rs.createtext(unitFrame.healthBar, "OVERLAY", 11, "OUTLINE", "CENTER")
 		unitFrame.healthBar.value:SetShadowColor(0,0,0,1)
 		unitFrame.healthBar.value:SetShadowOffset(0.5,-0.5)
@@ -116,6 +124,11 @@ function rs.CreateUIObj(unitFrame)
 		unitFrame.StolenFrame.Cooldown:SetReverse(true)
 		unitFrame.StolenFrame.Cooldown:SetHideCountdownNumbers(true)
 
+        -- namePlate.NpcNameRS = rs.createtext(namePlate, "OVERLAY", 12, "OUTLINE", "CENTER")
+        namePlate.NpcNameRS = rs.createtext(namePlate, "OVERLAY", 12, "THICKOUTLINE", "CENTER")
+        namePlate.NpcNameRS:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, 0)
+		namePlate.NpcNameRS:Hide()
+
 		unitFrame.rsed = true
 	end
 end
@@ -146,10 +159,23 @@ function rs.IsPlayerself(unitFrame)
 	return false
 end
 
+-- a test function 
+function rs.NpUnderProtection(unitframe, whocall)
+    if not unitframe then return end 
+    local unit = unitframe.unit 
+    local reaction = UnitReaction("player", unit)
+    
+    -- print(reaction, UnitName(unit), " canAttack:", UnitCanAttack("player", unit)," canAssist:", UnitCanAssist("player", unit)," IsFriend:",  UnitIsFriend("player", unit), " IsEnemy:", UnitIsEnemy("player", unit), "Call Method:", whocall, "Protect Mode: ")
+end
+
 
 function rs.SetBarColor(frame)
-	local r, g, b, a
 	local unit = frame.unit
+    if not unit then return end 
+    if not rs.IsNameplateUnit(frame) then return end 
+    if frame:IsForbidden() then return end
+
+	local r, g, b, a
 	local guid = UnitGUID(frame.unit)
 	local _, _, _, _, _, id = strsplit("-", guid or "") 
 	local _, threatStatus = UnitDetailedThreatSituation("player", unit)
@@ -157,10 +183,6 @@ function rs.SetBarColor(frame)
     
 	-- 资源条不染色
 	if rs.IsPlayerself(frame) then return end
-    
-	-- 3 易爆球
-	-- if (id == "120651") then 
-	-- 	r, g, b = .2, 1, .2
         
     -- 1 自定义NpcID
     if NpcColor then 
@@ -203,6 +225,45 @@ function rs.SetBarColor(frame)
 end
 
 
+function rs.SetName(frame) 
+    if not rs.IsNameplateUnit(frame) then return end 
+    if frame:IsForbidden() then return end 
+    rs.SetNameMode(frame)
+
+    if frame.name then 
+        if RSPlatesDB["NameWhite"] then 
+            frame.name:SetVertexColor(1, 1, 1)
+        end
+        if RSPlatesDB["NameSizeEnable"] then 
+            frame.name:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["NameSize"], nil)
+        end
+    end
+end
+
+
+function rs.ThinCastBar(self)
+    if not self.unit then return end 
+    local np = C_NamePlate.GetNamePlateForUnit(self.unit)
+    if not np then return end 
+    unitFrame = np.UnitFrame
+    if unitFrame:IsForbidden() then return end 
+	local function SetThin(self)
+
+		self.Icon:SetShown(true)
+		-- self.Icon:SetTexture(texture)
+		self:SetHeight(RSPlatesDB["CastHeight"])
+		self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -3, 0)
+		self.Icon:SetSize(RSPlatesDB["CastHeight"] + 13, RSPlatesDB["CastHeight"] + 13)  -- 13 + height
+		self.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
+		self.BorderShield:SetPoint("LEFT",self, "LEFT", -2, 0)
+	end
+
+	SetThin(self)
+	self:SetScript("OnSizeChanged", function ( ... )
+		SetThin(self)
+	end)
+end
+
 
 function rs.GetDetailText(unit)
 	local iType = RSPlatesDB["DetailType"]
@@ -244,7 +305,15 @@ function rs.GetDetailText(unit)
 	end
 end
 
-
+function rs.IsNameplateUnit(Frame)
+    local unit = Frame.unit
+    if not unit then return end 
+    if string.match(unit, "nameplate") == "nameplate" then 
+        return true
+    else
+        return false
+    end
+end
 
 function rs.IsOnThreatList(unit)
 	local _, threatStatus = UnitDetailedThreatSituation("player", unit)
@@ -271,6 +340,7 @@ function rs.IsOnKillHealth(unit)
 end
 
 
+-- 安全 
 function rs.SetSelectionHighlight(unitFrame)
 	if not unitFrame.healthBar.curTarget then return end
 	local unit = unitFrame.unit
@@ -334,6 +404,8 @@ function rs.On_NpRefreshOnce(unitFrame)
 	rs.SetUnitQuestState(unitFrame)
 
 	rs.RefAuraForOneNp(unitFrame)
+
+    rs.SetNameMode(unitFrame)
 end
 
 
@@ -348,30 +420,13 @@ end
 
 --- Hook Part
 ------------------------------------------------
-local function ThinCastBar(self)
-	local function SetThin(self)
-
-		self.Icon:SetShown(true)
-		-- self.Icon:SetTexture(texture)
-		self:SetHeight(RSPlatesDB["CastHeight"])
-		self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -3, 0)
-		self.Icon:SetSize(RSPlatesDB["CastHeight"] + 13, RSPlatesDB["CastHeight"] + 13)  -- 13 + height
-		self.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
-		self.BorderShield:SetPoint("LEFT",self, "LEFT", -2, 0)
-	end
-
-	SetThin(self)
-	self:SetScript("OnSizeChanged", function ( ... )
-		SetThin(self)
-	end)
-end
 
 
 function rs.HookBlizzedFunc()
     -- print ('hoooookkkkk')
-    if RSPlatesDB["NarrowCast"] then
+    if RSPlatesDB["NarrowCast"]then
         hooksecurefunc("CastingBarFrame_OnEvent", function(self, event, ...)
-            ThinCastBar(self)
+            rs.ThinCastBar(self)
         end)
         -- hooksecurefunc("CastingBarFrame_OnShow", function(self)
         -- 	ThinCastBar(self)
@@ -379,20 +434,14 @@ function rs.HookBlizzedFunc()
 
     end
 
-    -- 血条姓名更新
+    -- 名字
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
-        if frame.name then 
-            if RSPlatesDB["NameWhite"] then 
-                frame.name:SetVertexColor(1, 1, 1)
-            end
-            if RSPlatesDB["NameSizeEnable"] then 
-                frame.name:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["NameSize"], nil)
-            end
-        end
+        rs.SetName(frame)
     end)
 
-    -- 血量显示
+    -- 血量
     hooksecurefunc("CompactUnitFrame_UpdateHealth", function(frame)
+        if not rs.IsNameplateUnit(frame) then return end 
         if frame.healthBar.value then
             rs.SetBloodText(frame)
             if RSPlatesDB["SlayEnable"] then  -- 检查斩杀线
@@ -401,15 +450,17 @@ function rs.HookBlizzedFunc()
         end
     end)
 
-    -- 血条染色
+    -- 血条颜色
     hooksecurefunc("CompactUnitFrame_UpdateHealthColor", function(frame)
         rs.SetBarColor(frame)
     end)
 
     -- 目标选择
     hooksecurefunc("CompactUnitFrame_UpdateHealthBorder", function(frame)
+        if not rs.IsNameplateUnit(frame) then return end 
         rs.SetSelectionHighlight(frame)
         if RSPlatesDB["NarrowCast"] then  -- 隐藏精英图标
+            if frame:IsForbidden() then return end 
             if frame.ClassificationFrame then
                 frame.ClassificationFrame:Hide()
             end
@@ -430,28 +481,40 @@ loadFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 function loadFrame:OnEvent(event, arg1)
 	if event == "ADDON_LOADED" and arg1 == ADDONName then
+        rs.V.AddonFirstLoad = false
 		if not RSPlatesDB then 
 			rs.V.AddonFirstLoad = true
 			RSPlatesDB = rs.V.DefaultSetting
-            -- print('debug: 第一次加载，生成RSPlatesDB文件')
 		else
-			rs.V.AddonFirstLoad = false
-			-- 代码库与玩家存储的配置长度不一样时，直接更新
-			if (rs.table_leng(RSPlatesDB) ~= rs.table_leng(rs.V.DefaultSetting)) then 
-				RSPlatesDB = rs.V.DefaultSetting
-				rs.V.AddonFirstLoad = true
-				print ("|cffFFD700---RSPlates : "..L["UpdateInfo"].." |r")
-				print ("|cffFFD700---".. L["UpdateVersion"]..": |r"..RSPlatesDB["Version"] ) 
+            -- 版本号不一样
+            if RSPlatesDB["Version"] ~= rs.V.DefaultSetting["Version"] then 
+                rs.V.AddonFirstLoad = true 
+                RSPlatesDB, hasbeenForced = rs.GetMarginDB(RSPlatesDB)
+                if not hasbeenForced then 
+                    print (rs.L["UpdateInfo"])
+                    print ("|cffFFD700---RSPlates"..L["UpdateVersion"].."|r"..RSPlatesDB["Version"] ) 
+                else
+                    print(rs.L["UpdateForce"])
+                    print("|cffFFD700---RSPlates: "..L["UpdateVersion"].."|r"..RSPlatesDB["Version"] ) 
+                end
+            end
+        end
 
-			-- 长度一样，版本号不同，只更新版本号
-			elseif RSPlatesDB["Version"] ~= rs.V.DefaultSetting["Version"] then 
-				-- RSPlatesDB["Version"] = rs.V.DefaultSetting["Version"]
-                RSPlatesDB = rs.V.DefaultSetting
-				rs.V.AddonFirstLoad = true
-                print ("|cffFFD700---RSPlates : "..L["UpdateInfo"].." |r")
-				print ("|cffFFD700---".. L["UpdateVersion"]..": |r"..RSPlatesDB["Version"] ) 
-			end
-		end
+			-- -- 代码库与玩家存储的配置长度不一样时，直接更新
+			-- if (rs.table_leng(RSPlatesDB) ~= rs.table_leng(rs.V.DefaultSetting)) then 
+			-- 	RSPlatesDB = rs.V.DefaultSetting
+			-- 	rs.V.AddonFirstLoad = true
+			-- 	print ("|cffFFD700---RSPlates : "..L["UpdateInfo"].." |r")
+			-- 	print ("|cffFFD700---".. L["UpdateVersion"]..": |r"..RSPlatesDB["Version"] ) 
+
+			-- -- 长度一样，版本号不同，只更新版本号
+			-- elseif RSPlatesDB["Version"] ~= rs.V.DefaultSetting["Version"] then 
+			-- 	-- RSPlatesDB["Version"] = rs.V.DefaultSetting["Version"]
+            --     RSPlatesDB = rs.V.DefaultSetting
+			-- 	rs.V.AddonFirstLoad = true
+            --     print ("|cffFFD700---RSPlates : "..L["UpdateInfo"].." |r")
+			-- 	print ("|cffFFD700---".. L["UpdateVersion"]..": |r"..RSPlatesDB["Version"] ) 
+			-- end
 
         rs.OnColCheck()
 		rs.RSOn()

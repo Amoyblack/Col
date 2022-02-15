@@ -1,7 +1,6 @@
 local addon, rs = ...
 
 
-
 -- 不要无感修改任何CVars，最多只初始化修改第一次
 function rs.SetCVarOnFirstTime()
     -- 堆叠1 重叠 0 
@@ -25,13 +24,23 @@ end
 
 
 function rs.UpdateCvars()
-    SetCVar("nameplateSelectedScale", RSPlatesDB["SelectScale"])
-    SetCVar("nameplateGlobalScale", RSPlatesDB["GlobalScale"])
-    SetCVar("nameplateMaxDistance", RSPlatesDB["Distence"])
-    SetCVar("nameplateOverlapH", RSPlatesDB["GapH"])
-    SetCVar("nameplateOverlapV", RSPlatesDB["GapV"])
+    if RSPlatesDB["EnableCvar"] then 
+        SetCVar("nameplateSelectedScale", RSPlatesDB["nameplateSelectedScale"])
+        SetCVar("nameplateGlobalScale", RSPlatesDB["nameplateGlobalScale"])
+        SetCVar("nameplateMaxDistance", RSPlatesDB["nameplateMaxDistance"])
+        SetCVar("nameplateOverlapV", RSPlatesDB["nameplateOverlapV"])
+        SetCVar("nameplateOverlapH", RSPlatesDB["nameplateOverlapH"])
 
-    --不让血条随距离改变而变小,预设Min 0.8
-	SetCVar("namePlateMinScale", 1) 
-	SetCVar("namePlateMaxScale", 1) 
+        SetCVar("nameplateShowAll", RSPlatesDB["nameplateShowAll"]) 
+        SetCVar("nameplateShowFriendlyNPCs", RSPlatesDB["nameplateShowFriendlyNPCs"]) 
+
+        --不让血条随距离改变而变小,预设Min 0.8
+        SetCVar("namePlateMinScale", 1) 
+        SetCVar("namePlateMaxScale", 1) 
+    end
 end
+
+
+-- /dump GetCVar("nameplateShowFriendlyNPCs")
+-- /run SetCVar("nameplateShowFriendlyNPCs", 0) 
+

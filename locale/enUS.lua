@@ -131,7 +131,8 @@ rs.V.enus = {
     QuestIcon = "QuestMarker",
     QuestIconTT = "Show a mark on the top of the Quest Unit",
 
-    UpdateInfo = "Have detected that you've updated to newest version, all settings have been reset to default values.",
+    UpdateForce = "|cffFFD700---RSPlates: Version update has been detected, this version needs to reset the settings, the settings are now initialized|r",
+    UpdateInfo = "|cffFFD700---RSPlates: Version update has been detected|r",
     UpdateVersion = "Current Version:  ",
 
     WhiteListInput = "Enter  Aura ID",
@@ -179,4 +180,29 @@ rs.V.enus = {
 
     MiniMapEnable = "Minimap Button Enable",
     MiniMapEnableTT = "It may need to ReloadUI to take effect When using MinimapButtonBag or this type of minimap-button-Integrate addons",
+
+
+
+    Title9 = "Name Mode",
+    Title9TT = "Use Name instead of Healthbar to display",
+
+    EnableNamemode = "Enable",
+    EnableNamemodeTT = "Use Name instead of Healthbar display for the units below . (Due to Blizzard's restrictions, friendly units do not take effect in dungeon)",
+
+    NamemodeGroupTitle = "Unit Type",
+
+    FriendlyPlayer = "Friendly Player",
+
+    FriendlyNpc = "Friendly NPC",
+    FriendlyNpcTT = "You can turn on <Always Show Nameplates> and <Show Friendly NPC nameplates> in CVAR options at the same time to make the names of surrounding NPCs prominently displayed",
+
+    GetSpellDesFailInfo = "The spell has no description Or the Addon is not received due to blizzard server delay. If the latter, Re-open the RSPlates settings interface, it can be displayed normally",
+
+    ShowAllNP = "Always Show Nameplates",
+    ShowAllNPTT = "When off it only shows the nameplates (or Name in name-mode) in battle, when on it will always show. Same option as <Always Show Nameplates> in Blizzard UI settings",
+
+    ShowNpcNP = "Show Friendly NPC nameplates",
+    ShowNpcNPTT = "Display the friendly NPC's nameplates (or name in name mode), you need to open <Friendly Players> in Blizzard UI settings , the initial shortcut key is Shift + V",
+
+    NameModeNameSize = "Name Size",
 }

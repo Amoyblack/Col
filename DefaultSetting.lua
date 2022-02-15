@@ -4,7 +4,8 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "9.1.511",
+	["Version"] = "9.1.520",
+    ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
 	["FlatBar"] = false,
 	["NarrowCast"] = false,
@@ -15,11 +16,15 @@ rs.V.DefaultSetting = {
 	["WesternDetail"] = false,
 
     ["EnableCvar"] = false,
-	["SelectScale"] = 1,
-	["GlobalScale"] = 1.0,
-	["Distence"] = 45,
-	["GapV"] = 0.8,
-	["GapH"] = 0.6,
+	["nameplateSelectedScale"] = 1,
+	["nameplateGlobalScale"] = 1.0,
+	["nameplateMaxDistance"] = 45,
+	["nameplateOverlapV"] = 0.8,
+	["nameplateOverlapH"] = 0.6,
+
+    ["nameplateShowAll"] = 1,
+    ["nameplateShowFriendlyNPCs"] = 0,
+
 
     ["ThreatColorEnable"] = false,      -- 参数 r,g,b  格式: (255,0,255) --> (1,0,1)
     ["dpsSafeColor"] = {.1, .7, .9},    --dps低仇恨 (安全)/ 默认蓝色	Dps low threat (dps safe)
@@ -34,6 +39,12 @@ rs.V.DefaultSetting = {
 	["NameWhite"] = false,
     ["NameSizeEnable"] = false,
     ["NameSize"] = 12,
+
+    ["EnableNamemode"] = false,
+    ["NameModeFriendlyPlayer"] = false,
+    ["NameModeFriendlyNpc"] = false,
+    ["NameModeFriendlyPlayerSize"] = 12,
+    ["NameModeFriendlyNPCSize"] = 12,
 
 
 	["AuraNum"] = 3,

@@ -4,10 +4,7 @@ local function OnlyShowBall()
 	local haskey = false
 
 	for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
-		local unitFrame = namePlate.UnitFrame
-		local guid = UnitGUID(unitFrame.unit)
-		local _, _, _, _, _, id = strsplit("-", guid or "") 
-		if id == "120651" then
+        if rs.IsExpBall(nil, namePlate.UnitFrame) then 
 			haskey = true
 		end
 	end	
@@ -16,10 +13,7 @@ local function OnlyShowBall()
 	if haskey then 
             -- 隐藏球之外的血条框架
 			for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
-				local unitFrame = namePlate.UnitFrame
-				local guid = UnitGUID(unitFrame.unit)
-				local _, _, _, _, _, id = strsplit("-", guid or "") 
-				if id ~= "120651" then
+                if not rs.IsExpBall(nil, namePlate.UnitFrame) then 
 					unitFrame:Hide()
 				end
 			end
@@ -33,7 +27,7 @@ local function OnlyShowBall()
 	end
 end
 
--- 每0.2秒执行一次 
+-- 每0.25秒执行一次 
 
 local boomFrame, timei
 
@@ -50,4 +44,16 @@ function rs.BallScanner()
 			timei = 0
 		end
 	end)
+end
+
+function rs.IsExpBall(unit, unitFrame)
+    if not unit then unit = unitFrame.unit end
+    if not unit then return end 
+    local GUID = UnitGUID(unit)
+    local _, _, _, _, _, NpcID = strsplit("-", GUID or "") 
+    if NpcID ~= "120651" then
+        return true 
+    else
+        return false
+    end
 end

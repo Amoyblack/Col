@@ -131,7 +131,8 @@ rs.V.zhcn = {
     QuestIcon = "任务标记",
     QuestIconTT = "在任务单位血条上显示标记图标",
 
-    UpdateInfo = "检测到你已更新版本，所有设置已还原为预设值",
+    UpdateForce = "|cffFFD700---RSPlates: 已检测到版本更新,该版本需要重置设置,现已将设置初始化|r",
+    UpdateInfo = "|cffFFD700---RSPlates: 已检测到版本更新|r",
     UpdateVersion = "当前版本:  ",
 
     WhiteListInput = "输入光环ID",
@@ -181,4 +182,29 @@ rs.V.zhcn = {
     MiniMapEnable = "显示小地图按钮",
     MiniMapEnableTT = "在使用MinimapButtonBag等地图按钮整合插件时可能需要重载才会生效",
 
+
+
+
+    Title9 = "名字模式",
+    Title9TT = "使用名字替代血条显示",
+
+    EnableNamemode = "启用",
+    EnableNamemodeTT = "对选中的单位 使用名字替代血条显示 (由于暴雪的限制，友方类型单位在副本中不生效)",
+
+    NamemodeGroupTitle = "单位类型",
+
+    FriendlyPlayer = "友方玩家",
+
+    FriendlyNpc = "友方NPC",
+    FriendlyNpcTT = "可以同时打开 CVAR选项里 <始终显示姓名板> 和 <显示友方NPC姓名板> 使周围的NPC的名字醒目显示",
+
+    GetSpellDesFailInfo = "该技能没有描述  或  服务器延迟导致插件未接收到，如是后者重新打开设置界面即可正常显示",
+
+    ShowAllNP = "始终显示姓名板",
+    ShowAllNPTT = "关闭时只在战斗中显示姓名板(或 在名字模式下的名字)，开启后会始终显示。  与暴雪界面设置里的 <显示所有姓名板> 是同一个选项",
+
+    ShowNpcNP = "显示友方NPC姓名板",
+    ShowNpcNPTT = "显示友方NPC的姓名板（或 名字模式下的名字），需开启 友方玩家姓名板，初始快捷键 Shift + V",
+
+    NameModeNameSize = "名字大小",
 }
