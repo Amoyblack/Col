@@ -207,4 +207,13 @@ rs.V.zhcn = {
     ShowNpcNPTT = "显示友方NPC的姓名板（或 名字模式下的名字），需开启 友方玩家姓名板，初始快捷键 Shift + V",
 
     NameModeNameSize = "名字大小",
+
+    nameplateOccludedAlphaMult = "被遮挡单位透明度",
+
+    WhenselfShow = "何时显示个人资源条",
+    NameplatePersonalShowAlways = "总是显示",
+    NameplatePersonalShowInCombat = "战斗中显示",
+    NameplatePersonalShowWithTarget = "有目标时显示",
+
+    CVarExtraLink = "|cffFFD700更多完整的CVar文档手册可以在这里查阅:  https://wowpedia.fandom.com/wiki/Console_variables/Complete_list |r",
 }

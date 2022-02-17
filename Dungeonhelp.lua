@@ -49,9 +49,10 @@ end
 function rs.IsExpBall(unit, unitFrame)
     if not unit then unit = unitFrame.unit end
     if not unit then return end 
+    
     local GUID = UnitGUID(unit)
     local _, _, _, _, _, NpcID = strsplit("-", GUID or "") 
-    if NpcID ~= "120651" then
+    if NpcID == "120651" then
         return true 
     else
         return false

@@ -4,7 +4,7 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "9.1.520",
+	["Version"] = "9.1.521",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
 	["FlatBar"] = false,
@@ -21,10 +21,14 @@ rs.V.DefaultSetting = {
 	["nameplateMaxDistance"] = 45,
 	["nameplateOverlapV"] = 0.8,
 	["nameplateOverlapH"] = 0.6,
+    ["nameplateOccludedAlphaMult"] = 0.4,
 
     ["nameplateShowAll"] = 1,
     ["nameplateShowFriendlyNPCs"] = 0,
 
+    ["NameplatePersonalShowAlways"] = 0,
+    ["NameplatePersonalShowInCombat"] = 1,
+    ["NameplatePersonalShowWithTarget"] = 0,
 
     ["ThreatColorEnable"] = false,      -- 参数 r,g,b  格式: (255,0,255) --> (1,0,1)
     ["dpsSafeColor"] = {.1, .7, .9},    --dps低仇恨 (安全)/ 默认蓝色	Dps low threat (dps safe)

@@ -477,9 +477,14 @@ options.args.cvars = {
             end
 
         },
+        CvarExtraLink = {
+            order = 10,
+            name = L["CVarExtraLink"],
+            type = "description",
+        },
         CvarsSliderGroup = {
             name = "CVars",
-            order = 1,
+            order = 5,
             type = "group",
             inline = true,
             disabled = function(info) return not RSPlatesDB["EnableCvar"] end,
@@ -538,9 +543,17 @@ options.args.cvars = {
                     max = 1.5,
                     step  = 0.1,
                 }, 
+                nameplateOccludedAlphaMult = {
+                    name = L["nameplateOccludedAlphaMult"],
+                    type = "range",
+                    order = 16,
+                    min = 0.1,
+                    max = 1,
+                    step  = 0.1,                
+                },
                 cvargap1 = {
                     order = 20,
-                    name = " ",
+                    name = " \n ",
                     type = "description",
                 },
                 nameplateShowAll = {
@@ -560,11 +573,44 @@ options.args.cvars = {
                     get = function() if RSPlatesDB["nameplateShowFriendlyNPCs"] == 1 then return true else return false end end,
                     set = function(info, value) if value == true then RSPlatesDB["nameplateShowFriendlyNPCs"] = 1 else RSPlatesDB["nameplateShowFriendlyNPCs"] = 0 end rs.UpdateCvars() end,
                 },
+                cvargap2 = {
+                    order = 23,
+                    name = " \n ",
+                    type = "description",
+                },
+                PlayerselfGroup = {
+                    order = 30,
+                    type = "group",
+                    inline = true,
+                    name = L["WhenselfShow"],
+                    args = {
+                        NameplatePersonalShowAlways ={
+                            name = L["NameplatePersonalShowAlways"],
+                            type = "toggle",
+                            order = 1,
+                            get = function() if RSPlatesDB["NameplatePersonalShowAlways"] == 1 then return true else return false end end,
+                            set = function(info, value) if value == true then RSPlatesDB["NameplatePersonalShowAlways"] = 1 else RSPlatesDB["NameplatePersonalShowAlways"] = 0 end rs.UpdateCvars() end,
+                        },
+                        NameplatePersonalShowInCombat ={
+                            name = L["NameplatePersonalShowInCombat"],
+                            type = "toggle",
+                            order = 2,
+                            get = function() if RSPlatesDB["NameplatePersonalShowInCombat"] == 1 then return true else return false end end,
+                            set = function(info, value) if value == true then RSPlatesDB["NameplatePersonalShowInCombat"] = 1 else RSPlatesDB["NameplatePersonalShowInCombat"] = 0 end rs.UpdateCvars() end,
+                        },
+                        NameplatePersonalShowWithTarget ={
+                            name = L["NameplatePersonalShowWithTarget"],
+                            type = "toggle",
+                            order = 3,
+                            get = function() if RSPlatesDB["NameplatePersonalShowWithTarget"] == 2 then return true else return false end end,
+                            set = function(info, value) if value == true then RSPlatesDB["NameplatePersonalShowWithTarget"] = 2 else RSPlatesDB["NameplatePersonalShowWithTarget"] = 0 end rs.UpdateCvars() end,
+                        },
+                    },
+                },
             },
         },
 
-
-    }
+    },
 }
 
 options.args.namemode = {
@@ -1092,7 +1138,7 @@ function rs.SwitchBugReportWindow()
         bugReportFrame:AddChild(Input1)
 
         local Info2 = AceGUI:Create("Label")
-        Info2:SetText("English")
+        Info2:SetText("Curseforge")
         bugReportFrame:AddChild(Info2)
     
         local Input2 = AceGUI:Create("EditBox")

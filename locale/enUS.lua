@@ -205,4 +205,13 @@ rs.V.enus = {
     ShowNpcNPTT = "Display the friendly NPC's nameplates (or name in name mode), you need to open <Friendly Players> in Blizzard UI settings , the initial shortcut key is Shift + V",
 
     NameModeNameSize = "Name Size",
+
+    nameplateOccludedAlphaMult = "Occluded Unit Transparency",
+
+    WhenselfShow = "When to show the personal resource bar",
+    NameplatePersonalShowAlways = "Always",
+    NameplatePersonalShowInCombat = "In battle",
+    NameplatePersonalShowWithTarget = "Has a target",
+
+    CVarExtraLink = "|cffFFD700More complete CVar documentation can be found here:  https://wowpedia.fandom.com/wiki/Console_variables/Complete_list |r",
 }

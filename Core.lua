@@ -482,6 +482,7 @@ loadFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 function loadFrame:OnEvent(event, arg1)
 	if event == "ADDON_LOADED" and arg1 == ADDONName then
         rs.V.AddonFirstLoad = false
+        local hasbeenForced
 		if not RSPlatesDB then 
 			rs.V.AddonFirstLoad = true
 			RSPlatesDB = rs.V.DefaultSetting
@@ -497,6 +498,10 @@ function loadFrame:OnEvent(event, arg1)
                     print(rs.L["UpdateForce"])
                     print("|cffFFD700---RSPlates: "..L["UpdateVersion"].."|r"..RSPlatesDB["Version"] ) 
                 end
+            -- 版本号一样长度不一样 (因为意外导致版本升级时DB复写失败？ is possible????)
+            elseif rs.table_leng(RSPlatesDB) ~= rs.table_leng(rs.V.DefaultSetting) then 
+                rs.V.AddonFirstLoad = true 
+                RSPlatesDB, hasbeenForced = rs.GetMarginDB(RSPlatesDB)
             end
         end
 

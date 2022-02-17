@@ -4,10 +4,10 @@ local addon, rs = ...
 -- 不要无感修改任何CVars，最多只初始化修改第一次
 function rs.SetCVarOnFirstTime()
     -- 堆叠1 重叠 0 
-    SetCVar("nameplateMotion", 1) 
+    -- SetCVar("nameplateMotion", 1) 
 
     -- 不随距离变化更改透明度
-    SetCVar("nameplateMinAlpha", 1) 
+    -- SetCVar("nameplateMinAlpha", 1) 
 
     --     -- V所开启的姓名版类型
     -- SetCVar("nameplateShowAll", 1)   --显示所有
@@ -30,11 +30,16 @@ function rs.UpdateCvars()
         SetCVar("nameplateMaxDistance", RSPlatesDB["nameplateMaxDistance"])
         SetCVar("nameplateOverlapV", RSPlatesDB["nameplateOverlapV"])
         SetCVar("nameplateOverlapH", RSPlatesDB["nameplateOverlapH"])
+        SetCVar("nameplateOccludedAlphaMult", RSPlatesDB["nameplateOccludedAlphaMult"])
 
         SetCVar("nameplateShowAll", RSPlatesDB["nameplateShowAll"]) 
         SetCVar("nameplateShowFriendlyNPCs", RSPlatesDB["nameplateShowFriendlyNPCs"]) 
 
-        --不让血条随距离改变而变小,预设Min 0.8
+        SetCVar("NameplatePersonalShowAlways", RSPlatesDB["NameplatePersonalShowAlways"]) 
+        SetCVar("NameplatePersonalShowInCombat", RSPlatesDB["NameplatePersonalShowInCombat"]) 
+        SetCVar("NameplatePersonalShowWithTarget", RSPlatesDB["NameplatePersonalShowWithTarget"]) 
+
+        --不让血条随距离改变而变大变小,预设Min 0.8,解决暴雪自身在缩放时的一个性能问题
         SetCVar("namePlateMinScale", 1) 
         SetCVar("namePlateMaxScale", 1) 
     end
@@ -42,5 +47,5 @@ end
 
 
 -- /dump GetCVar("nameplateShowFriendlyNPCs")
--- /run SetCVar("nameplateShowFriendlyNPCs", 0) 
+-- /run SetCVar("NameplatePersonalShowAlways", 0) 
 
