@@ -194,16 +194,12 @@ function rs.SetBarColor(frame)
         r, g, b = frame.healthBar.AuraColor[1], frame.healthBar.AuraColor[2], frame.healthBar.AuraColor[3]
 
 	-- 3 斩杀
-	elseif RSPlatesDB["SlayEnable"] then
-        if rs.IsOnKillHealth(unit) then 
+	elseif RSPlatesDB["SlayEnable"] and rs.IsOnKillHealth(unit) then
 		    r, g, b = RSPlatesDB["SlayColor"][1], RSPlatesDB["SlayColor"][2], RSPlatesDB["SlayColor"][3]
-        end
 
 	-- 4 仇恨，目标与玩家处于战斗状态
-	elseif threatStatus then 
-		if RSPlatesDB["ThreatColorEnable"] then
+	elseif RSPlatesDB["ThreatColorEnable"] and threatStatus then 
 			r, g, b = rs.IsOnThreatList(frame.unit)
-		end
 	end
 
 	
