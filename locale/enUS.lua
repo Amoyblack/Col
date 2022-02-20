@@ -196,6 +196,11 @@ rs.V.enus = {
     FriendlyNpc = "Friendly NPC",
     FriendlyNpcTT = "You can turn on <Always Show Nameplates> and <Show Friendly NPC nameplates> in CVAR options at the same time to make the names of surrounding NPCs prominently displayed",
 
+    NameModeNameType = "Font Stroke",
+    NameModeNameTypeNIL = "NIL",
+    NameModeNameTypeOUTLINE = "OUTLINE",
+    NameModeNameTypeTHICKOUTLINE = "THICKOUTLINE",
+
     GetSpellDesFailInfo = "The spell has no description Or the Addon is not received due to blizzard server delay. If the latter, Re-open the RSPlates settings interface, it can be displayed normally",
 
     ShowAllNP = "Always Show Nameplates",

@@ -49,7 +49,7 @@ rs.V.DefaultSetting = {
     ["NameModeFriendlyNpc"] = false,
     ["NameModeFriendlyPlayerSize"] = 12,
     ["NameModeFriendlyNPCSize"] = 12,
-
+    ["NameModeNameType"] = "s2",
 
 	["AuraNum"] = 3,
 	["AuraDefault"] = true,

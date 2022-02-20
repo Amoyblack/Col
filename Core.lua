@@ -488,7 +488,7 @@ function loadFrame:OnEvent(event, arg1)
                 rs.V.AddonFirstLoad = true 
                 RSPlatesDB, hasbeenForced = rs.GetMarginDB(RSPlatesDB)
                 if not hasbeenForced then 
-                    print (rs.L["UpdateInfo"])
+                    -- print (rs.L["UpdateInfo"])
                     print ("|cffFFD700---RSPlates"..L["UpdateVersion"].."|r"..RSPlatesDB["Version"] ) 
                 else
                     print(rs.L["UpdateForce"])

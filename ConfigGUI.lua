@@ -672,6 +672,28 @@ options.args.namemode = {
                     max = 25,
                     step = 1,
                 },
+                NameModeGap2 = {
+                    order = 10,
+                    name = " ",
+                    type = "description",
+                },
+                NameModeNameType = {
+                    name = L["NameModeNameType"],
+                    type = "select",
+                    desc = nil,
+                    order = 11,
+                    values = {
+                        s1 = L["NameModeNameTypeNIL"],
+                        s2 = L["NameModeNameTypeOUTLINE"],
+                        s3 = L["NameModeNameTypeTHICKOUTLINE"],
+                    },
+                    set = function (info, value)
+                    RSPlatesDB[info[#info]] = value 
+                    rs.UpdateAllNameplatesOnce()
+                    end,
+                    get = function (info) return RSPlatesDB[info[#info]] end
+
+                },
             }
         }
 

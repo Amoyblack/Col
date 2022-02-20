@@ -195,6 +195,11 @@ rs.V.zhtw = {
     FriendlyNpc = "友方NPC",
     FriendlyNpcTT = "可以同時打開 CVAR選項裡 <始終顯示姓名板> 和 <顯示友方NPC姓名板> 使周圍的NPC的名字醒目顯示",
 
+    NameModeNameType = "字體描邊",
+    NameModeNameTypeNIL = "不描邊",
+    NameModeNameTypeOUTLINE = "細邊",
+    NameModeNameTypeTHICKOUTLINE = "粗邊",
+
     GetSpellDesFailInfo = "該技能沒有描述  或  服務器延遲導致插件未接收到，如是後者重新打開設置界面即可正常顯示",
 
     ShowAllNP = "總是顯示名稱",

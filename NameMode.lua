@@ -2,6 +2,12 @@ local addon, rs = ...
 
 local RSNpcTitleTooltip = CreateFrame("GameTooltip", "RS_Name_Tooltip", nil, "GameTooltipTemplate")
 
+local outlinetable = {
+    ["s1"] = "nil",
+    ["s2"] = "OUTLINE",
+    ["s3"] = "THICKOUTLINE",
+}
+
 
 local function GetNpcTitle(unit)
     if not unit then return end
@@ -12,11 +18,12 @@ local function GetNpcTitle(unit)
     if RS_Name_TooltipTextLeft2 and RS_Name_TooltipTextLeft2.GetText then
     -- local line = RS_Name_TooltipTextLeft2
         local text = RS_Name_TooltipTextLeft2:GetText()
+        if not text then return end 
         local res,_ = text:gsub("%D+", "")
         if res == "" then 
             return text
         else
-            return nil
+            return
         end
     end
 end
@@ -61,7 +68,7 @@ function rs.SetNameMode(unitFrame)
             unitFrame:Hide()
             namePlate.NpcNameRS:Show()
             namePlate.NpcNameRS:SetText(format("|cff94FF80%s|r\n%s",name, sTitle))
-            namePlate.NpcNameRS:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["NameModeFriendlyNPCSize"], "THICKOUTLINE")
+            namePlate.NpcNameRS:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["NameModeFriendlyNPCSize"], outlinetable[RSPlatesDB["NameModeNameType"]])
 
         -- Player
         elseif reaction ==5 and IsPlayer and RSPlatesDB["NameModeFriendlyPlayer"] then 
@@ -72,7 +79,7 @@ function rs.SetNameMode(unitFrame)
             
             unitFrame:Hide()
             namePlate.NpcNameRS:Show()
-            namePlate.NpcNameRS:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["NameModeFriendlyPlayerSize"], "THICKOUTLINE")
+            namePlate.NpcNameRS:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["NameModeFriendlyPlayerSize"], outlinetable[RSPlatesDB["NameModeNameType"]])
             namePlate.NpcNameRS:SetText(name)
             namePlate.NpcNameRS:SetTextColor(r,g,b,a)
             
