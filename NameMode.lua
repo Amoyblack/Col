@@ -54,11 +54,12 @@ function rs.SetNameMode(unitFrame)
     if RSPlatesDB["EnableNamemode"] then 
         local NpcTitle = GetNpcTitle(unit)
         local name, _ = UnitName(unit)
-        local reaction = UnitReaction("player", unit)
+        -- local reaction = UnitReaction("player", unit)
         local IsPlayer = UnitIsPlayer(unit)
+        local IsFriendly = UnitIsFriend("player", unit)
 
         -- NPC
-        if reaction == 5 and not IsPlayer and RSPlatesDB["NameModeFriendlyNpc"] then 
+        if IsFriendly and not IsPlayer and RSPlatesDB["NameModeFriendlyNpc"] then 
             if NpcTitle then 
                 sTitle = NpcTitle
             else
@@ -71,7 +72,7 @@ function rs.SetNameMode(unitFrame)
             namePlate.NpcNameRS:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["NameModeFriendlyNPCSize"], outlinetable[RSPlatesDB["NameModeNameType"]])
 
         -- Player
-        elseif reaction ==5 and IsPlayer and RSPlatesDB["NameModeFriendlyPlayer"] then 
+        elseif IsFriendly and IsPlayer and RSPlatesDB["NameModeFriendlyPlayer"] then 
             local r, g, b, a
             local _, englishClass = UnitClass(unit)
             local classColor = rs.V.Ccolors[englishClass]
