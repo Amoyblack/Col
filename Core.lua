@@ -124,8 +124,7 @@ function rs.CreateUIObj(unitFrame)
 		unitFrame.StolenFrame.Cooldown:SetReverse(true)
 		unitFrame.StolenFrame.Cooldown:SetHideCountdownNumbers(true)
 
-        -- namePlate.NpcNameRS = rs.createtext(namePlate, "OVERLAY", 12, "OUTLINE", "CENTER")
-        namePlate.NpcNameRS = rs.createtext(namePlate, "OVERLAY", 12, "THICKOUTLINE", "CENTER")
+        namePlate.NpcNameRS = rs.createtext(namePlate, "OVERLAY", 12, "OUTLINE", "CENTER")
         namePlate.NpcNameRS:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, 0)
 		namePlate.NpcNameRS:Hide()
 
@@ -168,7 +167,6 @@ function rs.NpUnderProtection(unitframe, whocall)
     -- print(reaction, UnitName(unit), " canAttack:", UnitCanAttack("player", unit)," canAssist:", UnitCanAssist("player", unit)," IsFriend:",  UnitIsFriend("player", unit), " IsEnemy:", UnitIsEnemy("player", unit), "Call Method:", whocall, "Protect Mode: ")
 end
 
-
 function rs.SetBarColor(frame)
 	local unit = frame.unit
     if not unit then return end 
@@ -181,29 +179,30 @@ function rs.SetBarColor(frame)
 	local _, threatStatus = UnitDetailedThreatSituation("player", unit)
     local NpcColor = RSPlatesDB["DctColorNpc"][tonumber(id)]
     
-	-- 资源条不染色
-	if rs.IsPlayerself(frame) then return end
-        
+    -- 资源条不染色
+    if rs.IsPlayerself(frame) then 
+        do end   
+    -- 灰名   
+    elseif UnitIsTapDenied(unit) then 
+        do end 
     -- 1 自定义NpcID
-    if NpcColor then 
+    elseif NpcColor then 
         r, g, b = NpcColor[1], NpcColor[2], NpcColor[3]
-
-
     -- 2 携带自定义光环
     elseif frame.healthBar.AuraColor then 
         r, g, b = frame.healthBar.AuraColor[1], frame.healthBar.AuraColor[2], frame.healthBar.AuraColor[3]
-
-	-- 3 斩杀
+    -- 3 斩杀
 	elseif RSPlatesDB["SlayEnable"] and rs.IsOnKillHealth(unit) then
-		    r, g, b = RSPlatesDB["SlayColor"][1], RSPlatesDB["SlayColor"][2], RSPlatesDB["SlayColor"][3]
-
-	-- 4 仇恨，目标与玩家处于战斗状态
+        r, g, b = RSPlatesDB["SlayColor"][1], RSPlatesDB["SlayColor"][2], RSPlatesDB["SlayColor"][3]
+        
+    -- 4 仇恨，目标与玩家处于战斗状态
 	elseif RSPlatesDB["ThreatColorEnable"] and threatStatus then 
-			r, g, b = rs.IsOnThreatList(frame.unit)
+        r, g, b = rs.IsOnThreatList(frame.unit)
 	end
 
 	
-	if not r then
+
+    if not (r) then
         r, g, b =  frame.healthBar.r, frame.healthBar.g, frame.healthBar.b
     end
 
@@ -215,7 +214,7 @@ function rs.SetBarColor(frame)
         frame.selectionHighlight:SetVertexColor(1, 1, 1);
     end
     if RSPlatesDB["BarBgCol"] then
-        frame.healthBar.background:SetColorTexture(2/5*r, 2/5*g, 2/5*b, .9)
+        frame.healthBar.background:SetColorTexture(2/5*r, 2/5*g, 2/5*b, .8)
     end
 
 end

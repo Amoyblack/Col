@@ -11,6 +11,7 @@
 
 - Two optional blood bars texture
 - Two optional cast bar style
+- Name Mode, See surrounding NPCs or Player more prominently
 - Show mark-icon on the quest unit.
 - Change blood bars' color for specific npc (such as  explosive)
 - Change blood bars' color for npc with  specific aura(buff/debuff) 
@@ -39,8 +40,8 @@
 
 #### <font color = Orange>Additional instructions</font>
 
-- The Addon is made based on the style of blizzard <Larger Nameplates>, It's strongly recommended to enable it by [esc - interface - Names - Larger Nameplates]
- 
+- The Addon is made based on the style of blizzard <Larger Nameplates>, It's recommended to enable it by [esc - interface - Names - Larger Nameplates]
+- When a unit meets multiple Color conditions at the same time, the Color priority is:  custom NPC > NPC with custom auras > execute > threat
 
 #### <font color = Orange>Video preview</font>
 
