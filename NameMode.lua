@@ -42,7 +42,7 @@ function rs.SetNameMode(unitFrame)
         return
     end
 
-    if rs.IsPlayerself(unitFrame) then return end
+    if UnitIsUnit("player", unit) then return end
     
     if rs.IsExpBall(unit) and RSPlatesDB["ExpballHelper"] then 
         unitFrame:Hide()

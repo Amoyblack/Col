@@ -138,7 +138,8 @@ end
 
 --血条数值
 function rs.SetBloodText(unitFrame)
-	if rs.IsPlayerself(unitFrame) then 
+    if not unitFrame.unit then return end 
+	if UnitIsUnit("player", unitFrame.unit) then 
 		unitFrame.healthBar.value:Hide()
 		return 
 	end
@@ -147,16 +148,6 @@ function rs.SetBloodText(unitFrame)
 	unitFrame.healthBar.value:SetText(rs.GetDetailText(unitFrame.unit))
 end
 
-
-function rs.IsPlayerself(unitFrame)
-	local unit = unitFrame.unit
-	if unit then 
-		if (UnitIsPlayer(unit) and (GetUnitName(unit) == UnitName("player"))) then
-			return true
-		end
-	end
-	return false
-end
 
 -- a test function 
 function rs.NpUnderProtection(unitframe, whocall)
@@ -180,7 +171,7 @@ function rs.SetBarColor(frame)
     local NpcColor = RSPlatesDB["DctColorNpc"][tonumber(id)]
     
     -- 资源条不染色
-    if rs.IsPlayerself(frame) then 
+    if UnitIsUnit("player", unit) then 
         do end   
     -- 灰名   
     elseif UnitIsTapDenied(unit) then 
@@ -202,7 +193,7 @@ function rs.SetBarColor(frame)
 
 	
 
-    if not (r) then
+    if not r then
         r, g, b =  frame.healthBar.r, frame.healthBar.g, frame.healthBar.b
     end
 
@@ -214,7 +205,11 @@ function rs.SetBarColor(frame)
         frame.selectionHighlight:SetVertexColor(1, 1, 1);
     end
     if RSPlatesDB["BarBgCol"] then
-        frame.healthBar.background:SetColorTexture(2/5*r, 2/5*g, 2/5*b, .8)
+        if UnitIsUnit("player", unit) then 
+            frame.healthBar.background:SetColorTexture(.5 , .5, .5,.1)
+        else
+            frame.healthBar.background:SetColorTexture(2/5*r, 2/5*g, 2/5*b, .7)
+        end
     end
 
 end
