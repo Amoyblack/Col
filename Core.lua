@@ -10,43 +10,28 @@ local barTexture = "Interface\\AddOns\\RSPlates\\media\\bar_rs"
 local arrorTexture = "Interface\\AddOns\\RSPlates\\media\\arrorH"
 local questTexture = "Interface\\AddOns\\RSPlates\\media\\questQuestion"
 
--- Np驱动器
 -------------------------------------------------
 function rs.RSOn()
-    NpDriveEvent = CreateFrame("Frame")
-    NpDriveEvent:HookScript("OnEvent", rs.NpDrive_OnEvent)
-    NpDriveEvent:RegisterEvent("NAME_PLATE_UNIT_ADDED")
-    -- NpDriveEvent:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
-    -- NpDriveEvent:RegisterEvent("NAME_PLATE_CREATED")
 	rs.HookBlizzedFunc()
 	if RSPlatesDB["ExpballHelper"] then 
 		rs.BallScanner()
 	end
 end
+-------------------------------------------------
 
 
-function rs.NpDrive_OnEvent (self, event, ...)
-    if event == "NAME_PLATE_UNIT_ADDED" then
-        rs.On_Np_Add(...)
-    -- elseif event == "NAME_PLATE_CREATED" then
 
-    -- elseif event == "NAME_PLATE_UNIT_REMOVED" then
-	-- 	rs.On_Np_Removed(...)
-    end
-end
-
-
-function rs.On_Np_Add(unitToken)
-	local namePlate = C_NamePlate.GetNamePlateForUnit(unitToken)
-	local unitFrame = namePlate.UnitFrame
+function rs.On_Np_Add(self, unitToken)
+	local namePlateFrameBase = C_NamePlate.GetNamePlateForUnit(unitToken, issecure())
+	local unitFrame = namePlateFrameBase.UnitFrame
     unitFrame.healthBar.AuraR, unitFrame.healthBar.AuraG, unitFrame.healthBar.AuraB = nil, nil, nil
     rs.CreateUIObj(unitFrame)
 	rs.On_NpRefreshOnce(unitFrame)
 end
 
 
-function rs.On_Np_Create(namePlateFrame)
-    print (namePlateFrame, namePlateFrame.healthBar)
+function rs.On_Np_Create(self, namePlateFrameBase)
+    print (self.healthBar, namePlateFrameBase, namePlateFrameBase.healthBar)
 end
 
 
@@ -414,6 +399,8 @@ end
 
 function rs.HookBlizzedFunc()
     -- print ('hoooookkkkk')
+    hooksecurefunc(NamePlateDriverFrame, "OnNamePlateAdded", rs.On_Np_Add)
+
     if RSPlatesDB["NarrowCast"]then
         hooksecurefunc("CastingBarFrame_OnEvent", function(self, event, ...)
             rs.ThinCastBar(self)
