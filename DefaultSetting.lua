@@ -10,6 +10,7 @@ rs.V.DefaultSetting = {
 	["FlatBar"] = false,
 	["NarrowCast"] = false,
 	["BarBgCol"] = false,
+    ["EliteIcon"] = true,
 
 	["DetailType"] = "s1",
 	["CenterDetail"] = false,
@@ -50,6 +51,8 @@ rs.V.DefaultSetting = {
     ["NameModeFriendlyPlayerSize"] = 12,
     ["NameModeFriendlyNPCSize"] = 12,
     ["NameModeNameType"] = "s2",
+    ["NameModeNpcOffY"] = 0,
+    ["NameModePlayerOffY"] = 0,
 
 	["AuraNum"] = 3,
 	["AuraDefault"] = true,

@@ -24,6 +24,8 @@ rs.V.enus = {
     NarrowCastBar = "Narrow CastBar",
     NarrowCastBarTT = "Use narrow castbar style instead of blizzard source style. (It's recommended to use this with Flat texture the same time for better display effect) |cff66CCFFNeed /reload.|r",
 
+    EliteIcon = "Elite Icon",
+    EliteIconTT = "Show Elite Icon",
 
     BgCol = "HealthBar Background Color",
     BgColTT = "Draw HealthBar background (health loss part) as a multiplier color which basic on HealthBar color, instead black background.",
@@ -200,6 +202,8 @@ rs.V.enus = {
     NameModeNameTypeNIL = "NIL",
     NameModeNameTypeOUTLINE = "OUTLINE",
     NameModeNameTypeTHICKOUTLINE = "THICKOUTLINE",
+
+    NameModeHeightOffset = "Height Offset",
 
     GetSpellDesFailInfo = "The spell has no description Or the Addon is not received due to blizzard server delay. If the latter, Re-open the RSPlates settings interface, it can be displayed normally",
 

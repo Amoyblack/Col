@@ -24,6 +24,8 @@ rs.V.zhcn = {
     NarrowCastBar = "窄施法条",
     NarrowCastBarTT = "使用窄施法条样式而非源生样式（建议搭配扁平材质获得更好的显示效果)   |cff66CCFF重载生效|r",
 
+    EliteIcon = "精英图标",
+    EliteIconTT = "显示精英图标",
 
     BgCol = "渲染血条背景色",
     BgColTT = "用血条自身的颜色渲染背景 (空血的部分), 而非黑色",
@@ -202,6 +204,8 @@ rs.V.zhcn = {
     NameModeNameTypeNIL = "不描边",
     NameModeNameTypeOUTLINE = "细边",
     NameModeNameTypeTHICKOUTLINE = "粗边",
+
+    NameModeHeightOffset = "高度偏移",
 
     GetSpellDesFailInfo = "该技能没有描述  或  服务器延迟导致插件未接收到，如是后者重新打开设置界面即可正常显示",
 

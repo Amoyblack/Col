@@ -72,11 +72,23 @@ options.args.basic = {
                     type = 'toggle',
                     order = 2,
                 },
+                EliteIcon = {
+                    name = L["EliteIcon"],
+                    desc = L["EliteIconTT"],
+                    type = 'toggle',
+                    order = 3,
+                    set = function (info, value) 
+                        if RSPlatesDB[info[#info]] ~= nil then 
+                            RSPlatesDB[info[#info]] = value 
+                        end
+                        rs.UpdateAllNameplatesOnce() 
+                    end,
+                },
                 BarBgCol = {
                     name = L["BgCol"],
                     desc = L["BgColTT"],
                     type = 'toggle',
-                    order = 3,
+                    order = 4,
                 },
             }
         },
@@ -644,7 +656,7 @@ options.args.namemode = {
                     type = "toggle",
                 },
                 NameModeFriendlyPlayerSize = {
-                    disabled = function() return not RSPlatesDB["NameModeFriendlyPlayer"] end,
+                    disabled = function() return not (RSPlatesDB["NameModeFriendlyPlayer"] and RSPlatesDB["EnableNamemode"]) end,
                     order = 2,
                     name = L["NameModeNameSize"],
                     type = "range",
@@ -652,8 +664,17 @@ options.args.namemode = {
                     max = 25,
                     step = 1,
                 },
-                NameModeGap1 = {
+                NameModePlayerOffY = {
+                    disabled = function() return not (RSPlatesDB["NameModeFriendlyPlayer"] and RSPlatesDB["EnableNamemode"])end,
                     order = 3,
+                    name = L["NameModeHeightOffset"],
+                    type = "range",
+                    min = -50,
+                    max = 50,
+                    step = 1,
+                },
+                NameModeGap1 = {
+                    order = 4,
                     name = " ",
                     type = "description",
                 },
@@ -664,7 +685,7 @@ options.args.namemode = {
                     type = "toggle",
                 },
                 NameModeFriendlyNPCSize = {
-                    disabled = function() return not RSPlatesDB["NameModeFriendlyNpc"] end,
+                    disabled = function() return not (RSPlatesDB["NameModeFriendlyNpc"] and RSPlatesDB["EnableNamemode"]) end,
                     order = 6,
                     name = L["NameModeNameSize"],
                     type = "range",
@@ -672,6 +693,16 @@ options.args.namemode = {
                     max = 25,
                     step = 1,
                 },
+                NameModeNpcOffY = {
+                    disabled = function() return not (RSPlatesDB["NameModeFriendlyNpc"] and RSPlatesDB["EnableNamemode"]) end,
+                    order = 7,
+                    name = L["NameModeHeightOffset"],
+                    type = "range",
+                    min = -50,
+                    max = 50,
+                    step = 1,
+                },
+
                 NameModeGap2 = {
                     order = 10,
                     name = " ",

@@ -337,6 +337,12 @@ function rs.SetSelectionHighlight(unitFrame)
             -- unitFrame.castBar.Icon:SetAlpha(RSPlatesDB["UnSelectAlpha"])
 		end
 	end
+    -- 精英图标
+    if not RSPlatesDB["EliteIcon"] then 
+        unitFrame.ClassificationFrame:Hide()
+    else
+        unitFrame.ClassificationFrame:Show()
+    end
 end
 
 
@@ -436,12 +442,6 @@ function rs.HookBlizzedFunc()
     hooksecurefunc("CompactUnitFrame_UpdateHealthBorder", function(frame)
         if not rs.IsNameplateUnit(frame) then return end 
         rs.SetSelectionHighlight(frame)
-        if RSPlatesDB["NarrowCast"] then  -- 隐藏精英图标
-            if frame:IsForbidden() then return end 
-            if frame.ClassificationFrame then
-                frame.ClassificationFrame:Hide()
-            end
-        end
     end)
 end
 

@@ -70,6 +70,7 @@ function rs.SetNameMode(unitFrame)
             namePlate.NpcNameRS:Show()
             namePlate.NpcNameRS:SetText(format("|cff94FF80%s|r\n%s",name, sTitle))
             namePlate.NpcNameRS:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["NameModeFriendlyNPCSize"], outlinetable[RSPlatesDB["NameModeNameType"]])
+            namePlate.NpcNameRS:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, RSPlatesDB["NameModeNpcOffY"])
 
         -- Player
         elseif IsFriendly and IsPlayer and RSPlatesDB["NameModeFriendlyPlayer"] then 
@@ -83,6 +84,7 @@ function rs.SetNameMode(unitFrame)
             namePlate.NpcNameRS:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["NameModeFriendlyPlayerSize"], outlinetable[RSPlatesDB["NameModeNameType"]])
             namePlate.NpcNameRS:SetText(name)
             namePlate.NpcNameRS:SetTextColor(r,g,b,a)
+            namePlate.NpcNameRS:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, RSPlatesDB["NameModePlayerOffY"])
             
         end
     end

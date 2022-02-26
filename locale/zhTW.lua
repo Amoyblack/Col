@@ -24,6 +24,8 @@ rs.V.zhtw = {
     NarrowCastBar = "窄施法條",
     NarrowCastBarTT = "使用窄施法條樣式而非源生樣式，（建議搭配扁平材質獲得更好的顯示效果)|cff66CCFF重載介面後生效|r。",
 
+    EliteIcon = "精英圖標",
+    EliteIconTT = "顯示精英圖標",
 
     BgCol = "渲染血量條底色",
     BgColTT = "渲染血量條本身的顏色作為背景（空血的部分）的底色，而非純黑色。",
@@ -199,6 +201,8 @@ rs.V.zhtw = {
     NameModeNameTypeNIL = "不描邊",
     NameModeNameTypeOUTLINE = "細邊",
     NameModeNameTypeTHICKOUTLINE = "粗邊",
+
+    NameModeHeightOffset = "高度偏移",
 
     GetSpellDesFailInfo = "該技能沒有描述  或  服務器延遲導致插件未接收到，如是後者重新打開設置界面即可正常顯示",
 
