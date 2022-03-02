@@ -4,7 +4,7 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "9.2.01",
+	["Version"] = "9.2.02",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
 	["FlatBar"] = false,
@@ -60,6 +60,7 @@ rs.V.DefaultSetting = {
 	["AuraOnlyMe"] = false,
 
 	["AuraHeight"] = 25,
+    ["SelfAuraHeight"] = 20,
     ["SquareAura"] = true,
 	["AuraSize"] = 22, 
 	["AuraTimer"] = false,

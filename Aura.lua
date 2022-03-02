@@ -4,7 +4,7 @@ local addon, rs = ...
 function rs:UpdateAnchor()
     if not (self:GetParent() and self:GetParent().unit) then return end 
     if UnitIsUnit("player", self:GetParent().unit) then 
-        self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, 20);
+        self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, RSPlatesDB["SelfAuraHeight"]);
     else
         self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, RSPlatesDB["AuraHeight"]);
     end

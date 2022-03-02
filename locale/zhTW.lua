@@ -94,6 +94,9 @@ rs.V.zhtw = {
     AuraHeight = "框體間距",
     AuraHeightTT = "光環圖示的框體與血量條的距離。",
 
+    SelfAuraHeight = "個人資源條光環高度",
+    SelfAuraHeightTT = "光環圖標相對於個人資源條的高度",
+
     AuraNum = "光環顯示數量",
     AuraNumTT = "0：不顯示",
 

@@ -94,6 +94,9 @@ rs.V.zhcn = {
     AuraHeight = "光环高度",
     AuraHeightTT = "光环图标相对于血条的高度",
 
+    SelfAuraHeight = "个人资源条光环高度",
+    SelfAuraHeightTT = "光环图标相对于个人资源条的高度",
+
     AuraNum = "光环显示数量",
     AuraNumTT = "0: 不显示",
 

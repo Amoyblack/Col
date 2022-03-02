@@ -91,8 +91,11 @@ rs.V.enus = {
 
     AuraText2 = "Auras Style",
 
-    AuraHeight = "Aura space",
+    AuraHeight = "Aura Space",
     AuraHeightTT = "The space between Health bar and aura frame",
+
+    SelfAuraHeight = "Personal resource bar Aura Space",
+    SelfAuraHeightTT = "The space between Personal resource bar and aura frame",
 
     AuraNum = "Aura Number",
     AuraNumTT = "How many aura display. 0: not display",
