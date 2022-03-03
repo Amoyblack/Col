@@ -13,8 +13,13 @@ local function OnlyShowBall()
 	if haskey then 
             -- 隐藏球之外的血条框架
 			for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
-                if not rs.IsExpBall(nil, namePlate.UnitFrame) then 
-					unitFrame:Hide()
+                local unitFrame = namePlate.UnitFrame
+                if rs.IsExpBall(nil, namePlate.UnitFrame) then 
+					unitFrame:Show()
+                else
+                    if not UnitIsUnit("player", unitFrame.unit) then 
+					    unitFrame:Hide()
+                    end
 				end
 			end
 	else
@@ -39,7 +44,7 @@ function rs.BallScanner()
         local activeKeystoneLevel, activeAffixIDs = C_ChallengeMode.GetActiveKeystoneInfo()
         if not activeAffixIDs or activeAffixIDs[3] ~= 13 then return end
 		timei = timei + elasped
-		if timei > 0.25 then
+		if timei > 0.2 then
 			OnlyShowBall()
 			timei = 0
 		end

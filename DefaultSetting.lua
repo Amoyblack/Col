@@ -4,7 +4,7 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "9.2.02",
+	["Version"] = "9.2.03",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
 	["FlatBar"] = false,
@@ -103,6 +103,7 @@ rs.V.DefaultSetting = {
     ["DctColorNpc"] = {
         [120651] = {0.2, 1, 0.2},   --易爆球
         [174773] = {0, 0, 1},   -- 怨毒影魔
+        [185680] = {0, 0, 1},   -- 维型圣物
     }, 
     ["DctColorAura"] = {
         [343502] = {0, 0, 1},   --鼓舞光环
