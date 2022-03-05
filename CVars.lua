@@ -40,12 +40,13 @@ function rs.UpdateCvars()
         SetCVar("NameplatePersonalShowWithTarget", RSPlatesDB["NameplatePersonalShowWithTarget"]) 
 
         --不让血条随距离改变而变大变小,预设Min 0.8,解决暴雪自身在缩放时的一个性能问题
-        SetCVar("namePlateMinScale", 1) 
-        SetCVar("namePlateMaxScale", 1) 
+        SetCVar("nameplateMinScale", 1) 
+        SetCVar("nameplateMaxScale", 1) 
+        SetCVar("nameplateMinAlpha", 1) 
     end
 end
 
 
--- /dump GetCVar("nameplateShowFriendlyNPCs")
--- /run SetCVar("NameplatePersonalShowAlways", 0) 
+-- /dump GetCVar("nameplateMinScale")
+-- /run SetCVar("nameplateMinScale", 1)
 
