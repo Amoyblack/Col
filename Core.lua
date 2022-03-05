@@ -23,6 +23,8 @@ end
 
 function rs.On_Np_Add(self, unitToken)
 	local namePlateFrameBase = C_NamePlate.GetNamePlateForUnit(unitToken, issecure())
+    -- protected (inside instance friendly. etc) return nil 
+    if not namePlateFrameBase then return end 
 	local unitFrame = namePlateFrameBase.UnitFrame
     unitFrame.healthBar.AuraR, unitFrame.healthBar.AuraG, unitFrame.healthBar.AuraB = nil, nil, nil
     rs.CreateUIObj(unitFrame)

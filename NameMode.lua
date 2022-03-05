@@ -35,27 +35,33 @@ function rs.SetNameMode(unitFrame)
     local unit = unitFrame.unit
     if not rs.IsNameplateUnit(unitFrame) then return end 
 
+    
+    
+    local namePlate = C_NamePlate.GetNamePlateForUnit(unit)
+    if namePlate and namePlate.NpcNameRS then 
+        namePlate.NpcNameRS:Hide()
+        namePlate.NpcNameRS:SetText("")
+        namePlate.NpcNameRS:SetTextColor(1,1,1)
+    else
+        return
+    end
+    
+    if UnitIsUnit("player", unit) then 
+        return 
+    end
+    
     local inInstance, instanceType = IsInInstance()
     if inInstance and instanceType == "party" then 
         return 
     end
 
-    if UnitIsUnit("player", unit) then return end
+    unitFrame:Show()
 
-    local namePlate = C_NamePlate.GetNamePlateForUnit(unit)
-    if namePlate and namePlate.NpcNameRS then 
-        namePlate.NpcNameRS:Hide()
-        namePlate.NpcNameRS:SetTextColor(1,1,1)
-    else
-        return
-    end
-
-    
-    if rs.IsExpBall(unit) and RSPlatesDB["ExpballHelper"] then 
-        unitFrame:Hide()
-    else
-        unitFrame:Show()
-    end
+    -- if rs.IsExpBall(unit) and RSPlatesDB["ExpballHelper"] then 
+    --     unitFrame:Hide()
+    -- else
+    --     unitFrame:Show()
+    -- end
     
     -- 再匹配
     if RSPlatesDB["EnableNamemode"] then 
