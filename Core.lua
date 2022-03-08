@@ -45,7 +45,7 @@ function rs.CreateUIObj(unitFrame)
     local unit = unitFrame.unit 
     if not unit then return end
 
-    local namePlate = C_NamePlate.GetNamePlateForUnit(unit)
+    local namePlate = C_NamePlate.GetNamePlateForUnit(unit, issecure())
     if not namePlate then return end 
 
 	unitFrame.BuffFrame.UpdateBuffs = rs.UpdateBuffsOri
@@ -114,6 +114,16 @@ function rs.CreateUIObj(unitFrame)
         namePlate.NpcNameRS = rs.createtext(namePlate, "OVERLAY", 12, "OUTLINE", "CENTER")
         namePlate.NpcNameRS:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, 0)
 		namePlate.NpcNameRS:Hide()
+
+        -- target glow new ui
+        namePlate.NameSelectGlow = namePlate:CreateTexture("targethighlight", "BACKGROUND", nil, -1)
+        namePlate.NameSelectGlow:SetTexture("Interface\\AddOns\\RSPlates\\media\\spark-flat")
+        namePlate.NameSelectGlow:SetPoint("TOPLEFT", unitFrame.healthBar, "TOPLEFT", 7, 7)
+        namePlate.NameSelectGlow:SetPoint("BOTTOMRIGHT", unitFrame.healthBar, "BOTTOMRIGHT", -7, -7)
+        namePlate.NameSelectGlow:SetVertexColor(1, 1, 1, .8)
+        -- namePlate.NameSelectGlow:SetTexCoord(0, 1, 1, 0)
+        namePlate.NameSelectGlow:SetBlendMode("ADD")
+        namePlate.NameSelectGlow:Hide()
 
 		unitFrame.rsed = true
 	end
@@ -220,7 +230,7 @@ end
 
 function rs.ThinCastBar(self)
     if not self.unit then return end 
-    local np = C_NamePlate.GetNamePlateForUnit(self.unit)
+    local np = C_NamePlate.GetNamePlateForUnit(self.unit, issecure())
     if not np then return end 
     unitFrame = np.UnitFrame
     if unitFrame:IsForbidden() then return end 
@@ -321,6 +331,8 @@ end
 function rs.SetSelectionHighlight(unitFrame)
 	if not unitFrame.healthBar.curTarget then return end
 	local unit = unitFrame.unit
+    local namePlate = C_NamePlate.GetNamePlateForUnit(unit, issecure())
+
 	if UnitIsUnit(unit, "target") and not UnitIsUnit(unit, "player") then
 		if RSPlatesDB["ShowArrow"] then 
 			unitFrame.healthBar.curTarget:Show()
@@ -330,6 +342,13 @@ function rs.SetSelectionHighlight(unitFrame)
 
 		unitFrame:SetAlpha(1)
 		-- unitFrame.castBar.Icon:SetAlpha(1)
+        -- Namemode Select Glow 
+        if namePlate and namePlate.NpcNameRS then 
+            if namePlate.NpcNameRS:IsShown() then 
+                namePlate.NameSelectGlow:Show()
+            end
+        end
+
 	else
 		unitFrame.healthBar.curTarget:Hide()
 		if UnitIsUnit(unit, "player") then 
@@ -338,6 +357,11 @@ function rs.SetSelectionHighlight(unitFrame)
 			unitFrame:SetAlpha(RSPlatesDB["UnSelectAlpha"])
             -- unitFrame.castBar.Icon:SetAlpha(RSPlatesDB["UnSelectAlpha"])
 		end
+
+        -- Namemode Select Glow 
+        if namePlate and namePlate.NameSelectGlow then 
+            namePlate.NameSelectGlow:Hide()
+        end
 	end
     -- 精英图标
     if not RSPlatesDB["EliteIcon"] then 

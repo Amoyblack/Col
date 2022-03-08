@@ -36,8 +36,7 @@ function rs.SetNameMode(unitFrame)
     if not rs.IsNameplateUnit(unitFrame) then return end 
 
     
-    
-    local namePlate = C_NamePlate.GetNamePlateForUnit(unit)
+    local namePlate = C_NamePlate.GetNamePlateForUnit(unit, issecure())
     if namePlate and namePlate.NpcNameRS then 
         namePlate.NpcNameRS:Hide()
         namePlate.NpcNameRS:SetText("")

@@ -15,7 +15,8 @@ end
 function rs.UpdateBuffsOri(self, unit, filter, showAll)
     local hasColorAura
     local hasStolenAura
-    local namePlate = C_NamePlate.GetNamePlateForUnit(unit)
+    local namePlate = C_NamePlate.GetNamePlateForUnit(unit, issecure())
+    if not namePlate then return end 
     namePlate.UnitFrame.healthBar.AuraColor = nil
     namePlate.UnitFrame.StolenFrame:Hide()
     namePlate.UnitFrame.healthBar.curTarget:SetPoint("LEFT", namePlate.UnitFrame.healthBar, "RIGHT", 0, 0)
