@@ -63,8 +63,6 @@ function rs.CreateUIObj(unitFrame)
 		if not RSPlatesDB["NarrowCast"] then 
 			unitFrame.castBar.Icon.iconborder:Hide()
 			unitFrame.castBar.castBG:Hide()
-        else
-            unitFrame.RaidTargetFrame:SetPoint("RIGHT", -170, -10)
 		end
 
 
@@ -430,9 +428,22 @@ end
 
 
 function rs.HookBlizzedFunc()
-    -- print ('hoooookkkkk')
+    -- On Add
     hooksecurefunc(NamePlateDriverFrame, "OnNamePlateAdded", rs.On_Np_Add)
 
+    -- Size Change
+    hooksecurefunc(NamePlateDriverFrame, "UpdateNamePlateOptions", function()
+        for k, namePlate in pairs(C_NamePlate.GetNamePlates()) do
+            local unit = namePlate.UnitFrame.unit
+            rs.On_Np_Add(nil, unit)
+        end
+    end)
+
+    hooksecurefunc(NamePlateDriverFrame, "OnUnitFactionChanged", function(self,unit)
+        rs.On_Np_Add(nil, unit)
+    end)
+
+    -- Thin CastBar
     if RSPlatesDB["NarrowCast"]then
         hooksecurefunc("CastingBarFrame_OnEvent", function(self, event, ...)
             rs.ThinCastBar(self)

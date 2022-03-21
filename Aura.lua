@@ -61,19 +61,22 @@ function rs.UpdateBuffsOri(self, unit, filter, showAll)
 					self.buffList[buffIndex] = CreateFrame("Frame", nil, self, "NameplateBuffButtonTemplate");
 					self.buffList[buffIndex]:SetMouseClickEnabled(false);
 					self.buffList[buffIndex].layoutIndex = buffIndex;
-                    if RSPlatesDB["SquareAura"] then 
-                        self.buffList[buffIndex]:SetSize(RSPlatesDB["AuraSize"],RSPlatesDB["AuraSize"])
-                        self.buffList[buffIndex].Icon:SetPoint("TOPLEFT",self.buffList[buffIndex],"TOPLEFT", 1, -1)
-                        self.buffList[buffIndex].Icon:SetPoint("BOTTOMRIGHT",self.buffList[buffIndex],"BOTTOMRIGHT", -1, 1)
-                        self.buffList[buffIndex].Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
-                    end
-                    self.buffList[buffIndex].Cooldown:SetHideCountdownNumbers(not RSPlatesDB["AuraTimer"])
-                    local regon = self.buffList[buffIndex].Cooldown:GetRegions()
-                    if regon.GetText then 
-                        regon:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["AuraTimerSize"], nil)  --Default : 15 "OUTLINE"
-                    end
 				end
-				local buff = self.buffList[buffIndex];
+                
+                local buff = self.buffList[buffIndex];
+                
+                if RSPlatesDB["SquareAura"] then 
+                    buff:SetSize(RSPlatesDB["AuraSize"],RSPlatesDB["AuraSize"])
+                    buff.Icon:SetPoint("TOPLEFT", buff,"TOPLEFT", 1, -1)
+                    buff.Icon:SetPoint("BOTTOMRIGHT", buff,"BOTTOMRIGHT", -1, 1)
+                    buff.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
+                end
+                buff.Cooldown:SetHideCountdownNumbers(not RSPlatesDB["AuraTimer"])
+                local regon = buff.Cooldown:GetRegions()
+                if regon.GetText then 
+                    regon:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["AuraTimerSize"], nil)  --Default : 15 "OUTLINE"
+                end
+
 				buff:SetID(index);
 				buff.Icon:SetTexture(texture);
 				if (count > 1) then
