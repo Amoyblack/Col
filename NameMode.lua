@@ -33,14 +33,15 @@ end
 function rs.SetNameMode(unitFrame)
     -- 先初始化状态
     local unit = unitFrame.unit
-    if not rs.IsNameplateUnit(unitFrame) then return end 
+    if (not rs.IsNameplateUnit(unitFrame)) or unitFrame:IsForbidden() then return end 
 
     
-    local namePlate = C_NamePlate.GetNamePlateForUnit(unit, issecure())
-    if namePlate and namePlate.NpcNameRS then 
+    local namePlate = C_NamePlate.GetNamePlateForUnit(unit, false)
+    if namePlate and namePlate.NpcNameRS and namePlate.NameSelectGlow then 
         namePlate.NpcNameRS:Hide()
         namePlate.NpcNameRS:SetText("")
         namePlate.NpcNameRS:SetTextColor(1,1,1)
+        namePlate.NameSelectGlow:Hide()
     else
         return
     end
@@ -69,6 +70,7 @@ function rs.SetNameMode(unitFrame)
         -- local reaction = UnitReaction("player", unit)
         local IsPlayer = UnitIsPlayer(unit)
         local IsFriendly = UnitIsFriend("player", unit)
+        local CanAttack = UnitCanAttack("player", unit)
 
         -- NPC
         if IsFriendly and not IsPlayer and RSPlatesDB["NameModeFriendlyNpc"] then 
@@ -85,7 +87,7 @@ function rs.SetNameMode(unitFrame)
             namePlate.NpcNameRS:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, RSPlatesDB["NameModeNpcOffY"])
 
         -- Player
-        elseif IsFriendly and IsPlayer and RSPlatesDB["NameModeFriendlyPlayer"] then 
+        elseif IsFriendly and IsPlayer and not CanAttack and RSPlatesDB["NameModeFriendlyPlayer"] then 
             local r, g, b, a
             local _, englishClass = UnitClass(unit)
             local classColor = rs.V.Ccolors[englishClass]

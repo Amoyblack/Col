@@ -749,7 +749,7 @@ options.args.auras = {
                     type = "range",
                     order = 0,
                     min = 0,
-                    max = 5,
+                    max = 10,
                     step  = 1,
                 },    
                 gapline = {

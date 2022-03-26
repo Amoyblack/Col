@@ -1,6 +1,93 @@
 local addon, rs = ...
 
 
+local function NameplateBuffContainerShowsBuff(name, caster, nameplateShowPersonal, nameplateShowAll)
+    if (not name) then
+        return false;
+    end
+    return nameplateShowAll or
+           (nameplateShowPersonal and (caster == "player" or caster == "pet" or caster == "vehicle"));
+end
+
+function rs.OnUnitAuraUpdateRS(self, unit, isFullUpdate, updatedAuraInfos)
+
+    -- print("\n", UnitName(unit),"    全更新:", isFullUpdate, "  更新数据:", updatedAuraInfos)
+    
+	local filter;
+	local showAll = false;
+    
+	local isPlayer = UnitIsUnit("player", unit);
+	local reaction = UnitReaction("player", unit);
+	-- Reaction 4 is neutral and less than 4 becomes increasingly more hostile
+	local hostileUnit = reaction and reaction <= 4;
+	local showDebuffsOnFriendly = GetCVarBool("nameplateShowDebuffsOnFriendly");
+	if isPlayer then
+		filter = "HELPFUL|INCLUDE_NAME_PLATE_ONLY";
+	else
+		if hostileUnit then
+            -- Reaction 4 is neutral and less than 4 becomes increasingly more hostile
+			filter = "HARMFUL|INCLUDE_NAME_PLATE_ONLY";
+		else
+			if (showDebuffsOnFriendly) then
+				-- dispellable debuffs
+				filter = "HARMFUL|RAID";
+				showAll = true;
+			else
+				filter = "NONE";
+			end
+		end
+	end
+
+    local isStolenAura 
+    local isWhitelistAura
+    local isBarColorAura
+    if updatedAuraInfos then 
+        for _, oAura in pairs(updatedAuraInfos) do 
+            if RSPlatesDB["ShowStolenBuff"] and oAura.isHelpful then 
+                isStolenAura = true 
+            end
+            if RSPlatesDB["DctColorAura"][oAura.spellId] then 
+                isBarColorAura = true 
+            end
+            if RSPlatesDB["AuraWhite"] and RSPlatesDB["DctAura"][oAura.spellId] then 
+                isWhitelistAura = true 
+            end
+            -- print(oAura.name)
+            -- print("偷取:",isStolenAura, "  白名单:",isWhitelistAura, "   自定义光环染色:",isBarColorAura, "\n")
+        end
+    end
+
+	local nameplate = C_NamePlate.GetNamePlateForUnit(unit, issecure());
+	if (nameplate) then
+		-- Early out if the update cannot affect the nameplate
+		local function AuraCouldDisplayAsBuff(auraInfo)
+			if not NameplateBuffContainerShowsBuff(auraInfo.name, auraInfo.sourceUnit, auraInfo.nameplateShowPersonal, auraInfo.nameplateShowAll or showAll) then
+				return false;
+			elseif isPlayer then
+				return auraInfo.isHelpful;
+			elseif hostileUnit then
+				return auraInfo.isHarmful;
+			elseif showDebuffsOnFriendly then
+				return auraInfo.isHarmful and auraInfo.isRaid;
+			end
+
+			return false;
+		end
+
+        -- blizzard skip case
+		if filter ~= "NONE" and AuraUtil.ShouldSkipAuraUpdate(isFullUpdate, updatedAuraInfos, AuraCouldDisplayAsBuff) then
+			-- return;
+            if isStolenAura or isBarColorAura or isWhitelistAura then 
+                rs.UpdateBuffsRS(nameplate.UnitFrame.BuffFrame, nameplate.namePlateUnitToken, filter, showAll);
+            end
+		end
+
+		-- nameplate.UnitFrame.BuffFrame:UpdateBuffs(nameplate.namePlateUnitToken, filter, showAll);
+	end
+end
+
+
+
 function rs:UpdateAnchor()
     if not (self:GetParent() and self:GetParent().unit) then return end 
     if UnitIsUnit("player", self:GetParent().unit) then 
@@ -12,10 +99,10 @@ end
 
 
 
-function rs.UpdateBuffsOri(self, unit, filter, showAll)
+function rs.UpdateBuffsRS(self, unit, filter, showAll)
     local hasColorAura
     local hasStolenAura
-    local namePlate = C_NamePlate.GetNamePlateForUnit(unit, issecure())
+    local namePlate = C_NamePlate.GetNamePlateForUnit(unit, false)
     if not namePlate then return end 
     namePlate.UnitFrame.healthBar.AuraColor = nil
     namePlate.UnitFrame.StolenFrame:Hide()
@@ -121,8 +208,9 @@ function rs.UpdateBuffsOri(self, unit, filter, showAll)
 
         if hasColorAura then 
             namePlate.UnitFrame.healthBar.AuraColor = hasColorAura
-            rs.SetBarColor(namePlate.UnitFrame)
         end
+        
+        rs.SetBarColor(namePlate.UnitFrame)
 
 
 		for i = buffIndex, BUFF_MAX_DISPLAY do

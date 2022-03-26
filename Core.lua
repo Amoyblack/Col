@@ -22,7 +22,7 @@ end
 
 
 function rs.On_Np_Add(self, unitToken)
-	local namePlateFrameBase = C_NamePlate.GetNamePlateForUnit(unitToken, issecure())
+	local namePlateFrameBase = C_NamePlate.GetNamePlateForUnit(unitToken, false)
     -- protected (inside instance friendly. etc) return nil 
     if not namePlateFrameBase then return end 
 	local unitFrame = namePlateFrameBase.UnitFrame
@@ -45,10 +45,10 @@ function rs.CreateUIObj(unitFrame)
     local unit = unitFrame.unit 
     if not unit then return end
 
-    local namePlate = C_NamePlate.GetNamePlateForUnit(unit, issecure())
+    local namePlate = C_NamePlate.GetNamePlateForUnit(unit, false)
     if not namePlate then return end 
 
-	unitFrame.BuffFrame.UpdateBuffs = rs.UpdateBuffsOri
+	unitFrame.BuffFrame.UpdateBuffs = rs.UpdateBuffsRS
 	unitFrame.BuffFrame.UpdateAnchor = rs.UpdateAnchor
 
 	if not unitFrame.rsed then 
@@ -133,6 +133,7 @@ end
 
 --血条数值
 function rs.SetBloodText(unitFrame)
+    if unitFrame:IsForbidden() then return end 
     if not unitFrame.unit then return end 
 	if UnitIsUnit("player", unitFrame.unit) then 
 		unitFrame.healthBar.value:Hide()
@@ -154,10 +155,10 @@ function rs.NpUnderProtection(unitframe, whocall)
 end
 
 function rs.SetBarColor(frame)
+    if frame:IsForbidden() then return end
 	local unit = frame.unit
     if not unit then return end 
     if not rs.IsNameplateUnit(frame) then return end 
-    if frame:IsForbidden() then return end
 
 	local r, g, b, a
 	local guid = UnitGUID(frame.unit)
@@ -211,8 +212,8 @@ end
 
 
 function rs.SetName(frame) 
-    if not rs.IsNameplateUnit(frame) then return end 
     if frame:IsForbidden() then return end 
+    if not rs.IsNameplateUnit(frame) then return end 
     rs.SetNameMode(frame)
 
     if frame.name then 
@@ -228,7 +229,7 @@ end
 
 function rs.ThinCastBar(self)
     if not self.unit then return end 
-    local np = C_NamePlate.GetNamePlateForUnit(self.unit, issecure())
+    local np = C_NamePlate.GetNamePlateForUnit(self.unit, false)
     if not np then return end 
     unitFrame = np.UnitFrame
     if unitFrame:IsForbidden() then return end 
@@ -325,11 +326,11 @@ function rs.IsOnKillHealth(unit)
 end
 
 
--- 安全 
 function rs.SetSelectionHighlight(unitFrame)
+    if unitFrame:IsForbidden() then return end 
 	if not unitFrame.healthBar.curTarget then return end
 	local unit = unitFrame.unit
-    local namePlate = C_NamePlate.GetNamePlateForUnit(unit, issecure())
+    local namePlate = C_NamePlate.GetNamePlateForUnit(unit, false)
 
 	if UnitIsUnit(unit, "target") and not UnitIsUnit(unit, "player") then
 		if RSPlatesDB["ShowArrow"] then 
@@ -371,6 +372,7 @@ end
 
 
 function rs.SetUnitQuestState(unitFrame)
+    if unitFrame:IsForbidden() then return end 
 	local unit = unitFrame.unit
 	local inInstance, instanceType = IsInInstance()
 	if not inInstance and rs.IsQuestUnit(unit) and RSPlatesDB["ShowQuestIcon"] then
@@ -417,7 +419,7 @@ end
 function rs.RefAuraForOneNp(unitFrame)
 	local unit = unitFrame.unit
 	if not unit then return end
-	NamePlateDriverFrame:OnUnitAuraUpdate(unit)
+    NamePlateDriverFrame:OnUnitAuraUpdate(unit, true, nil)
 end
 
 
@@ -430,6 +432,9 @@ end
 function rs.HookBlizzedFunc()
     -- On Add
     hooksecurefunc(NamePlateDriverFrame, "OnNamePlateAdded", rs.On_Np_Add)
+
+    -- On Aura Update
+    hooksecurefunc(NamePlateDriverFrame, "OnUnitAuraUpdate", rs.OnUnitAuraUpdateRS)
 
     -- Size Change
     hooksecurefunc(NamePlateDriverFrame, "UpdateNamePlateOptions", function()
