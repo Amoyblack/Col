@@ -1,52 +1,58 @@
 local addon, rs = ...
 
 
--- 不要无感修改任何CVars，最多只初始化修改第一次
+local dctCVar = {
+    "nameplateSelectedScale",
+    "nameplateGlobalScale",
+    "nameplateMaxDistance",
+    "nameplateOverlapV",
+    "nameplateOverlapH",
+    "nameplateOccludedAlphaMult",
+
+    "nameplateShowAll",
+    "nameplateShowFriendlyNPCs",
+
+    "NameplatePersonalShowAlways",
+    "NameplatePersonalShowInCombat",
+    "NameplatePersonalShowWithTarget",
+    "NameplatePersonalHideDelaySeconds",
+}
+
+-- 留着备用 引导界面使用
 function rs.SetCVarOnFirstTime()
     -- 堆叠1 重叠 0 
     -- SetCVar("nameplateMotion", 1) 
 
     -- 不随距离变化更改透明度
     -- SetCVar("nameplateMinAlpha", 1) 
-
-    --     -- V所开启的姓名版类型
-    -- SetCVar("nameplateShowAll", 1)   --显示所有
-    -- SetCVar("nameplateShowEnemies", 1)   --敌对单位
-    -- SetCVar("nameplateShowEnemyMinions", 1)   --仆从
-    -- SetCVar("nameplateShowEnemyMinus", 1)   --杂兵
-
-    -- -- 遮挡姓名版透明度与  个人资源条 显示逻辑
-    -- SetCVar("NameplatePersonalShowInCombat", 1)
-    -- SetCVar("NameplatePersonalShowWithTarget", 1)
-    -- SetCVar("nameplateOccludedAlphaMult", 0.2)
 end
-
 
 
 function rs.UpdateCvars()
     if RSPlatesDB["EnableCvar"] then 
-        SetCVar("nameplateSelectedScale", RSPlatesDB["nameplateSelectedScale"])
-        SetCVar("nameplateGlobalScale", RSPlatesDB["nameplateGlobalScale"])
-        SetCVar("nameplateMaxDistance", RSPlatesDB["nameplateMaxDistance"])
-        SetCVar("nameplateOverlapV", RSPlatesDB["nameplateOverlapV"])
-        SetCVar("nameplateOverlapH", RSPlatesDB["nameplateOverlapH"])
-        SetCVar("nameplateOccludedAlphaMult", RSPlatesDB["nameplateOccludedAlphaMult"])
+        for _, k in pairs(dctCVar) do 
+            SetCVar(k, RSPlatesDB[k])
+        end
 
-        SetCVar("nameplateShowAll", RSPlatesDB["nameplateShowAll"]) 
-        SetCVar("nameplateShowFriendlyNPCs", RSPlatesDB["nameplateShowFriendlyNPCs"]) 
-
-        SetCVar("NameplatePersonalShowAlways", RSPlatesDB["NameplatePersonalShowAlways"]) 
-        SetCVar("NameplatePersonalShowInCombat", RSPlatesDB["NameplatePersonalShowInCombat"]) 
-        SetCVar("NameplatePersonalShowWithTarget", RSPlatesDB["NameplatePersonalShowWithTarget"]) 
-
-        --不让血条随距离改变而变大变小,预设Min 0.8,解决暴雪自身在缩放时的一个性能问题
+        --不让血条随距离改变而改变大小和透明度,fix blizzard perfomance issue
         SetCVar("nameplateMinScale", 1) 
         SetCVar("nameplateMaxScale", 1) 
         SetCVar("nameplateMinAlpha", 1) 
     end
 end
 
+-- 用服务器数据覆盖本地数据
+-- function rs.GenerateLocalCVar()
+--     for _, k in pairs(dctCVar) do 
+--         print(k, GetCVar(k))
+--         RSPlatesDB[k] = tonumber(GetCVar(k))
+--     end
+-- end
+
 
 -- /dump GetCVar("nameplateMinScale")
 -- /run SetCVar("nameplateMinScale", 1)
+
+-- GetCVarBool()
+-- tonumber(GetCVar())
 

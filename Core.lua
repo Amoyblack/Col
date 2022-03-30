@@ -4,11 +4,16 @@
 local ADDONName, rs = ...
 local L = rs.L
 
-local NpDriveEvent
-
-local barTexture = "Interface\\AddOns\\RSPlates\\media\\bar_rs"
 local arrorTexture = "Interface\\AddOns\\RSPlates\\media\\arrorH"
 local questTexture = "Interface\\AddOns\\RSPlates\\media\\questQuestion"
+local dctTexture = {
+    ["s1"] = "Interface\\TargetingFrame\\UI-TargetingFrame-BarFill",
+    ["s2"] = "Interface\\AddOns\\RSPlates\\media\\bar_rs",
+    ["s3"] = "Interface\\AddOns\\RSPlates\\media\\bar_rs_bright",
+    ["s4"] = "Interface\\AddOns\\RSPlates\\media\\bar_raid",
+    ["s5"] = "Interface\\AddOns\\RSPlates\\media\\bar_raid_bright",
+    ["s6"] = "Interface\\AddOns\\RSPlates\\media\\bar_solid",
+}
 
 -------------------------------------------------
 function rs.RSOn()
@@ -23,11 +28,12 @@ end
 
 function rs.On_Np_Add(self, unitToken)
 	local namePlateFrameBase = C_NamePlate.GetNamePlateForUnit(unitToken, false)
-    -- protected (inside instance friendly. etc) return nil 
     if not namePlateFrameBase then return end 
 	local unitFrame = namePlateFrameBase.UnitFrame
     unitFrame.healthBar.AuraR, unitFrame.healthBar.AuraG, unitFrame.healthBar.AuraB = nil, nil, nil
     rs.CreateUIObj(unitFrame)
+    -- The Event that Blizzard nameplate.lua does not exists 
+    rs.RegisterNpEvent(unitFrame)
 	rs.On_NpRefreshOnce(unitFrame)
 end
 
@@ -37,7 +43,38 @@ function rs.On_Np_Create(self, namePlateFrameBase)
 end
 
 
+local function MouseoverOnUpdate(self, elapsed)
+    if not UnitIsUnit(self.unit, "mouseover") then
+        self.MouseoverGlow:Hide()
+    end
+end
 
+local function OnNpMouseover(unitFrame)
+    if unitFrame:IsForbidden() then return end
+    if not rs.IsNameplateUnit(unitFrame) then return end 
+    local unit = unitFrame.unit
+	if UnitIsUnit(unit, "mouseover") and not UnitIsUnit(unit, "player") then
+		unitFrame.MouseoverGlow:Show()
+	else
+		unitFrame.MouseoverGlow:Hide()
+	end
+	unitFrame:SetScript("OnUpdate", MouseoverOnUpdate)
+end
+
+function rs.RegisterNpEvent(unitFrame)
+    if RSPlatesDB["MouseoverGlow"] then 
+        unitFrame:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+        unitFrame:HookScript("OnEvent", rs.Np_OnEvent)
+    else
+        unitFrame:UnregisterEvent("UPDATE_MOUSEOVER_UNIT")
+    end
+end
+
+function rs.Np_OnEvent(self, event, ...)
+    if event == "UPDATE_MOUSEOVER_UNIT" then 
+        OnNpMouseover(self)
+    end
+end
 ---------------------------------------------------
 
 function rs.CreateUIObj(unitFrame)
@@ -85,6 +122,17 @@ function rs.CreateUIObj(unitFrame)
 		unitFrame.healthBar.curTarget:SetPoint("LEFT", unitFrame.healthBar, "RIGHT", 0, 0)
 		unitFrame.healthBar.curTarget:Hide()
 	
+        -- 鼠标 new ui
+        unitFrame.MouseoverGlow =  unitFrame:CreateTexture("mouseoverhighlight", "BACKGROUND", nil, -1)
+        unitFrame.MouseoverGlow:SetTexture("Interface\\AddOns\\RSPlates\\media\\spark-flat")
+        unitFrame.MouseoverGlow:SetPoint("TOPLEFT", unitFrame.healthBar, "TOPLEFT", -25, 15)
+        unitFrame.MouseoverGlow:SetPoint("BOTTOMRIGHT", unitFrame.healthBar, "BOTTOMRIGHT", 25, -15)
+        unitFrame.MouseoverGlow:SetVertexColor(1, 1, 1, 1)
+        -- unitFrame.MouseoverGlow:SetTexCoord(0, 1, 1, 0)
+        unitFrame.MouseoverGlow:SetBlendMode("ADD")
+        unitFrame.MouseoverGlow:Hide()
+
+
 		-- 任务 new ui
 		unitFrame.healthBar.questIcon = unitFrame.healthBar:CreateTexture("QuestIcon", "OVERLAY")
 		unitFrame.healthBar.questIcon:SetSize(30, 30)
@@ -166,8 +214,11 @@ function rs.SetBarColor(frame)
 	local _, threatStatus = UnitDetailedThreatSituation("player", unit)
     local NpcColor = RSPlatesDB["DctColorNpc"][tonumber(id)]
     
+    if RSPlatesDB["TargetColorEnable"] and UnitIsUnit("target", unit) and not UnitIsUnit("player", unit) then 
+        r, g, b = RSPlatesDB["TargetColor"][1], RSPlatesDB["TargetColor"][2], RSPlatesDB["TargetColor"][3]
+
     -- 资源条不染色
-    if UnitIsUnit("player", unit) then 
+    elseif UnitIsUnit("player", unit) then 
         do end   
     -- 灰名   
     elseif UnitIsTapDenied(unit) then 
@@ -332,6 +383,8 @@ function rs.SetSelectionHighlight(unitFrame)
 	local unit = unitFrame.unit
     local namePlate = C_NamePlate.GetNamePlateForUnit(unit, false)
 
+    rs.SetBarColor(unitFrame)
+
 	if UnitIsUnit(unit, "target") and not UnitIsUnit(unit, "player") then
 		if RSPlatesDB["ShowArrow"] then 
 			unitFrame.healthBar.curTarget:Show()
@@ -386,10 +439,11 @@ end
 
 --血条材质
 function rs.SetBarTexture(unitFrame)
-	if RSPlatesDB["FlatBar"] then 
-		unitFrame.healthBar:SetStatusBarTexture(barTexture)
-		unitFrame.castBar:SetStatusBarTexture(barTexture)	
-		ClassNameplateManaBarFrame:SetStatusBarTexture(barTexture)		
+    local texturePath = dctTexture[RSPlatesDB["BarTexture"]]
+    if texturePath then 
+		unitFrame.healthBar:SetStatusBarTexture(texturePath)
+		unitFrame.castBar:SetStatusBarTexture(texturePath)	
+		ClassNameplateManaBarFrame:SetStatusBarTexture(texturePath)		
 	end
 end
 

@@ -18,8 +18,9 @@ rs.V.zhcn = {
     Title7 = "地下城助手",
     Title8 = "其它",
 
-    FlatBarTexture = "扁平材质",
-    FlatBarTextureTT = "使用扁平化材质而非源生材质   |cff66CCFF重载生效|r",
+    BarTexture = "血条材质",
+    BarTextureTT = "若需要自定义材质，将你的材质改名为UI-TargetingFrame-BarFill后放置于目录 [~/_retail_/Interface/TargetingFrame/你的材质], 然后选择源生即可",
+    BarTextureSource = "源生",
 
     NarrowCastBar = "窄施法条",
     NarrowCastBarTT = "使用窄施法条样式而非源生样式（建议搭配扁平材质获得更好的显示效果)   |cff66CCFF重载生效|r",
@@ -127,7 +128,17 @@ rs.V.zhcn = {
     WesternDetail = "西方单位",
     WesternDetailTT = "使用k,m血量单位",
 
-    Arrow = "选中箭头",
+    TargetGroup = "目标指示器",
+
+    MouseoverGlow = "鼠标指向高亮",
+    MouseoverGlowTT = "高亮鼠标指向的单位(无需选中)，经常使用鼠标指向宏时推荐开启",
+
+    TargetColorEnable = "启用目标染色",
+    TargetColorEnableTT = "对当前目标血条染色",
+
+    TargetColor = "目标颜色",
+
+    Arrow = "目标箭头",
     ArrowTT = "在选中单位的血条右侧显示一个箭头",
 
     StolenBuff = "显示可驱散/偷取BUFF",
@@ -226,6 +237,7 @@ rs.V.zhcn = {
     NameplatePersonalShowAlways = "总是显示",
     NameplatePersonalShowInCombat = "战斗中显示",
     NameplatePersonalShowWithTarget = "有目标时显示",
+    NameplatePersonalHideDelaySeconds = "渐隐时间（秒）",
 
     CVarExtraLink = "|cffFFD700更多完整的CVar文档手册可以在这里查阅:  https://wowpedia.fandom.com/wiki/Console_variables/Complete_list |r",
 }

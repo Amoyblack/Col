@@ -18,8 +18,9 @@ rs.V.zhtw = {
     Title7 = "地城助手",
     Title8 = "其他",
 
-    FlatBarTexture = "扁平化材質",
-    FlatBarTextureTT = "使用扁平化材質而非源生材質，|cff66CCFF重載介面後生效|r。",
+    BarTexture = "血條材質",
+    BarTextureTT = "若需要自定義材質，將你的材質改名為UI-TargetingFrame-BarFill後放置於目錄 [~/_retail_/Interface/TargetingFrame/你的材質], 然後選擇源生即可",
+    BarTextureSource = "源生",
 
     NarrowCastBar = "窄施法條",
     NarrowCastBarTT = "使用窄施法條樣式而非源生樣式，（建議搭配扁平材質獲得更好的顯示效果)|cff66CCFF重載介面後生效|r。",
@@ -127,6 +128,16 @@ rs.V.zhtw = {
     WesternDetail = "西方單位",
     WesternDetailTT = "使用k,m血量單位",
 
+    TargetGroup = "目標指示器",
+
+    MouseoverGlow = "鼠標指向高亮",
+    MouseoverGlowTT = "高亮鼠標指向的單位(無需選中)，經常使用鼠標指向宏時推薦開啟",
+
+    TargetColorEnable = "啟用目標染色",
+    TargetColorEnableTT = "對當前目標血條染色",
+
+    TargetColor = "目標顏色",
+
     Arrow = "目標箭頭",
     ArrowTT = "在目標的名條右側顯示一個箭頭。",
 
@@ -223,6 +234,7 @@ rs.V.zhtw = {
     NameplatePersonalShowAlways = "總是顯示",
     NameplatePersonalShowInCombat = "戰鬥中顯示",
     NameplatePersonalShowWithTarget = "有目標時顯示",
+    NameplatePersonalHideDelaySeconds = "漸隱時間（秒）",
 
     CVarExtraLink = "|cffFFD700更多完整的CVar文檔手冊可以在這裡查閱:  https://wowpedia.fandom.com/wiki/Console_variables/Complete_list |r",
 }

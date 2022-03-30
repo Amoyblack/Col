@@ -18,8 +18,9 @@ rs.V.enus = {
     Title7 = "Dungeon Helper",
     Title8 = "Others",
 
-    FlatBarTexture = "Flat Bar Texture",
-    FlatBarTextureTT = "Use flattened bartexture instead of blizzard source texture |cff66CCFFNeed /reload.|r",
+    BarTexture = "Bar Texture",
+    BarTextureTT = "If you want to customize the texture, rename your texture file to 'UI-TargetingFrame-BarFill' and place it in the directory [~/_retail_/Interface/TargetingFrame/your texture file], then select the source",
+    BarTextureSource = "source",
 
     NarrowCastBar = "Narrow CastBar",
     NarrowCastBarTT = "Use narrow castbar style instead of blizzard source style. (It's recommended to use this with Flat texture the same time for better display effect) |cff66CCFFNeed /reload.|r",
@@ -127,6 +128,16 @@ rs.V.enus = {
     WesternDetail = "Western Unit",
     WesternDetailTT = "K/M unit for 1000/100000 health value",
 
+    TargetGroup = "Target Indicator",
+
+    MouseoverGlow = "Mouseover Highlight",
+    MouseoverGlowTT = "Hightlight the mouseover unit(no need to select),It is recommended to enable when you often use the mouseover macro",
+
+    TargetColorEnable = "Enable Target Color",
+    TargetColorEnableTT = "Color the current target's health bar",
+
+    TargetColor = "Target Color",
+
     Arrow = "Selected Arrow",
     ArrowTT = "Display an arrow at nameplate right on target unit.",
 
@@ -152,7 +163,7 @@ rs.V.enus = {
 
 
 
-    BlizzardPanelLargeInfo = "RSPlates is made based on the style of blizzard <Larger Nameplates>\n It's strongly recommended to enable it by [esc - interface - Names - Larger Nameplates]",
+    BlizzardPanelLargeInfo = "RSPlates is made based on the style of blizzard <Larger Nameplates>\n It's recommended to enable it by [esc - interface - Names - Larger Nameplates]",
 
     needReload = "|cff66CCFF >> Take effect after reload UI<< |r",
 
@@ -177,7 +188,7 @@ rs.V.enus = {
 
     MarginCol1 = "\nSince the new version of RSP has refactored and optimized the performance and structure, you need to manually delete the plugin directory of the old version once",
     MarginCol2 = "\nDetected that an old version plugin directory currently exists",
-    MarginCol3 = "\nlocated at .../_retail_/Interface/AddOns/Col，Just delete the <Col> folder",
+    MarginCol3 = "\nlocated at .../_retail_/Interface/AddOns/Col,Just delete the <Col> folder",
     MarginCol4 = "\nAfter deleting the plugin directory of the old version, this prompt will be automatically closed, and the coexistence of the old and new versions will cause conflicts and bugs",
 
     MiniMapLeftBtn = "|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:13:11:0:3:512:720:12:66:311:422|t : Open Config",
@@ -224,6 +235,7 @@ rs.V.enus = {
     NameplatePersonalShowAlways = "Always",
     NameplatePersonalShowInCombat = "In battle",
     NameplatePersonalShowWithTarget = "Has a target",
+    NameplatePersonalHideDelaySeconds = "HideDelay (sec)",
 
     CVarExtraLink = "|cffFFD700More complete CVar documentation can be found here:  https://wowpedia.fandom.com/wiki/Console_variables/Complete_list |r",
 }

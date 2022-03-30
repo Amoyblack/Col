@@ -58,14 +58,8 @@ options.args.basic = {
             name = L["Title1"],
             type = 'group',
             inline = true,
-            order = 1,
+            order = 2,
             args = {
-                FlatBar = {
-                    name = L["FlatBarTexture"],
-                    desc = L["FlatBarTextureTT"],
-                    type = 'toggle',
-                    order = 1,
-                },
                 NarrowCast = {
                     name = L["NarrowCastBar"],
                     desc = L["NarrowCastBarTT"],
@@ -90,13 +84,41 @@ options.args.basic = {
                     type = 'toggle',
                     order = 4,
                 },
+                gap = {
+                    name = "",
+                    type = "description",
+                    order = 5,
+                },
+                BarTexture = {
+                    name = "|cffFFFFFF "..L["BarTexture"].."|r",
+                    desc = L["BarTextureTT"],
+                    order = 6,
+                    width = 2,
+                    type = "select",
+                    get = function(info) return RSPlatesDB[info[#info]] end,
+                    set = function(info, value) RSPlatesDB[info[#info]] = value rs.UpdateAllNameplatesOnce()  end, 
+                    values = {
+                        s1 = "|TInterface\\TargetingFrame\\UI-TargetingFrame-BarFill:10:150:0:0|t  "..L["BarTextureSource"],
+                        s2 = "|TInterface\\AddOns\\RSPlates\\media\\bar_rs:10:150:0:0|t  rs",
+                        s3 = "|TInterface\\AddOns\\RSPlates\\media\\bar_rs_bright:10:150:0:0|t  rs_L",
+                        s4 = "|TInterface\\AddOns\\RSPlates\\media\\bar_raid:10:150:0:0|t  raid",
+                        s5 = "|TInterface\\AddOns\\RSPlates\\media\\bar_raid_bright:10:150:0:0|t  raid_L",
+                        s6 = "|TInterface\\AddOns\\RSPlates\\media\\bar_solid:10:150:0:0|t  solid",
+                    }
+                    
+                }
             }
+        },
+        gap1 = {
+            name = " ",
+            type = "description",
+            order = 3,
         },
         div2 = {
             name = L["Health"],
             type = "group",
             inline = true,
-            order = 2,
+            order = 4,
             args = {
                 DetailType = {
                     name = "",
@@ -136,11 +158,16 @@ options.args.basic = {
                 }
             }
         },
+        gap2 = {
+            name = " ",
+            type = "description",
+            order = 5,
+        },
         div3 = {
             name = L["Title4"],
             type = "group",
             inline = true,
-            order =3,
+            order = 6,
             args = {
                 -- omen3colorlable = {
                 --     name = "仇恨染色:",
@@ -244,11 +271,16 @@ options.args.basic = {
 
             }
         },
+        gap3 = {
+            name = " ",
+            type = "description",
+            order = 7,
+        },
         div4 = {
             name = L["Title5"],
             type = "group",
             inline = true,
-            order = 4,
+            order = 8,
             set = function (info, value) 
                 if RSPlatesDB[info[#info]] ~= nil then 
                     RSPlatesDB[info[#info]] = value 
@@ -280,18 +312,35 @@ options.args.basic = {
                 },
             }
         },
+        gap4 = {
+            name = " ",
+            type = "description",
+            order = 9,
+        },
         div5 = {
-            name = L["Title8"],
+            name = L["TargetGroup"],
             type = "group",
             inline = true,
-            order = 5,
+            order = 10,
             args = {
-                ShowQuestIcon = {
-                    name = L["QuestIcon"],
-                    desc = L["QuestIconTT"],
+                MouseoverGlow = {
+                    name = L["MouseoverGlow"],
+                    desc = L["MouseoverGlowTT"],
                     type = "toggle",
-                    width = 0.8,
                     order = 1,
+                    set = function(info, value) RSPlatesDB[info[#info]] = value 
+                        for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+                            local unitFrame = namePlate.UnitFrame
+                            local unit = unitFrame.unit
+                            rs.On_Np_Add(nil, unit)
+                        end	
+                    end,
+                },
+                ShowArrow = {
+                    name = L["Arrow"],
+                    desc = L["ArrowTT"],
+                    type = "toggle",
+                    order = 2,
                     set = function (info, value) 
                         if RSPlatesDB[info[#info]] ~= nil then 
                             RSPlatesDB[info[#info]] = value 
@@ -299,12 +348,73 @@ options.args.basic = {
                         rs.UpdateAllNameplatesOnce()
                     end,
                 },
-                ShowArrow = {
-                    name = L["Arrow"],
-                    desc = L["ArrowTT"],
+                UnSelectAlpha = {
+                    name = L["UnSelectAlpha"],
+                    desc = L["UnSelectAlphaTT"],
+                    type = "range",
+                    order = 3,
+                    min = 0.1,
+                    -- softmin =0,
+                    max = 1,
+                    -- softmax = 100,
+                    step  = 0.1,
+                    set = function (info, value) 
+                        if RSPlatesDB[info[#info]] ~= nil then 
+                            RSPlatesDB[info[#info]] = value 
+                        end 
+                        rs.UpdateAllNameplatesOnce()
+                    end,
+                },     
+                TargetColorGroup = {
+                    name = " ",
+                    type = "group",
+                    inline = true, 
+                    order = 4,
+                    args = {
+                        TargetColorEnable = {
+                            name = L["TargetColorEnable"],
+                            desc = L["TargetColorEnableTT"],
+                            type = "toggle",
+                            order = 1,
+                            set = function (info, value) 
+                                if RSPlatesDB[info[#info]] ~= nil then 
+                                    RSPlatesDB[info[#info]] = value 
+                                end 
+                                rs.UpdateAllNameplatesOnce()
+                            end,
+                        },
+                        TargetColor = {
+                            name = L["TargetColor"],
+                            type = "color",
+                            order = 2,
+                            get = function(info)
+                                return RSPlatesDB[info[#info]][1], RSPlatesDB[info[#info]][2], RSPlatesDB[info[#info]][3]
+                            end,
+                            set = function(info, r, g, b, a)
+                                RSPlatesDB[info[#info]] = {r-r%0.01, g-g%0.01, b-b%0.01}
+                                rs.UpdateAllNameplatesOnce()
+                            end,
+                        },
+                    },
+                },
+            },
+        },
+        gap5 = {
+            name = " ",
+            type = "description",
+            order = 11,
+        },
+        div6 = {
+            name = L["Title8"],
+            type = "group",
+            inline = true,
+            order = 12,
+            args = {
+                ShowQuestIcon = {
+                    name = L["QuestIcon"],
+                    desc = L["QuestIconTT"],
                     type = "toggle",
-                    width = 0.8,
-                    order = 2,
+                    order = 1,
                     set = function (info, value) 
                         if RSPlatesDB[info[#info]] ~= nil then 
                             RSPlatesDB[info[#info]] = value 
@@ -319,11 +429,11 @@ options.args.basic = {
                     width = 1.3,
                     order = 3,
                 },     
-                gap = {
-                    name = " ",
-                    type = "description",
-                    order = 4,
-                },
+                -- gap = {
+                --     name = " ",
+                --     type = "description",
+                --     order = 4,
+                -- },
                 CastHeight = {
                     name = L["CastHeight"],
                     desc = L["CastHeightTT"],
@@ -335,23 +445,6 @@ options.args.basic = {
                     -- softmax = 100,
                     step  = 1,
                 },
-                UnSelectAlpha = {
-                    name = L["UnSelectAlpha"],
-                    desc = L["UnSelectAlphaTT"],
-                    type = "range",
-                    order = 6,
-                    min = 0.1,
-                    -- softmin =0,
-                    max = 1,
-                    -- softmax = 100,
-                    step  = 0.1,
-                    set = function (info, value) 
-                        if RSPlatesDB[info[#info]] ~= nil then 
-                            RSPlatesDB[info[#info]] = value 
-                        end 
-                        rs.UpdateAllNameplatesOnce()
-                    end,
-                },     
             }
         }
     },
@@ -479,6 +572,7 @@ options.args.cvars = {
             name = L["CvarEnable"],
             desc = L["CvarEnableTT"],
             type = "toggle",
+            get = function (info) return RSPlatesDB[info[#info]] end,
             set = function(info, value)
                 if RSPlatesDB[info[#info]] ~= nil then 
                     RSPlatesDB[info[#info]] = value 
@@ -500,14 +594,12 @@ options.args.cvars = {
             type = "group",
             inline = true,
             disabled = function(info) return not RSPlatesDB["EnableCvar"] end,
+            get = function(info) return tonumber(GetCVar(info[#info])) end,
             set = function (info, value) 
                 if RSPlatesDB[info[#info]] ~= nil then 
                     RSPlatesDB[info[#info]] = value 
                 end 
                 rs.UpdateCvars()
-            end,
-            get = function(info) 
-                return RSPlatesDB[info[#info]]
             end,
             args = {
                 nameplateSelectedScale = {
@@ -573,8 +665,8 @@ options.args.cvars = {
                     name = L["ShowAllNP"],
                     desc = L["ShowAllNPTT"],
                     type = "toggle",
-                    get = function() if RSPlatesDB["nameplateShowAll"] == 1 then return true else return false end end,
-                    set = function(info, value) if value == true then RSPlatesDB["nameplateShowAll"] = 1 else RSPlatesDB["nameplateShowAll"] = 0 end rs.UpdateCvars() end,
+                    get = function(info) if tonumber(GetCVar(info[#info])) == 1 then return true else return false end end,
+                    set = function(info, value) if value == true then RSPlatesDB[info[#info]] = 1 else RSPlatesDB[info[#info]] = 0 end rs.UpdateCvars() end,
                 },
         
                 nameplateShowFriendlyNPCs = {
@@ -582,8 +674,8 @@ options.args.cvars = {
                     name = L["ShowNpcNP"],
                     desc = L["ShowNpcNPTT"],
                     type = "toggle",
-                    get = function() if RSPlatesDB["nameplateShowFriendlyNPCs"] == 1 then return true else return false end end,
-                    set = function(info, value) if value == true then RSPlatesDB["nameplateShowFriendlyNPCs"] = 1 else RSPlatesDB["nameplateShowFriendlyNPCs"] = 0 end rs.UpdateCvars() end,
+                    get = function(info) if tonumber(GetCVar(info[#info])) == 1 then return true else return false end end,
+                    set = function(info, value) if value == true then RSPlatesDB[info[#info]] = 1 else RSPlatesDB[info[#info]] = 0 end rs.UpdateCvars() end,
                 },
                 cvargap2 = {
                     order = 23,
@@ -600,22 +692,35 @@ options.args.cvars = {
                             name = L["NameplatePersonalShowAlways"],
                             type = "toggle",
                             order = 1,
-                            get = function() if RSPlatesDB["NameplatePersonalShowAlways"] == 1 then return true else return false end end,
-                            set = function(info, value) if value == true then RSPlatesDB["NameplatePersonalShowAlways"] = 1 else RSPlatesDB["NameplatePersonalShowAlways"] = 0 end rs.UpdateCvars() end,
+                            get = function(info) if tonumber(GetCVar(info[#info])) == 1 then return true else return false end end,
+                            set = function(info, value) if value == true then RSPlatesDB[info[#info]] = 1 else RSPlatesDB[info[#info]] = 0 end rs.UpdateCvars() end,
                         },
                         NameplatePersonalShowInCombat ={
                             name = L["NameplatePersonalShowInCombat"],
                             type = "toggle",
                             order = 2,
-                            get = function() if RSPlatesDB["NameplatePersonalShowInCombat"] == 1 then return true else return false end end,
-                            set = function(info, value) if value == true then RSPlatesDB["NameplatePersonalShowInCombat"] = 1 else RSPlatesDB["NameplatePersonalShowInCombat"] = 0 end rs.UpdateCvars() end,
+                            get = function(info) if tonumber(GetCVar(info[#info])) == 1 then return true else return false end end,
+                            set = function(info, value) if value == true then RSPlatesDB[info[#info]] = 1 else RSPlatesDB[info[#info]] = 0 end rs.UpdateCvars() end,
                         },
                         NameplatePersonalShowWithTarget ={
                             name = L["NameplatePersonalShowWithTarget"],
                             type = "toggle",
                             order = 3,
-                            get = function() if RSPlatesDB["NameplatePersonalShowWithTarget"] == 2 then return true else return false end end,
-                            set = function(info, value) if value == true then RSPlatesDB["NameplatePersonalShowWithTarget"] = 2 else RSPlatesDB["NameplatePersonalShowWithTarget"] = 0 end rs.UpdateCvars() end,
+                            get = function(info) if tonumber(GetCVar(info[#info])) == 2 then return true else return false end end,
+                            set = function(info, value) if value == true then RSPlatesDB[info[#info]] = 2 else RSPlatesDB[info[#info]] = 0 end rs.UpdateCvars() end,
+                        },
+                        gap = {
+                            name = "",
+                            type = "description",
+                            order =4,
+                        },
+                        NameplatePersonalHideDelaySeconds ={
+                            name = L["NameplatePersonalHideDelaySeconds"],
+                            type = "range",
+                            order = 5,
+                            min = 0.3,
+                            max = 5,
+                            step  = 0.1,    
                         },
                     },
                 },
@@ -1219,7 +1324,6 @@ function rs.UpdateAllNameplatesOnce()
 	for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
 		local unitFrame = namePlate.UnitFrame
 		rs.On_NpRefreshOnce(unitFrame)
-        rs.SetNameMode(unitFrame)
         if unitFrame.name then 
             if RSPlatesDB["NameWhite"] then 
                 unitFrame.name:SetVertexColor(1, 1, 1)

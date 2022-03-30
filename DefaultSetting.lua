@@ -4,10 +4,10 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "9.2.10",
+	["Version"] = "9.2.11",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
-	["FlatBar"] = false,
+    ["BarTexture"] = "s1",
 	["NarrowCast"] = false,
 	["BarBgCol"] = false,
     ["EliteIcon"] = true,
@@ -30,6 +30,7 @@ rs.V.DefaultSetting = {
     ["NameplatePersonalShowAlways"] = 0,
     ["NameplatePersonalShowInCombat"] = 1,
     ["NameplatePersonalShowWithTarget"] = 0,
+    ["NameplatePersonalHideDelaySeconds"] = 0.7,
 
     ["ThreatColorEnable"] = false,      -- 参数 r,g,b  格式: (255,0,255) --> (1,0,1)
     ["dpsSafeColor"] = {.1, .7, .9},    --dps低仇恨 (安全)/ 默认蓝色	Dps low threat (dps safe)
@@ -70,6 +71,9 @@ rs.V.DefaultSetting = {
 	["UnSelectAlpha"] = 1.0,
 
 	["ShowArrow"] = false,
+    ["TargetColorEnable"] = false,
+    ["TargetColor"] = {1, 1, 1},
+    ["MouseoverGlow"] = false,
 	["ShowStolenBuff"] = true,
 	["ShowQuestIcon"] = true,
 

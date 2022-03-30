@@ -32,7 +32,7 @@ local function OnlyShowBall()
 	end
 end
 
--- 每0.25秒执行一次 
+-- 每0.2秒执行一次 
 
 local boomFrame, timei
 
