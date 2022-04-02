@@ -28,13 +28,14 @@ end
 
 function rs.On_Np_Add(self, unitToken)
 	local namePlateFrameBase = C_NamePlate.GetNamePlateForUnit(unitToken, false)
-    if not namePlateFrameBase then return end 
-	local unitFrame = namePlateFrameBase.UnitFrame
-    unitFrame.healthBar.AuraR, unitFrame.healthBar.AuraG, unitFrame.healthBar.AuraB = nil, nil, nil
-    rs.CreateUIObj(unitFrame)
-    -- The Event that Blizzard nameplate.lua does not exists 
-    rs.RegisterNpEvent(unitFrame)
-	rs.On_NpRefreshOnce(unitFrame)
+    if namePlateFrameBase then 
+        local unitFrame = namePlateFrameBase.UnitFrame
+        unitFrame.healthBar.AuraR, unitFrame.healthBar.AuraG, unitFrame.healthBar.AuraB = nil, nil, nil
+        rs.CreateUIObj(unitFrame, namePlateFrameBase)
+        -- The Event that Blizzard nameplate.lua does not exists 
+        rs.RegisterNpEvent(unitFrame)
+        rs.On_NpRefreshOnce(unitFrame)
+    end
 end
 
 
@@ -50,18 +51,18 @@ local function MouseoverOnUpdate(self, elapsed)
 end
 
 local function OnNpMouseover(unitFrame)
-    if unitFrame:IsForbidden() then return end
-    if not rs.IsNameplateUnit(unitFrame) then return end 
-    local unit = unitFrame.unit
-	if UnitIsUnit(unit, "mouseover") and not UnitIsUnit(unit, "player") then
-		unitFrame.MouseoverGlow:Show()
-	else
-		unitFrame.MouseoverGlow:Hide()
-	end
-	unitFrame:SetScript("OnUpdate", MouseoverOnUpdate)
+    if rs.IsLegalUnit(unitFrame.unit, unitFrame) then 
+        if UnitIsUnit(unitFrame.unit, "mouseover") and not UnitIsUnit(unitFrame.unit, "player") then
+            unitFrame.MouseoverGlow:Show()
+        else
+            unitFrame.MouseoverGlow:Hide()
+        end
+        unitFrame:SetScript("OnUpdate", MouseoverOnUpdate)
+    end
 end
 
 function rs.RegisterNpEvent(unitFrame)
+    -- remove 会 unRegallevent, release pool , 不要判断rsed, each time 
     if RSPlatesDB["MouseoverGlow"] then 
         unitFrame:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
         unitFrame:HookScript("OnEvent", rs.Np_OnEvent)
@@ -77,18 +78,16 @@ function rs.Np_OnEvent(self, event, ...)
 end
 ---------------------------------------------------
 
-function rs.CreateUIObj(unitFrame)
+function rs.CreateUIObj(unitFrame, namePlate)
 
     local unit = unitFrame.unit 
     if not unit then return end
 
-    local namePlate = C_NamePlate.GetNamePlateForUnit(unit, false)
-    if not namePlate then return end 
-
-	unitFrame.BuffFrame.UpdateBuffs = rs.UpdateBuffsRS
-	unitFrame.BuffFrame.UpdateAnchor = rs.UpdateAnchor
-
 	if not unitFrame.rsed then 
+        -- print(unit, 'createUIObj')
+
+        unitFrame.BuffFrame.UpdateBuffs = rs.UpdateBuffsRS
+        unitFrame.BuffFrame.UpdateAnchor = rs.UpdateAnchor
 
 		-- 施法条毛玻璃边 
 		unitFrame.castBar.castBG = rs.CreateBackDrop(unitFrame.castBar, unitFrame.castBar, 1) 
@@ -164,8 +163,8 @@ function rs.CreateUIObj(unitFrame)
         -- target glow new ui
         namePlate.NameSelectGlow = namePlate:CreateTexture("targethighlight", "BACKGROUND", nil, -1)
         namePlate.NameSelectGlow:SetTexture("Interface\\AddOns\\RSPlates\\media\\spark-flat")
-        namePlate.NameSelectGlow:SetPoint("TOPLEFT", unitFrame.healthBar, "TOPLEFT", 7, 7)
-        namePlate.NameSelectGlow:SetPoint("BOTTOMRIGHT", unitFrame.healthBar, "BOTTOMRIGHT", -7, -7)
+        namePlate.NameSelectGlow:SetPoint("TOPLEFT", namePlate.NpcNameRS, "TOPLEFT", 0, 7)
+        namePlate.NameSelectGlow:SetPoint("BOTTOMRIGHT", namePlate.NpcNameRS, "BOTTOMRIGHT", 0, -7)
         namePlate.NameSelectGlow:SetVertexColor(1, 1, 1, .8)
         -- namePlate.NameSelectGlow:SetTexCoord(0, 1, 1, 0)
         namePlate.NameSelectGlow:SetBlendMode("ADD")
@@ -181,81 +180,93 @@ end
 
 --血条数值
 function rs.SetBloodText(unitFrame)
-    if unitFrame:IsForbidden() then return end 
-    if not unitFrame.unit then return end 
-	if UnitIsUnit("player", unitFrame.unit) then 
-		unitFrame.healthBar.value:Hide()
-		return 
-	end
+    if rs.IsLegalUnit(unitFrame.unit, unitFrame) then 
+        if unitFrame.healthBar.value then 
+            if UnitIsUnit("player", unitFrame.unit) then 
+                unitFrame.healthBar.value:Hide()
+                return 
+            end
 
-	unitFrame.healthBar.value:Show()
-	unitFrame.healthBar.value:SetText(rs.GetDetailText(unitFrame.unit))
+            unitFrame.healthBar.value:Show()
+            unitFrame.healthBar.value:SetText(rs.GetDetailText(unitFrame.unit))
+        end
+    end
 end
 
+function rs.IsLegalUnit(unit, unitframe)
+    if not unit or not rs.IsNameplateUnit(unit) then 
+        return false
+    end
 
--- a test function 
-function rs.NpUnderProtection(unitframe, whocall)
-    if not unitframe then return end 
-    local unit = unitframe.unit 
-    local reaction = UnitReaction("player", unit)
-    
-    -- print(reaction, UnitName(unit), " canAttack:", UnitCanAttack("player", unit)," canAssist:", UnitCanAssist("player", unit)," IsFriend:",  UnitIsFriend("player", unit), " IsEnemy:", UnitIsEnemy("player", unit), "Call Method:", whocall, "Protect Mode: ")
+    if not unitframe then 
+        local nameplatebase = C_NamePlate.GetNamePlateForUnit(unit, false)
+        if nameplatebase then 
+            unitframe = nameplatebase.UnitFrame
+        end
+    end
+
+    if not unitframe then return false end 
+
+    if unitframe:IsForbidden() then 
+        return false
+    end
+    return true 
 end
+
 
 function rs.SetBarColor(frame)
-    if frame:IsForbidden() then return end
-	local unit = frame.unit
-    if not unit then return end 
-    if not rs.IsNameplateUnit(frame) then return end 
+    if rs.IsLegalUnit(frame.unit, frame) then 
+        local unit = frame.unit
 
-	local r, g, b, a
-	local guid = UnitGUID(frame.unit)
-	local _, _, _, _, _, id = strsplit("-", guid or "") 
-	local _, threatStatus = UnitDetailedThreatSituation("player", unit)
-    local NpcColor = RSPlatesDB["DctColorNpc"][tonumber(id)]
-    
-    if RSPlatesDB["TargetColorEnable"] and UnitIsUnit("target", unit) and not UnitIsUnit("player", unit) then 
-        r, g, b = RSPlatesDB["TargetColor"][1], RSPlatesDB["TargetColor"][2], RSPlatesDB["TargetColor"][3]
-
-    -- 资源条不染色
-    elseif UnitIsUnit("player", unit) then 
-        do end   
-    -- 灰名   
-    elseif UnitIsTapDenied(unit) then 
-        do end 
-    -- 1 自定义NpcID
-    elseif NpcColor then 
-        r, g, b = NpcColor[1], NpcColor[2], NpcColor[3]
-    -- 2 携带自定义光环
-    elseif frame.healthBar.AuraColor then 
-        r, g, b = frame.healthBar.AuraColor[1], frame.healthBar.AuraColor[2], frame.healthBar.AuraColor[3]
-    -- 3 斩杀
-	elseif RSPlatesDB["SlayEnable"] and rs.IsOnKillHealth(unit) then
-        r, g, b = RSPlatesDB["SlayColor"][1], RSPlatesDB["SlayColor"][2], RSPlatesDB["SlayColor"][3]
+        local r, g, b, a
+        local guid = UnitGUID(frame.unit)
+        local _, _, _, _, _, id = strsplit("-", guid or "") 
+        local _, threatStatus = UnitDetailedThreatSituation("player", unit)
+        local NpcColor = RSPlatesDB["DctColorNpc"][tonumber(id)]
         
-    -- 4 仇恨，目标与玩家处于战斗状态
-	elseif RSPlatesDB["ThreatColorEnable"] and threatStatus then 
-        r, g, b = rs.IsOnThreatList(frame.unit)
-	end
+        if RSPlatesDB["TargetColorEnable"] and UnitIsUnit("target", unit) and not UnitIsUnit("player", unit) then 
+            r, g, b = RSPlatesDB["TargetColor"][1], RSPlatesDB["TargetColor"][2], RSPlatesDB["TargetColor"][3]
 
-	
+        -- 资源条不染色
+        elseif UnitIsUnit("player", unit) then 
+            do end   
+        -- 灰名   
+        elseif UnitIsTapDenied(unit) then 
+            do end 
+        -- 1 自定义NpcID
+        elseif NpcColor then 
+            r, g, b = NpcColor[1], NpcColor[2], NpcColor[3]
+        -- 2 携带自定义光环
+        elseif frame.healthBar.AuraColor then 
+            r, g, b = frame.healthBar.AuraColor[1], frame.healthBar.AuraColor[2], frame.healthBar.AuraColor[3]
+        -- 3 斩杀
+        elseif RSPlatesDB["SlayEnable"] and rs.IsOnKillHealth(unit) then
+            r, g, b = RSPlatesDB["SlayColor"][1], RSPlatesDB["SlayColor"][2], RSPlatesDB["SlayColor"][3]
+            
+        -- 4 仇恨，目标与玩家处于战斗状态
+        elseif RSPlatesDB["ThreatColorEnable"] and threatStatus then 
+            r, g, b = rs.IsOnThreatList(frame.unit)
+        end
 
-    if not r then
-        r, g, b =  frame.healthBar.r, frame.healthBar.g, frame.healthBar.b
-    end
+        
 
-    frame.healthBar:SetStatusBarColor(r, g, b);
+        if not r then
+            r, g, b =  frame.healthBar.r, frame.healthBar.g, frame.healthBar.b
+        end
 
-    if (frame.optionTable.colorHealthWithExtendedColors) then
-        frame.selectionHighlight:SetVertexColor(r, g, b);
-    else
-        frame.selectionHighlight:SetVertexColor(1, 1, 1);
-    end
-    if RSPlatesDB["BarBgCol"] then
-        if UnitIsUnit("player", unit) then 
-            frame.healthBar.background:SetColorTexture(.5 , .5, .5,.1)
+        frame.healthBar:SetStatusBarColor(r, g, b);
+
+        if (frame.optionTable.colorHealthWithExtendedColors) then
+            frame.selectionHighlight:SetVertexColor(r, g, b);
         else
-            frame.healthBar.background:SetColorTexture(2/5*r, 2/5*g, 2/5*b, .7)
+            frame.selectionHighlight:SetVertexColor(1, 1, 1);
+        end
+        if RSPlatesDB["BarBgCol"] then
+            if UnitIsUnit("player", unit) then 
+                frame.healthBar.background:SetColorTexture(.5 , .5, .5,.1)
+            else
+                frame.healthBar.background:SetColorTexture(2/5*r, 2/5*g, 2/5*b, .7)
+            end
         end
     end
 
@@ -263,42 +274,38 @@ end
 
 
 function rs.SetName(frame) 
-    if frame:IsForbidden() then return end 
-    if not rs.IsNameplateUnit(frame) then return end 
-    rs.SetNameMode(frame)
+    if rs.IsLegalUnit(frame.unit, frame) then 
+        rs.SetNameMode(frame)
 
-    if frame.name then 
-        if RSPlatesDB["NameWhite"] then 
-            frame.name:SetVertexColor(1, 1, 1)
-        end
-        if RSPlatesDB["NameSizeEnable"] then 
-            frame.name:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["NameSize"], nil)
+        if frame.name then 
+            if RSPlatesDB["NameWhite"] then 
+                frame.name:SetVertexColor(1, 1, 1)
+            end
+            if RSPlatesDB["NameSizeEnable"] then 
+                frame.name:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["NameSize"], nil)
+            end
         end
     end
 end
 
 
 function rs.ThinCastBar(self)
-    if not self.unit then return end 
-    local np = C_NamePlate.GetNamePlateForUnit(self.unit, false)
-    if not np then return end 
-    unitFrame = np.UnitFrame
-    if unitFrame:IsForbidden() then return end 
-	local function SetThin(self)
+    if rs.IsLegalUnit(self.unit, self) then 
+        local function SetThin(self)
+            self.Icon:SetShown(true)
+            -- self.Icon:SetTexture(texture)
+            self:SetHeight(RSPlatesDB["CastHeight"])
+            self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -3, 0)
+            self.Icon:SetSize(RSPlatesDB["CastHeight"] + 13, RSPlatesDB["CastHeight"] + 13)  -- 13 + height
+            self.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
+            self.BorderShield:SetPoint("LEFT",self, "LEFT", -2, 0)
+        end
 
-		self.Icon:SetShown(true)
-		-- self.Icon:SetTexture(texture)
-		self:SetHeight(RSPlatesDB["CastHeight"])
-		self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -3, 0)
-		self.Icon:SetSize(RSPlatesDB["CastHeight"] + 13, RSPlatesDB["CastHeight"] + 13)  -- 13 + height
-		self.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
-		self.BorderShield:SetPoint("LEFT",self, "LEFT", -2, 0)
-	end
-
-	SetThin(self)
-	self:SetScript("OnSizeChanged", function ( ... )
-		SetThin(self)
-	end)
+        SetThin(self)
+        self:SetScript("OnSizeChanged", function ( ... )
+            SetThin(self)
+        end)
+    end
 end
 
 
@@ -322,9 +329,9 @@ function rs.GetDetailText(unit)
 		end
 	else
 		if CurHealth > 10000 and CurHealth < 100000000 then
-			fCur = string.format("%.1fW", CurHealth/10000)
+			fCur = string.format("%.1f万", CurHealth/10000)
 		elseif CurHealth > 100000000 then
-			fCur = string.format("%.1fY", CurHealth/100000000)
+			fCur = string.format("%.1f亿", CurHealth/100000000)
 		else
 			fCur = tostring(CurHealth)
 		end
@@ -342,8 +349,7 @@ function rs.GetDetailText(unit)
 	end
 end
 
-function rs.IsNameplateUnit(Frame)
-    local unit = Frame.unit
+function rs.IsNameplateUnit(unit)
     if not unit then return end 
     if string.match(unit, "nameplate") == "nameplate" then 
         return true
@@ -378,61 +384,62 @@ end
 
 
 function rs.SetSelectionHighlight(unitFrame)
-    if unitFrame:IsForbidden() then return end 
-	if not unitFrame.healthBar.curTarget then return end
-	local unit = unitFrame.unit
-    local namePlate = C_NamePlate.GetNamePlateForUnit(unit, false)
+    if rs.IsLegalUnit(unitFrame.unit, unitFrame) then 
+        if not unitFrame.healthBar.curTarget then return end
+        local unit = unitFrame.unit
+        local namePlate = C_NamePlate.GetNamePlateForUnit(unit, false)
 
-    rs.SetBarColor(unitFrame)
+        rs.SetBarColor(unitFrame)
 
-	if UnitIsUnit(unit, "target") and not UnitIsUnit(unit, "player") then
-		if RSPlatesDB["ShowArrow"] then 
-			unitFrame.healthBar.curTarget:Show()
-		else
-			unitFrame.healthBar.curTarget:Hide()
-		end
+        if UnitIsUnit(unit, "target") and not UnitIsUnit(unit, "player") then
+            if RSPlatesDB["ShowArrow"] then 
+                unitFrame.healthBar.curTarget:Show()
+            else
+                unitFrame.healthBar.curTarget:Hide()
+            end
 
-		unitFrame:SetAlpha(1)
-		-- unitFrame.castBar.Icon:SetAlpha(1)
-        -- Namemode Select Glow 
-        if namePlate and namePlate.NpcNameRS then 
-            if namePlate.NpcNameRS:IsShown() then 
-                namePlate.NameSelectGlow:Show()
+            unitFrame:SetAlpha(1)
+            -- unitFrame.castBar.Icon:SetAlpha(1)
+            -- Namemode Select Glow 
+            if namePlate and namePlate.NpcNameRS then 
+                if namePlate.NpcNameRS:IsShown() then 
+                    namePlate.NameSelectGlow:Show()
+                end
+            end
+
+        else
+            unitFrame.healthBar.curTarget:Hide()
+            if UnitIsUnit(unit, "player") then 
+                unitFrame:SetAlpha(1)
+            else
+                unitFrame:SetAlpha(RSPlatesDB["UnSelectAlpha"])
+                -- unitFrame.castBar.Icon:SetAlpha(RSPlatesDB["UnSelectAlpha"])
+            end
+
+            -- Namemode Select Glow 
+            if namePlate and namePlate.NameSelectGlow then 
+                namePlate.NameSelectGlow:Hide()
             end
         end
-
-	else
-		unitFrame.healthBar.curTarget:Hide()
-		if UnitIsUnit(unit, "player") then 
-			unitFrame:SetAlpha(1)
-		else
-			unitFrame:SetAlpha(RSPlatesDB["UnSelectAlpha"])
-            -- unitFrame.castBar.Icon:SetAlpha(RSPlatesDB["UnSelectAlpha"])
-		end
-
-        -- Namemode Select Glow 
-        if namePlate and namePlate.NameSelectGlow then 
-            namePlate.NameSelectGlow:Hide()
+        -- 精英图标
+        if not RSPlatesDB["EliteIcon"] then 
+            unitFrame.ClassificationFrame:Hide()
+        else
+            unitFrame.ClassificationFrame:Show()
         end
-	end
-    -- 精英图标
-    if not RSPlatesDB["EliteIcon"] then 
-        unitFrame.ClassificationFrame:Hide()
-    else
-        unitFrame.ClassificationFrame:Show()
     end
 end
 
 
 function rs.SetUnitQuestState(unitFrame)
-    if unitFrame:IsForbidden() then return end 
-	local unit = unitFrame.unit
-	local inInstance, instanceType = IsInInstance()
-	if not inInstance and rs.IsQuestUnit(unit) and RSPlatesDB["ShowQuestIcon"] then
-		unitFrame.healthBar.questIcon:Show()
-		return
-	end	
-	unitFrame.healthBar.questIcon:Hide()
+    if rs.IsLegalUnit(unitFrame.unit, unitFrame) then 
+        local inInstance, instanceType = IsInInstance()
+        if not inInstance and rs.IsQuestUnit(unitFrame.unit) and RSPlatesDB["ShowQuestIcon"] then
+            unitFrame.healthBar.questIcon:Show()
+            return
+        end	
+        unitFrame.healthBar.questIcon:Hide()
+    end
 end
 
 
@@ -447,9 +454,6 @@ function rs.SetBarTexture(unitFrame)
 	end
 end
 
--- rs:()和rs.()调用的区别,前者把自己rs当第一个参数发出去
--- function rs:xx 和 rs.xx 区别： 调用前者时,第一个传入参数永远赋给self（变量接收位置可不声明self)
--- 综上：二者适合配合使用  rs:()配合 function rs:xx()  分开使用会比较混乱
 
 
 ---手动设置一次需要设置的
@@ -459,8 +463,6 @@ function rs.On_NpRefreshOnce(unitFrame)
 	rs.SetBloodText(unitFrame)
 	
 	rs.SetSelectionHighlight(unitFrame)
-
-	rs.SetBarColor(unitFrame)
 
 	rs.SetUnitQuestState(unitFrame)
 
@@ -476,14 +478,62 @@ function rs.RefAuraForOneNp(unitFrame)
     NamePlateDriverFrame:OnUnitAuraUpdate(unit, true, nil)
 end
 
-
+function rs.PerfomanceTest()
+    local t = 1
+    t = t + 1
+    -- print('RSP -- > testing', t)
+end
 
 
 --- Hook Part
 ------------------------------------------------
+function rs.HookBlizzedFuncTest()
+    -- On Add
+    hooksecurefunc(NamePlateDriverFrame, "OnNamePlateAdded", rs.PerfomanceTest)
+
+    -- On Aura Update
+    hooksecurefunc(NamePlateDriverFrame, "OnUnitAuraUpdate", rs.PerfomanceTest)
+
+    -- Size Change
+    hooksecurefunc(NamePlateDriverFrame, "UpdateNamePlateOptions", function()
+        rs.PerfomanceTest()
+    end)
+
+    hooksecurefunc(NamePlateDriverFrame, "OnUnitFactionChanged", function(self,unit)
+        rs.PerfomanceTest()
+    end)
+
+    -- Thin CastBar
+    if RSPlatesDB["NarrowCast"]then
+        hooksecurefunc("CastingBarFrame_OnEvent", function(self, event, ...)
+            rs.PerfomanceTest()
+        end)
+    end
+
+    -- 名字
+    hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
+        rs.PerfomanceTest()
+    end)
+
+    -- 血量
+    hooksecurefunc("CompactUnitFrame_UpdateHealth", function(frame)
+        rs.PerfomanceTest()
+    end)
+
+    -- 血条颜色
+    hooksecurefunc("CompactUnitFrame_UpdateHealthColor", function(frame)
+        rs.PerfomanceTest()
+    end)
+
+    -- 目标选择
+    hooksecurefunc("CompactUnitFrame_UpdateHealthBorder", function(frame)
+        rs.PerfomanceTest()
+    end)
+end
 
 
 function rs.HookBlizzedFunc()
+    -- print('---> hoocsuccessful')
     -- On Add
     hooksecurefunc(NamePlateDriverFrame, "OnNamePlateAdded", rs.On_Np_Add)
 
@@ -492,6 +542,7 @@ function rs.HookBlizzedFunc()
 
     -- Size Change
     hooksecurefunc(NamePlateDriverFrame, "UpdateNamePlateOptions", function()
+        -- print('UpdateNpOptions')
         for k, namePlate in pairs(C_NamePlate.GetNamePlates()) do
             local unit = namePlate.UnitFrame.unit
             rs.On_Np_Add(nil, unit)
@@ -499,7 +550,10 @@ function rs.HookBlizzedFunc()
     end)
 
     hooksecurefunc(NamePlateDriverFrame, "OnUnitFactionChanged", function(self,unit)
-        rs.On_Np_Add(nil, unit)
+        if rs.IsLegalUnit(unit) then 
+            -- print("OnUnitFactionChanged", unit, UnitName(unit))
+            rs.On_Np_Add(nil, unit)
+        end
     end)
 
     -- Thin CastBar
@@ -520,12 +574,9 @@ function rs.HookBlizzedFunc()
 
     -- 血量
     hooksecurefunc("CompactUnitFrame_UpdateHealth", function(frame)
-        if not rs.IsNameplateUnit(frame) then return end 
-        if frame.healthBar.value then
-            rs.SetBloodText(frame)
-            if RSPlatesDB["SlayEnable"] then  -- 检查斩杀线
-                rs.SetBarColor(frame)
-            end
+        rs.SetBloodText(frame)
+        if RSPlatesDB["SlayEnable"] then  -- 检查斩杀线
+            rs.SetBarColor(frame)
         end
     end)
 
@@ -536,7 +587,6 @@ function rs.HookBlizzedFunc()
 
     -- 目标选择
     hooksecurefunc("CompactUnitFrame_UpdateHealthBorder", function(frame)
-        if not rs.IsNameplateUnit(frame) then return end 
         rs.SetSelectionHighlight(frame)
     end)
 end
@@ -551,6 +601,7 @@ local loadFrame = CreateFrame("FRAME");
 loadFrame:RegisterEvent("ADDON_LOADED"); 
 -- loadFrame:RegisterEvent("PLAYER_LOGOUT"); 
 loadFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+loadFrame:RegisterEvent("LOADING_SCREEN_DISABLED")
 
 function loadFrame:OnEvent(event, arg1)
 	if event == "ADDON_LOADED" and arg1 == ADDONName then
@@ -598,11 +649,14 @@ function loadFrame:OnEvent(event, arg1)
 		rs.RSOn()
         rs.InitMinimapBtn()
         -- rs.SwitchConfigGUI()
+
+    -- time : entering_world --> WA set --> loading_screen_disabled
     elseif event == "PLAYER_ENTERING_WORLD" then 
-        rs.UpdateCvars()
         if rs.V.AddonFirstLoad then 
             rs.SetCVarOnFirstTime()
         end
+    elseif event == "LOADING_SCREEN_DISABLED" then 
+        C_Timer.After(1, rs.UpdateCvars)
 	end
 end
 loadFrame:SetScript("OnEvent", loadFrame.OnEvent);

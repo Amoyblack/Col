@@ -57,7 +57,7 @@ function rs.OnUnitAuraUpdateRS(self, unit, isFullUpdate, updatedAuraInfos)
         end
     end
 
-	local nameplate = C_NamePlate.GetNamePlateForUnit(unit, issecure());
+	local nameplate = C_NamePlate.GetNamePlateForUnit(unit, false);
 	if (nameplate) then
 		-- Early out if the update cannot affect the nameplate
 		local function AuraCouldDisplayAsBuff(auraInfo)

@@ -131,7 +131,7 @@ rs.V.enus = {
     TargetGroup = "Target Indicator",
 
     MouseoverGlow = "Mouseover Highlight",
-    MouseoverGlowTT = "Hightlight the mouseover unit(no need to select),It is recommended to enable when you often use the mouseover macro",
+    MouseoverGlowTT = "Hightlight the mouseover unit(no need to select)",
 
     TargetColorEnable = "Enable Target Color",
     TargetColorEnableTT = "Color the current target's health bar",

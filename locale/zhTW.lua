@@ -131,7 +131,7 @@ rs.V.zhtw = {
     TargetGroup = "目標指示器",
 
     MouseoverGlow = "鼠標指向高亮",
-    MouseoverGlowTT = "高亮鼠標指向的單位(無需選中)，經常使用鼠標指向宏時推薦開啟",
+    MouseoverGlowTT = "高亮鼠標指向的單位(無需選中)",
 
     TargetColorEnable = "啟用目標染色",
     TargetColorEnableTT = "對當前目標血條染色",

@@ -444,6 +444,12 @@ options.args.basic = {
                     max = 20,
                     -- softmax = 100,
                     step  = 1,
+                    set = function (info, value) 
+                        if RSPlatesDB[info[#info]] ~= nil then 
+                            RSPlatesDB[info[#info]] = value 
+                        end 
+                        rs.UpdateAllNameplatesOnce()
+                    end,
                 },
             }
         }
@@ -1324,6 +1330,7 @@ function rs.UpdateAllNameplatesOnce()
 	for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
 		local unitFrame = namePlate.UnitFrame
 		rs.On_NpRefreshOnce(unitFrame)
+        rs.ThinCastBar(unitFrame.castBar)
         if unitFrame.name then 
             if RSPlatesDB["NameWhite"] then 
                 unitFrame.name:SetVertexColor(1, 1, 1)

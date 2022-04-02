@@ -20,8 +20,8 @@ rs.V.DefaultSetting = {
 	["nameplateSelectedScale"] = 1,
 	["nameplateGlobalScale"] = 1.0,
 	["nameplateMaxDistance"] = 45,
-	["nameplateOverlapV"] = 0.8,
-	["nameplateOverlapH"] = 0.6,
+	["nameplateOverlapV"] = 1.1,
+	["nameplateOverlapH"] = 0.8,
     ["nameplateOccludedAlphaMult"] = 0.4,
 
     ["nameplateShowAll"] = 1,
