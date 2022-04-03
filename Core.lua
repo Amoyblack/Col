@@ -47,6 +47,7 @@ end
 local function MouseoverOnUpdate(self, elapsed)
     if not UnitIsUnit(self.unit, "mouseover") then
         self.MouseoverGlow:Hide()
+        self.MGlowBorder:Hide()
     end
 end
 
@@ -54,8 +55,10 @@ local function OnNpMouseover(unitFrame)
     if rs.IsLegalUnit(unitFrame.unit, unitFrame) then 
         if UnitIsUnit(unitFrame.unit, "mouseover") and not UnitIsUnit(unitFrame.unit, "player") then
             unitFrame.MouseoverGlow:Show()
+            unitFrame.MGlowBorder:Show()
         else
             unitFrame.MouseoverGlow:Hide()
+            unitFrame.MGlowBorder:Hide()
         end
         unitFrame:SetScript("OnUpdate", MouseoverOnUpdate)
     end
@@ -126,12 +129,20 @@ function rs.CreateUIObj(unitFrame, namePlate)
         unitFrame.MouseoverGlow:SetTexture("Interface\\AddOns\\RSPlates\\media\\spark-flat")
         unitFrame.MouseoverGlow:SetPoint("TOPLEFT", unitFrame.healthBar, "TOPLEFT", -25, 15)
         unitFrame.MouseoverGlow:SetPoint("BOTTOMRIGHT", unitFrame.healthBar, "BOTTOMRIGHT", 25, -15)
-        unitFrame.MouseoverGlow:SetVertexColor(1, 1, 1, 1)
-        -- unitFrame.MouseoverGlow:SetTexCoord(0, 1, 1, 0)
-        unitFrame.MouseoverGlow:SetBlendMode("ADD")
+        unitFrame.MouseoverGlow:SetVertexColor(1, .95, .25, 1)
+        -- unitFrame.MouseoverGlow:SetBlendMode("ADD")
         unitFrame.MouseoverGlow:Hide()
 
-
+        unitFrame.MGlowBorder =  unitFrame:CreateTexture("MGlowBorder", "BACKGROUND", nil, -2)
+        unitFrame.MGlowBorder:SetTexture("Interface\\AddOns\\RSPlates\\media\\bar_solid")
+        unitFrame.MGlowBorder:SetPoint("TOPLEFT", unitFrame.healthBar, "TOPLEFT", -3, 3)
+        unitFrame.MGlowBorder:SetPoint("BOTTOMRIGHT", unitFrame.healthBar, "BOTTOMRIGHT", 3, -3)
+        unitFrame.MGlowBorder:SetVertexColor(1, .95, .25, 1)
+        -- unitFrame.MGlowBorder:SetBlendMode("ADD")
+        unitFrame.MGlowBorder:Hide()
+        
+        
+        
 		-- 任务 new ui
 		unitFrame.healthBar.questIcon = unitFrame.healthBar:CreateTexture("QuestIcon", "OVERLAY")
 		unitFrame.healthBar.questIcon:SetSize(30, 30)
@@ -289,22 +300,26 @@ function rs.SetName(frame)
 end
 
 
-function rs.ThinCastBar(self)
+function rs.ThinCastBar(self, event, ...)
     if rs.IsLegalUnit(self.unit, self) then 
-        local function SetThin(self)
-            self.Icon:SetShown(true)
-            -- self.Icon:SetTexture(texture)
-            self:SetHeight(RSPlatesDB["CastHeight"])
-            self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -3, 0)
-            self.Icon:SetSize(RSPlatesDB["CastHeight"] + 13, RSPlatesDB["CastHeight"] + 13)  -- 13 + height
-            self.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
-            self.BorderShield:SetPoint("LEFT",self, "LEFT", -2, 0)
+        -- Thin cast bar
+        if RSPlatesDB["NarrowCast"]then
+            local function SetThin(self)
+                self.Icon:SetShown(true)
+                -- self.Icon:SetTexture(texture)
+                self:SetHeight(RSPlatesDB["CastHeight"])
+                self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -3, 0)
+                self.Icon:SetSize(RSPlatesDB["CastHeight"] + 13, RSPlatesDB["CastHeight"] + 13)  -- 13 + height
+                self.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
+                self.BorderShield:SetPoint("LEFT",self, "LEFT", -2, 0)
+            end
+
+            SetThin(self)
+            self:SetScript("OnSizeChanged", function ( ... )
+                SetThin(self)
+            end)
         end
 
-        SetThin(self)
-        self:SetScript("OnSizeChanged", function ( ... )
-            SetThin(self)
-        end)
     end
 end
 
@@ -557,15 +572,13 @@ function rs.HookBlizzedFunc()
     end)
 
     -- Thin CastBar
-    if RSPlatesDB["NarrowCast"]then
-        hooksecurefunc("CastingBarFrame_OnEvent", function(self, event, ...)
-            rs.ThinCastBar(self)
-        end)
-        -- hooksecurefunc("CastingBarFrame_OnShow", function(self)
-        -- 	ThinCastBar(self)
-        -- end)
+    hooksecurefunc("CastingBarFrame_OnEvent", function(self, event, ...)
+        rs.ThinCastBar(self, event, ...)
+    end)
+    -- hooksecurefunc("CastingBarFrame_OnShow", function(self)
+    -- 	ThinCastBar(self)
+    -- end)
 
-    end
 
     -- 名字
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)

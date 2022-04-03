@@ -498,6 +498,7 @@ options.args.dungeon = {
                                 RSPlatesDB["DctColorNpc"][iNpcID] = {0, 0, 1}
                                 print(L["NpcIDAdded"]..sNpcname)
                                 rs.RefDungeonNPCPanel()
+                                rs.UpdateAllNameplatesOnce()
                             else
                                 print(L["NpcIDInputError"])
                             end
@@ -1108,6 +1109,7 @@ function rs.RefDungeonNPCPanel()
                 desc = L["RemoveCheckBoxTT"],
                 set = function(info,value) RSPlatesDB["DctColorNpc"][i] = nil rs.RefDungeonNPCPanel() 
                     print(L["NpcIDDeled"]..sNpcName)
+                    rs.UpdateAllNameplatesOnce()
                 end 
             }
             v = v + 1
