@@ -471,6 +471,8 @@ function rs.On_NpRefreshOnce(unitFrame)
 	
 	rs.SetSelectionHighlight(unitFrame)
 
+    rs.SetBarColor(unitFrame)
+    
 	rs.SetUnitQuestState(unitFrame)
 
 	rs.RefAuraForOneNp(unitFrame)
