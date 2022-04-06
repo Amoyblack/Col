@@ -117,7 +117,7 @@ rs.V.zhcn = {
     ExpTT = "场上有易爆球时会自动隐藏其他所有单位的血条,直到场上没有易爆球为止",
 
     CastHeight = "施法条宽度",
-    CastHeightTT = "开启源生施法条时该项不生效",
+    CastHeightTT = "只对窄施法条生效",
 
     UnSelectAlpha = "非当前目标透明度",
     UnSelectAlphaTT = "非当前目标的血条框架透明度",
@@ -146,6 +146,9 @@ rs.V.zhcn = {
 
     QuestIcon = "任务标记",
     QuestIconTT = "在任务单位血条上显示标记图标",
+
+    LockPlayerColor = "锁定玩家颜色",
+    LockPlayerColorTT = "不对玩家血条染色",
 
     UpdateForce = "|cffFFD700---RSPlates: 已检测到版本更新,该版本需要重置设置,现已将设置初始化|r",
     UpdateInfo = "|cffFFD700---RSPlates: 已检测到版本更新|r",

@@ -1,5 +1,15 @@
 
 
+-- CPU usage :  obj Event set << obj Func Override < hookscript == hook
+
+-- Blizzard source frame  --> hook
+
+-- New frame --> set event 
+
+-- Dont set event on blizzard np obj cuz it will overide its event 
+
+-- so, compromise it by Hooking blizzard ui, Global Set Event on new ui obj that Got by C_N API (api still occupied cpu lightly)  
+
 
 local ADDONName, rs = ...
 local L = rs.L
@@ -26,14 +36,13 @@ end
 
 
 
-function rs.On_Np_Add(self, unitToken)
+function rs.On_Np_Add(unitToken)
 	local namePlateFrameBase = C_NamePlate.GetNamePlateForUnit(unitToken, false)
     if namePlateFrameBase then 
         local unitFrame = namePlateFrameBase.UnitFrame
         unitFrame.healthBar.AuraR, unitFrame.healthBar.AuraG, unitFrame.healthBar.AuraB = nil, nil, nil
         rs.CreateUIObj(unitFrame, namePlateFrameBase)
-        -- The Event that Blizzard nameplate.lua does not exists 
-        rs.RegisterNpEvent(unitFrame)
+        rs.RegExtraUIEvent(unitFrame)
         rs.On_NpRefreshOnce(unitFrame)
     end
 end
@@ -46,48 +55,50 @@ end
 
 local function MouseoverOnUpdate(self, elapsed)
     if not UnitIsUnit(self.unit, "mouseover") then
-        self.MouseoverGlow:Hide()
-        self.MGlowBorder:Hide()
+        self:Hide()
     end
 end
 
-local function OnNpMouseover(unitFrame)
-    if rs.IsLegalUnit(unitFrame.unit, unitFrame) then 
-        if UnitIsUnit(unitFrame.unit, "mouseover") and not UnitIsUnit(unitFrame.unit, "player") then
-            unitFrame.MouseoverGlow:Show()
-            unitFrame.MGlowBorder:Show()
+local function OnNpMouseover(MouseoverFrame)
+    if rs.IsLegalUnit(MouseoverFrame) then 
+        if UnitIsUnit(MouseoverFrame.unit, "mouseover") and not UnitIsUnit(MouseoverFrame.unit, "player") then
+            MouseoverFrame:Show()
         else
-            unitFrame.MouseoverGlow:Hide()
-            unitFrame.MGlowBorder:Hide()
+            MouseoverFrame:Hide()
         end
-        unitFrame:SetScript("OnUpdate", MouseoverOnUpdate)
+        MouseoverFrame:SetScript("OnUpdate", MouseoverOnUpdate)
     end
 end
 
-function rs.RegisterNpEvent(unitFrame)
-    -- remove 会 unRegallevent, release pool , 不要判断rsed, each time 
-    if RSPlatesDB["MouseoverGlow"] then 
-        unitFrame:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
-        unitFrame:HookScript("OnEvent", rs.Np_OnEvent)
-    else
-        unitFrame:UnregisterEvent("UPDATE_MOUSEOVER_UNIT")
-    end
-end
-
-function rs.Np_OnEvent(self, event, ...)
+local function MouseOverFrame_OnEvent(self, event, ...)
     if event == "UPDATE_MOUSEOVER_UNIT" then 
         OnNpMouseover(self)
     end
 end
+
+function rs.RegExtraUIEvent(unitFrame)
+    -- remove 会 unRegallevent, release pool , 不要判断rsed, each time 
+    if RSPlatesDB["MouseoverGlow"] then 
+        unitFrame.MouseoverFrame:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+        unitFrame.MouseoverFrame:SetScript("OnEvent", MouseOverFrame_OnEvent)
+    else
+        unitFrame.MouseoverFrame:UnregisterEvent("UPDATE_MOUSEOVER_UNIT")
+        unitFrame.MouseoverFrame:SetScript("OnEvent", nil)
+    end
+
+end
+
 ---------------------------------------------------
 
 function rs.CreateUIObj(unitFrame, namePlate)
 
     local unit = unitFrame.unit 
     if not unit then return end
+    if unitFrame.MouseoverFrame then 
+        unitFrame.MouseoverFrame.unit = unit 
+    end
 
 	if not unitFrame.rsed then 
-        -- print(unit, 'createUIObj')
 
         unitFrame.BuffFrame.UpdateBuffs = rs.UpdateBuffsRS
         unitFrame.BuffFrame.UpdateAnchor = rs.UpdateAnchor
@@ -124,22 +135,22 @@ function rs.CreateUIObj(unitFrame, namePlate)
 		unitFrame.healthBar.curTarget:SetPoint("LEFT", unitFrame.healthBar, "RIGHT", 0, 0)
 		unitFrame.healthBar.curTarget:Hide()
 	
-        -- 鼠标 new ui
-        unitFrame.MouseoverGlow =  unitFrame:CreateTexture("mouseoverhighlight", "BACKGROUND", nil, -1)
-        unitFrame.MouseoverGlow:SetTexture("Interface\\AddOns\\RSPlates\\media\\spark-flat")
-        unitFrame.MouseoverGlow:SetPoint("TOPLEFT", unitFrame.healthBar, "TOPLEFT", -25, 15)
-        unitFrame.MouseoverGlow:SetPoint("BOTTOMRIGHT", unitFrame.healthBar, "BOTTOMRIGHT", 25, -15)
-        unitFrame.MouseoverGlow:SetVertexColor(1, .95, .25, 1)
-        -- unitFrame.MouseoverGlow:SetBlendMode("ADD")
-        unitFrame.MouseoverGlow:Hide()
+        -- 鼠标指向 new ui
+        unitFrame.MouseoverFrame = CreateFrame("Frame", nil, unitFrame)
+        unitFrame.MouseoverFrame.unit = unit
+		unitFrame.MouseoverFrame:Hide()
 
-        unitFrame.MGlowBorder =  unitFrame:CreateTexture("MGlowBorder", "BACKGROUND", nil, -2)
-        unitFrame.MGlowBorder:SetTexture("Interface\\AddOns\\RSPlates\\media\\bar_solid")
-        unitFrame.MGlowBorder:SetPoint("TOPLEFT", unitFrame.healthBar, "TOPLEFT", -3, 3)
-        unitFrame.MGlowBorder:SetPoint("BOTTOMRIGHT", unitFrame.healthBar, "BOTTOMRIGHT", 3, -3)
-        unitFrame.MGlowBorder:SetVertexColor(1, .95, .25, 1)
-        -- unitFrame.MGlowBorder:SetBlendMode("ADD")
-        unitFrame.MGlowBorder:Hide()
+        unitFrame.MouseoverFrame.Glow =  unitFrame.MouseoverFrame:CreateTexture("mouseoverhighlight", "BACKGROUND", nil, -3)
+        unitFrame.MouseoverFrame.Glow:SetTexture("Interface\\AddOns\\RSPlates\\media\\spark-flat")
+        unitFrame.MouseoverFrame.Glow:SetPoint("TOPLEFT", unitFrame.healthBar, "TOPLEFT", -25, 15)
+        unitFrame.MouseoverFrame.Glow:SetPoint("BOTTOMRIGHT", unitFrame.healthBar, "BOTTOMRIGHT", 25, -15)
+        unitFrame.MouseoverFrame.Glow:SetVertexColor(1, .95, .25, 1)
+
+        unitFrame.MouseoverFrame.Border =  unitFrame.MouseoverFrame:CreateTexture("MGlowBorder", "BACKGROUND", nil, -2)
+        unitFrame.MouseoverFrame.Border:SetTexture("Interface\\AddOns\\RSPlates\\media\\bar_solid")
+        unitFrame.MouseoverFrame.Border:SetPoint("TOPLEFT", unitFrame.healthBar, "TOPLEFT", -3, 3)
+        unitFrame.MouseoverFrame.Border:SetPoint("BOTTOMRIGHT", unitFrame.healthBar, "BOTTOMRIGHT", 3, -3)
+        unitFrame.MouseoverFrame.Border:SetVertexColor(1, .95, .25, 1)
         
         
         
@@ -191,7 +202,7 @@ end
 
 --血条数值
 function rs.SetBloodText(unitFrame)
-    if rs.IsLegalUnit(unitFrame.unit, unitFrame) then 
+    if rs.IsLegalUnit(unitFrame) then 
         if unitFrame.healthBar.value then 
             if UnitIsUnit("player", unitFrame.unit) then 
                 unitFrame.healthBar.value:Hide()
@@ -204,29 +215,16 @@ function rs.SetBloodText(unitFrame)
     end
 end
 
-function rs.IsLegalUnit(unit, unitframe)
-    if not unit or not rs.IsNameplateUnit(unit) then 
-        return false
-    end
-
-    if not unitframe then 
-        local nameplatebase = C_NamePlate.GetNamePlateForUnit(unit, false)
-        if nameplatebase then 
-            unitframe = nameplatebase.UnitFrame
-        end
-    end
-
-    if not unitframe then return false end 
-
-    if unitframe:IsForbidden() then 
-        return false
-    end
+function rs.IsLegalUnit(frame)
+    if not frame and not frame.unit then return end 
+    if not string.match(frame.unit, "nameplate") then return end 
+    if frame:IsForbidden() then return end 
     return true 
 end
 
 
 function rs.SetBarColor(frame)
-    if rs.IsLegalUnit(frame.unit, frame) then 
+    if rs.IsLegalUnit(frame) then 
         local unit = frame.unit
 
         local r, g, b, a
@@ -235,7 +233,11 @@ function rs.SetBarColor(frame)
         local _, threatStatus = UnitDetailedThreatSituation("player", unit)
         local NpcColor = RSPlatesDB["DctColorNpc"][tonumber(id)]
         
-        if RSPlatesDB["TargetColorEnable"] and UnitIsUnit("target", unit) and not UnitIsUnit("player", unit) then 
+        -- 锁定玩家颜色
+        if RSPlatesDB["LockPlayerColor"] and (UnitIsPlayer(unit) or UnitIsPossessed(unit) or UnitPlayerControlled(unit)) then 
+            do end 
+
+        elseif RSPlatesDB["TargetColorEnable"] and UnitIsUnit("target", unit) and not UnitIsUnit("player", unit) then 
             r, g, b = RSPlatesDB["TargetColor"][1], RSPlatesDB["TargetColor"][2], RSPlatesDB["TargetColor"][3]
 
         -- 资源条不染色
@@ -285,7 +287,7 @@ end
 
 
 function rs.SetName(frame) 
-    if rs.IsLegalUnit(frame.unit, frame) then 
+    if rs.IsLegalUnit(frame) then 
         rs.SetNameMode(frame)
 
         if frame.name then 
@@ -301,7 +303,7 @@ end
 
 
 function rs.ThinCastBar(self, event, ...)
-    if rs.IsLegalUnit(self.unit, self) then 
+    if rs.IsLegalUnit(self) then 
         -- Thin cast bar
         if RSPlatesDB["NarrowCast"]then
             local function SetThin(self)
@@ -364,14 +366,6 @@ function rs.GetDetailText(unit)
 	end
 end
 
-function rs.IsNameplateUnit(unit)
-    if not unit then return end 
-    if string.match(unit, "nameplate") == "nameplate" then 
-        return true
-    else
-        return false
-    end
-end
 
 function rs.IsOnThreatList(unit)
 	local _, threatStatus = UnitDetailedThreatSituation("player", unit)
@@ -399,12 +393,10 @@ end
 
 
 function rs.SetSelectionHighlight(unitFrame)
-    if rs.IsLegalUnit(unitFrame.unit, unitFrame) then 
+    if rs.IsLegalUnit(unitFrame) then 
         if not unitFrame.healthBar.curTarget then return end
         local unit = unitFrame.unit
         local namePlate = C_NamePlate.GetNamePlateForUnit(unit, false)
-
-        rs.SetBarColor(unitFrame)
 
         if UnitIsUnit(unit, "target") and not UnitIsUnit(unit, "player") then
             if RSPlatesDB["ShowArrow"] then 
@@ -447,7 +439,7 @@ end
 
 
 function rs.SetUnitQuestState(unitFrame)
-    if rs.IsLegalUnit(unitFrame.unit, unitFrame) then 
+    if rs.IsLegalUnit(unitFrame) then 
         local inInstance, instanceType = IsInInstance()
         if not inInstance and rs.IsQuestUnit(unitFrame.unit) and RSPlatesDB["ShowQuestIcon"] then
             unitFrame.healthBar.questIcon:Show()
@@ -483,7 +475,7 @@ function rs.On_NpRefreshOnce(unitFrame)
 
 	rs.RefAuraForOneNp(unitFrame)
 
-    rs.SetNameMode(unitFrame)
+    rs.SetName(unitFrame)
 end
 
 
@@ -493,91 +485,37 @@ function rs.RefAuraForOneNp(unitFrame)
     NamePlateDriverFrame:OnUnitAuraUpdate(unit, true, nil)
 end
 
-function rs.PerfomanceTest()
-    local t = 1
-    t = t + 1
-    -- print('RSP -- > testing', t)
-end
-
 
 --- Hook Part
 ------------------------------------------------
-function rs.HookBlizzedFuncTest()
-    -- On Add
-    hooksecurefunc(NamePlateDriverFrame, "OnNamePlateAdded", rs.PerfomanceTest)
-
-    -- On Aura Update
-    hooksecurefunc(NamePlateDriverFrame, "OnUnitAuraUpdate", rs.PerfomanceTest)
-
-    -- Size Change
-    hooksecurefunc(NamePlateDriverFrame, "UpdateNamePlateOptions", function()
-        rs.PerfomanceTest()
-    end)
-
-    hooksecurefunc(NamePlateDriverFrame, "OnUnitFactionChanged", function(self,unit)
-        rs.PerfomanceTest()
-    end)
-
-    -- Thin CastBar
-    if RSPlatesDB["NarrowCast"]then
-        hooksecurefunc("CastingBarFrame_OnEvent", function(self, event, ...)
-            rs.PerfomanceTest()
-        end)
-    end
-
-    -- 名字
-    hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
-        rs.PerfomanceTest()
-    end)
-
-    -- 血量
-    hooksecurefunc("CompactUnitFrame_UpdateHealth", function(frame)
-        rs.PerfomanceTest()
-    end)
-
-    -- 血条颜色
-    hooksecurefunc("CompactUnitFrame_UpdateHealthColor", function(frame)
-        rs.PerfomanceTest()
-    end)
-
-    -- 目标选择
-    hooksecurefunc("CompactUnitFrame_UpdateHealthBorder", function(frame)
-        rs.PerfomanceTest()
-    end)
-end
-
 
 function rs.HookBlizzedFunc()
     -- print('---> hoocsuccessful')
-    -- On Add
-    hooksecurefunc(NamePlateDriverFrame, "OnNamePlateAdded", rs.On_Np_Add)
-
-    -- On Aura Update
-    hooksecurefunc(NamePlateDriverFrame, "OnUnitAuraUpdate", rs.OnUnitAuraUpdateRS)
 
     -- Size Change
     hooksecurefunc(NamePlateDriverFrame, "UpdateNamePlateOptions", function()
-        -- print('UpdateNpOptions')
         for k, namePlate in pairs(C_NamePlate.GetNamePlates()) do
-            local unit = namePlate.UnitFrame.unit
-            rs.On_Np_Add(nil, unit)
+            rs.On_NpRefreshOnce(namePlate.UnitFrame)
         end
     end)
 
+    -- Unit Faction
     hooksecurefunc(NamePlateDriverFrame, "OnUnitFactionChanged", function(self,unit)
-        if rs.IsLegalUnit(unit) then 
-            -- print("OnUnitFactionChanged", unit, UnitName(unit))
-            rs.On_Np_Add(nil, unit)
+        if not string.match(unit, "nameplate") then return end 
+        local npbase = C_NamePlate.GetNamePlateForUnit(unit, false)
+        if npbase then 
+            rs.On_NpRefreshOnce(npbase.UnitFrame)
         end
+            -- print("OnUnitFactionChanged", unit, UnitName(unit))
     end)
 
     -- Thin CastBar
     hooksecurefunc("CastingBarFrame_OnEvent", function(self, event, ...)
         rs.ThinCastBar(self, event, ...)
     end)
-    -- hooksecurefunc("CastingBarFrame_OnShow", function(self)
-    -- 	ThinCastBar(self)
-    -- end)
+    hooksecurefunc("CastingBarFrame_OnShow", function(self)
+    	rs.ThinCastBar(self)
+    end)
 
 
     -- 名字
@@ -585,22 +523,16 @@ function rs.HookBlizzedFunc()
         rs.SetName(frame)
     end)
 
-    -- 血量
-    hooksecurefunc("CompactUnitFrame_UpdateHealth", function(frame)
-        rs.SetBloodText(frame)
-        if RSPlatesDB["SlayEnable"] then  -- 检查斩杀线
-            rs.SetBarColor(frame)
-        end
-    end)
 
     -- 血条颜色
     hooksecurefunc("CompactUnitFrame_UpdateHealthColor", function(frame)
         rs.SetBarColor(frame)
     end)
 
-    -- 目标选择
+    -- -- 目标选择
     hooksecurefunc("CompactUnitFrame_UpdateHealthBorder", function(frame)
         rs.SetSelectionHighlight(frame)
+        rs.SetBarColor(frame)
     end)
 end
 
@@ -696,3 +628,30 @@ end
 
 SLASH_CONFIG1 = "/rs"
 SlashCmdList.CONFIG = function() rs.SwitchConfigGUI() end
+
+
+local function UIObj_Event(self, event, ...)
+    if event == "NAME_PLATE_UNIT_ADDED" then 
+        local unit = ...
+        rs.On_Np_Add(unit)
+
+    elseif event == "UNIT_HEALTH" then 
+        local unit = ...
+        local frame = C_NamePlate.GetNamePlateForUnit(unit, false)
+        if frame then 
+            rs.SetBloodText(frame.UnitFrame)
+            rs.SetBarColor(frame.UnitFrame)
+        end
+
+    elseif event == "UNIT_AURA" then 
+        local unit, isFullUpdate, updatedAuraInfos = ...
+        if not string.match(unit, "nameplate") then return end 
+        rs:OnUnitAuraUpdateRS(unit, isFullUpdate, updatedAuraInfos)
+    end
+end
+
+local UIObjectDriveFrame = CreateFrame("Frame", "RS_Plates", UIParent)
+UIObjectDriveFrame:SetScript("OnEvent", UIObj_Event)
+UIObjectDriveFrame:RegisterEvent("UNIT_HEALTH")
+UIObjectDriveFrame:RegisterEvent("UNIT_AURA")
+UIObjectDriveFrame:RegisterEvent("NAME_PLATE_UNIT_ADDED")

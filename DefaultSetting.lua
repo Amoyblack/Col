@@ -76,6 +76,7 @@ rs.V.DefaultSetting = {
     ["MouseoverGlow"] = false,
 	["ShowStolenBuff"] = true,
 	["ShowQuestIcon"] = true,
+    ["LockPlayerColor"] = true,
 
 	["ExpballHelper"] = false,
 

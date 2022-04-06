@@ -117,7 +117,7 @@ rs.V.enus = {
     ExpTT = "When Explosives spawn, all of other nameplates will be hidden until there is no more Explosives alive",
 
     CastHeight = "Castbar Width",
-    CastHeightTT = "Won't enable when you're using Source Castbar style.",
+    CastHeightTT = "Only works in narrow castbar style",
 
     UnSelectAlpha = "Transparency",
     UnSelectAlphaTT = "Transparency of non-current target's Nameplates.",
@@ -146,6 +146,9 @@ rs.V.enus = {
 
     QuestIcon = "QuestMarker",
     QuestIconTT = "Show a mark on the top of the Quest Unit",
+
+    LockPlayerColor = "Lock Player BarColor",
+    LockPlayerColorTT = "Do not color any player's healthbar color",
 
     UpdateForce = "|cffFFD700---RSPlates: Version update has been detected, this version needs to reset the settings, the settings are now initialized|r",
     UpdateInfo = "|cffFFD700---RSPlates: Version update has been detected|r",

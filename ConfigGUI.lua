@@ -331,8 +331,7 @@ options.args.basic = {
                     set = function(info, value) RSPlatesDB[info[#info]] = value 
                         for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
                             local unitFrame = namePlate.UnitFrame
-                            local unit = unitFrame.unit
-                            rs.On_Np_Add(nil, unit)
+                            rs.RegExtraUIEvent(unitFrame)
                         end	
                     end,
                 },
@@ -434,6 +433,13 @@ options.args.basic = {
                 --     type = "description",
                 --     order = 4,
                 -- },
+                LockPlayerColor = {
+                    name = L["LockPlayerColor"],
+                    desc = L["LockPlayerColorTT"],
+                    type = "toggle",
+                    width = 1,
+                    order = 4,
+                },
                 CastHeight = {
                     name = L["CastHeight"],
                     desc = L["CastHeightTT"],

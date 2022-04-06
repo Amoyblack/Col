@@ -31,7 +31,7 @@ end
 
 
 function rs.SetNameMode(unitFrame)
-    if rs.IsLegalUnit(unitFrame.unit, unitFrame) then 
+    if rs.IsLegalUnit(unitFrame) then 
         -- 先初始化状态
         local unit = unitFrame.unit
         

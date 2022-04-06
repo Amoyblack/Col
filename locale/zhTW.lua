@@ -117,7 +117,7 @@ rs.V.zhtw = {
     ExpTT = "場上有炸藥小球時，自動隱藏其他所有單位的名條，直到場上沒有球為止",
 
     CastHeight = "施法條寬度",
-    CastHeightTT = "使用暴雪施法條樣式時，此項不生效。",
+    CastHeightTT = "只對窄施法條生效",
 
     UnSelectAlpha = "透明度",
     UnSelectAlphaTT = "非當前目標的名條透明度",
@@ -146,6 +146,9 @@ rs.V.zhtw = {
 
     QuestIcon = "任務標記",
     QuestIconTT = "在任務單位血條上顯示標記圖標",
+
+    LockPlayerColor = "鎖定玩家顏色",
+    LockPlayerColorTT = "不對玩家血條染色",
 
     UpdateForce = "|cffFFD700---RSPlates: 已檢測到版本更新,該版本需要重置設置,現已將設置初始化|r",
     UpdateInfo = "|cffFFD700---RSPlates: 已檢測到版本更新|r",

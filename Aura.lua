@@ -78,7 +78,7 @@ function rs.OnUnitAuraUpdateRS(self, unit, isFullUpdate, updatedAuraInfos)
 		if filter ~= "NONE" and AuraUtil.ShouldSkipAuraUpdate(isFullUpdate, updatedAuraInfos, AuraCouldDisplayAsBuff) then
 			-- return;
             if isStolenAura or isBarColorAura or isWhitelistAura then 
-                rs.UpdateBuffsRS(nameplate.UnitFrame.BuffFrame, nameplate.namePlateUnitToken, filter, showAll);
+                nameplate.UnitFrame.BuffFrame:UpdateBuffs(nameplate.namePlateUnitToken, filter, showAll);
             end
 		end
 
