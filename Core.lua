@@ -216,7 +216,7 @@ function rs.SetBloodText(unitFrame)
 end
 
 function rs.IsLegalUnit(frame)
-    if not frame and not frame.unit then return end 
+    if not (frame and frame.unit) then return end 
     if not string.match(frame.unit, "nameplate") then return end 
     if frame:IsForbidden() then return end 
     return true 
