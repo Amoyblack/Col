@@ -51,6 +51,8 @@ rs.V.enus = {
     SelectScale = "Select Scale",
     SelectScaleTT = "Scale Selected Nameplate.",
 
+    nameplateOtherTopInset = "Minimum Top Spacing",
+    nameplateOtherTopInsetTT = "Minimum spacing between the nameplates and the top of the screen",
 
     Distance = "Display Range",
     DistanceTT = "How many yards far away to show Nameplates.",

@@ -51,6 +51,8 @@ rs.V.zhtw = {
     SelectScale = "目標縮放",
     SelectScaleTT = "當前目標的放大倍率。",
 
+    nameplateOtherTopInset = "最小頂部間距",
+    nameplateOtherTopInsetTT = "姓名板和屏幕頂部的最小間距",
 
     Distance = "顯示距離",
     DistanceTT = "顯示多少碼以內的名條。",

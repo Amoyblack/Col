@@ -104,11 +104,8 @@ local function CastingExpandFrame_OnHookScript(self, escape)
     unitframe.CastingExpandFrame.CastingTimer:SetText(castingTime)
 end
 
--- 0.1ms CPU per uf
-local zeroPoint = 0
+-- 0.1ms（to next test, old data) CPU per uf
 local function CastingTimerUpdate(self, escape)
-    zeroPoint = zeroPoint + escape
-    if zeroPoint > 0.1 then
         local castingTime
         local UnitFramecastBar = self:GetParent()
         if not UnitFramecastBar.maxValue then return end
@@ -123,8 +120,6 @@ local function CastingTimerUpdate(self, escape)
         self.CastingTimer:Show()
         -- print(UnitFramecastBar, self, UnitFramecastBar.maxValue, UnitFramecastBar.value)
         -- print(castingTime)
-        zeroPoint = 0
-    end
 end
 
 local function CastingExpandFrame_OnSetEvent(self, event, ...)

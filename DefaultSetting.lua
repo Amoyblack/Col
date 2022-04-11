@@ -4,7 +4,7 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "9.2.22",
+	["Version"] = "9.2.23",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
     ["BarTexture"] = "s1",
@@ -20,6 +20,7 @@ rs.V.DefaultSetting = {
 	["nameplateSelectedScale"] = 1,
 	["nameplateGlobalScale"] = 1.0,
 	["nameplateMaxDistance"] = 45,
+	["nameplateOtherTopInset"] = 0.08,
 	["nameplateOverlapV"] = 1.1,
 	["nameplateOverlapH"] = 0.8,
     ["nameplateOccludedAlphaMult"] = 0.4,

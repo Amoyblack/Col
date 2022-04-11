@@ -4,7 +4,7 @@ local addon, rs = ...
 local dctCVar = {
     "nameplateSelectedScale",
     "nameplateGlobalScale",
-    "nameplateMaxDistance",
+    "nameplateOtherTopInset",
     "nameplateOverlapV",
     "nameplateOverlapH",
     "nameplateOccludedAlphaMult",
@@ -25,7 +25,6 @@ function rs.SetCVarOnFirstTime()
 
     -- 不随距离变化更改透明度
     -- SetCVar("nameplateMinAlpha", 1) 
-    -- nameplateOtherTopInset,  0.05   default 0.08
 end
 
 
@@ -40,7 +39,6 @@ function rs.UpdateCvars()
         SetCVar("nameplateMaxScale", 1) 
         SetCVar("nameplateMinAlpha", 1) 
         SetCVar("nameplateShowOnlyNames", 0) 
-        -- SetCVar("nameplateOtherTopInset", 0.05) 
     end
 end
 

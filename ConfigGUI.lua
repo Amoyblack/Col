@@ -731,14 +731,14 @@ options.args.cvars = {
                     max = 2,
                     step  = 0.1,
                 }, 
-                nameplateMaxDistance = {
-                    name = L["Distance"],
-                    desc = L["DistanceTT"],
+                nameplateOtherTopInset = {
+                    name = L["nameplateOtherTopInset"],
+                    desc = L["nameplateOtherTopInsetTT"],
                     type = "range",
                     order = 13,
-                    min = 10,
-                    max = 60,
-                    step  = 1,
+                    min = 0.01,
+                    max = 0.15,
+                    step  = 0.01,
                 }, 
                 nameplateOverlapV = {
                     name = L["OverlapV"],

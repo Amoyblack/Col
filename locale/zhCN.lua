@@ -51,6 +51,8 @@ rs.V.zhcn = {
     SelectScale = "选中缩放",
     SelectScaleTT = "选中单位的放大倍数",
 
+    nameplateOtherTopInset = "最小顶部间距",
+    nameplateOtherTopInsetTT = "姓名板和屏幕顶部的最小间距",
 
     Distance = "显示距离",
     DistanceTT = "显示多少码数内的姓名板",
