@@ -12,7 +12,7 @@ rs.V.zhtw = {
 
     Title1 = "風格",
     Title2 = "CVars",
-    Title4 = "血量條染色",
+    Title4 = "威脅與斬殺",
     Title5 = "字型",
     Title6 = "光環",
     Title7 = "地城助手",
@@ -140,6 +140,26 @@ rs.V.zhtw = {
 
     Arrow = "目標箭頭",
     ArrowTT = "在目標的名條右側顯示一個箭頭。",
+
+    CastingTitle = "施法指示器",
+    CastTimer = "施法時間",
+    CastTimerTT = "顯示單位的施法時間",
+
+    CastTarget = "施法目標",
+    CastTargetTT = "顯示單位的施法目標",
+
+    CastInterrupteFrom = "打斷來源",
+    CastInterrupteFromTT = "當單位法術被打斷時，在其施法條上顯示打斷者的名字",
+
+    CastInterrupteIndicatorEnable = "打斷指示器",
+    CastInterrupteIndicatorEnableTT = "當敵方單位施放可打斷法術時，若你擁有任何在下列監控列表中的技能且處於可用狀態時，便會在該施法單位的姓名板上亮起一個綠色的打斷指示器",
+
+    InterrupteSpellInput = "向打斷指示器中添加監控技能，輸入技能ID (SpellID)添加",
+    InterrupteSpellInputTT = "輸入技能ID (SpellID)添加，點擊技能圖標移除",
+
+    InterrupteSpellIDInputError = "|cffFFD700---RSPlates:|r 請輸入正確的法術ID",
+    InterrupteSpellIDAdded = "|cffFFD700---RSPlates:|r 法術成功添加 ",
+    InterrupteSpellIDRemoved = "|cffFFD700---RSPlates:|r 法術成功刪除 ",
 
     StolenBuff = "額外顯示可驅散/偷取BUFF",
     StolenBuffTT = "在單位血條右側高亮顯示可偷取或驅散的BUFF",

@@ -12,7 +12,7 @@ rs.V.enus = {
 
     Title1 = "Style",
     Title2 = "CVars",
-    Title4 = "Colors",
+    Title4 = "Threat and Execute",
     Title5 = "Name",
     Title6 = "Auras",
     Title7 = "Dungeon Helper",
@@ -141,6 +141,26 @@ rs.V.enus = {
     Arrow = "Selected Arrow",
     ArrowTT = "Display an arrow at nameplate right on target unit.",
 
+    CastingTitle = "Spell Casting Indicator",
+    CastTimer = "Cast Time",
+    CastTimerTT = "Shows the unit's cast time",
+
+    CastTarget = "Cast Target",
+    CastTargetTT = "Shows the unit's cast target",
+
+    CastInterrupteFrom = "Interrupt Source",
+    CastInterrupteFromTT = "When a unit spell is interrupted,display the interrupter's name on its cast bar",
+
+    CastInterrupteIndicatorEnable = "Interrupt Indicator",
+    CastInterrupteIndicatorEnableTT = "When an enemy unit casts an interruptible spell, a green interrupt indicator will light up on the spellcasting unit's nameplate if you have any of the skills on the watch list below and are available(not in CD)",
+
+    InterrupteSpellInput = "Add monitoring spell to Interrupt Indicator, enter Spell ID to add",
+    InterrupteSpellInputTT = "Enter the Spell ID to add, click the spell icon to remove",
+
+    InterrupteSpellIDInputError = "|cffFFD700---RSPlates:|r Please enter the correct Spell ID",
+    InterrupteSpellIDAdded = "|cffFFD700---RSPlates:|r Spell added successfully ",
+    InterrupteSpellIDRemoved = "|cffFFD700---RSPlates:|r Spell successfully removed ",
+    
     StolenBuff = "Extra display canStealOrPurge BUFF",
     StolenBuffTT = "Highlight the buff that can be stolen or purged on the right side of the unit health bar",
 

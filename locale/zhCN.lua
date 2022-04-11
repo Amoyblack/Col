@@ -12,7 +12,7 @@ rs.V.zhcn = {
 
     Title1 = "风格",
     Title2 = "CVars",
-    Title4 = "血条染色",
+    Title4 = "仇恨与斩杀",
     Title5 = "姓名",
     Title6 = "光环",
     Title7 = "地下城助手",
@@ -141,6 +141,26 @@ rs.V.zhcn = {
     Arrow = "目标箭头",
     ArrowTT = "在选中单位的血条右侧显示一个箭头",
 
+    CastingTitle = "施法指示器",
+    CastTimer = "施法时间",
+    CastTimerTT = "显示单位的施法时间",
+
+    CastTarget = "施法目标",
+    CastTargetTT = "显示单位的施法目标",
+
+    CastInterrupteFrom = "打断来源",
+    CastInterrupteFromTT = "当单位法术被打断时，在其施法条上显示打断者的名字",
+
+    CastInterrupteIndicatorEnable = "打断指示器",
+    CastInterrupteIndicatorEnableTT = "当敌方单位施放可打断法术时，若你拥有任何在下列监控列表中的技能且处于可用状态时，便会在该施法单位的姓名板上亮起一个绿色的打断指示器",
+
+    InterrupteSpellInput = "向打断指示器中添加监控技能，输入技能ID (SpellID)添加",
+    InterrupteSpellInputTT = "输入技能ID (SpellID)添加，点击技能图标移除",
+
+    InterrupteSpellIDInputError = "|cffFFD700---RSPlates:|r 请输入正确的法术ID",
+    InterrupteSpellIDAdded = "|cffFFD700---RSPlates:|r 法术成功添加 ",
+    InterrupteSpellIDRemoved = "|cffFFD700---RSPlates:|r 法术成功删除 ",
+    
     StolenBuff = "显示可驱散/偷取BUFF",
     StolenBuffTT = "在单位血条右侧高亮显示可偷取或驱散的BUFF",
 

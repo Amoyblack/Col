@@ -404,10 +404,108 @@ options.args.basic = {
             order = 11,
         },
         div6 = {
-            name = L["Title8"],
+            name = L["CastingTitle"],
             type = "group",
             inline = true,
             order = 12,
+            args = {
+                CastTimer = {
+                    name = L["CastTimer"],
+                    desc = L["CastTimerTT"],
+                    type = "toggle",
+                    order = 1,
+                    set = function(info, value) RSPlatesDB[info[#info]] = value 
+                        for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+                            local unitFrame = namePlate.UnitFrame
+                            rs.RegExtraUIEvent(unitFrame)
+                        end	
+                    end,
+                },
+                CastTarget = {
+                    name = L["CastTarget"],
+                    desc = L["CastTargetTT"],
+                    type = "toggle",
+                    order = 3,
+                    set = function(info, value) RSPlatesDB[info[#info]] = value 
+                        rs.UpdateAllNameplatesOnce()
+                    end,
+                },
+                CastInterrupteFrom = {
+                    name = L["CastInterrupteFrom"],
+                    desc = L["CastInterrupteFromTT"],
+                    type = "toggle",
+                    order = 5,
+                },
+                InterrupteGroup = {
+                    name = " ",
+                    type = "group",
+                    inline = true,
+                    order = 7,
+                    args = {
+                        CastInterrupteIndicatorEnable = {
+                            name = L["CastInterrupteIndicatorEnable"],
+                            desc = L["CastInterrupteIndicatorEnableTT"],
+                            type = "toggle",
+                            order = 1,
+                            set = function(info, value) RSPlatesDB[info[#info]] = value 
+                                for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+                                    -- will not get forbidden unitframe
+                                    local unitFrame = namePlate.UnitFrame
+                                    rs.RegExtraUIEvent(unitFrame)
+                                    rs.On_NpRefreshOnce(unitFrame)
+                                end	
+                            end,
+                        },
+                        gap0 = {
+                            name = "",
+                            type = "description",
+                            order = 2,
+                        },
+                        InterrupteSpellInput = {
+                            name = L["InterrupteSpellInput"],
+                            desc = L["InterrupteSpellInputTT"],
+                            type = "input",
+                            order = 3,
+                            width = "full",
+                            set = function(info, value)
+                                local iSpellID = tonumber(value)
+                                if not iSpellID then 
+                                    print(L["InterrupteSpellIDInputError"])
+                                elseif iSpellID/1000000000 >= 1 then 
+                                    print(L["InterrupteSpellIDInputError"])
+                                else
+                                    local name, rank, icon, castTime, minRange, maxRange, spellID = GetSpellInfo(iSpellID)
+                                    if not RSPlatesDB["DctInterrupteSpell"][iSpellID] and name then
+                                        RSPlatesDB["DctInterrupteSpell"][iSpellID] = true
+                                        print(L["InterrupteSpellIDAdded"]..name)
+                                        rs.RefInterrupteSpellPanel()
+                                    else
+                                        print(L["InterrupteSpellIDInputError"])
+                                    end
+                                end
+                            end,
+                        },
+                        InterrupteSepllGroup = {
+                            name = "",
+                            type = "group",
+                            order = 4,
+                            args = {
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        gap6 = {
+            name = " ",
+            type = "description",
+            order = 13,
+        },
+        div7 = {
+            name = L["Title8"],
+            type = "group",
+            inline = true,
+            order = 14,
             args = {
                 ShowQuestIcon = {
                     name = L["QuestIcon"],
@@ -1068,6 +1166,7 @@ function rs.SwitchConfigGUI(page)
             ConfigFrameContainer:SetStatusText(format("%s%s",L["UpdateVersion"], RSPlatesDB["Version"]))
             ConfigFrameContainer:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
         -- end
+        rs.RefInterrupteSpellPanel()
         rs.RefWhitelistAuraPanel()
         rs.RefDungeonNPCPanel()
         rs.RefDungeonAuraPanel()
@@ -1213,6 +1312,37 @@ function rs.RefWhitelistAuraPanel()
     end
 end
 
+-- 打断指示器 技能
+function rs.RefInterrupteSpellPanel()
+    local t = 1
+    local node = options.args.basic.args.div6.args.InterrupteGroup.args.InterrupteSepllGroup
+    node.args = {}
+    for i, v in pairs(RSPlatesDB["DctInterrupteSpell"]) do
+        local sSpell = tostring(i)
+        local iconname, _, icon = GetSpellInfo(i)
+        local spellDes = GetSpellDescription(i)
+        if spellDes == "" then
+            spellDes = L["GetSpellDesFailInfo"]
+        end
+        local des = format("SpellID: %s\n\n%s", sSpell, spellDes)
+        node.args[sSpell.."Interrupte"] = {
+            name = " ",
+            type = "toggle",
+            image = icon,
+            width = 0.3,
+            order = t,
+            desc = format("|cffFFD700%s|r\n\n%s\n\n%s",iconname, des, L["RemoveCheckBoxTT"]),
+            set = function(info, value)
+                if RSPlatesDB["DctInterrupteSpell"][i] then 
+                    RSPlatesDB["DctInterrupteSpell"][i] = nil
+                    print(L["InterrupteSpellIDRemoved"]..iconname)
+                end
+                rs.RefInterrupteSpellPanel()
+            end
+        }
+        t = t + 1
+    end
+end
 
 local function CreateBlizzardOptionPanel(frame)
     if not frame.openConfigGuiBtn then 

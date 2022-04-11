@@ -143,7 +143,7 @@ function rs.UpdateBuffsRS(self, unit, filter, showAll)
 			local ShouldShow = self:ShouldShowBuff(name, caster, nameplateShowPersonal, nameplateShowAll or showAll, duration) and RSPlatesDB["AuraDefault"]
 			local WhiteList = RSPlatesDB["AuraWhite"] and RSPlatesDB["DctAura"][spellId]
 			local notPlayerself = RSPlatesDB["AuraOnlyMe"] and caster ~= "player"
-			if (ShouldShow or WhiteList and not notPlayerself) then
+			if ((ShouldShow or WhiteList) and not notPlayerself) then
 				if (not self.buffList[buffIndex]) then
 					self.buffList[buffIndex] = CreateFrame("Frame", nil, self, "NameplateBuffButtonTemplate");
 					self.buffList[buffIndex]:SetMouseClickEnabled(false);

@@ -4,7 +4,7 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "9.2.21",
+	["Version"] = "9.2.22",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
     ["BarTexture"] = "s1",
@@ -78,6 +78,11 @@ rs.V.DefaultSetting = {
 	["ShowQuestIcon"] = true,
     ["LockPlayerColor"] = true,
 
+    ["CastTimer"] = false,
+    ["CastTarget"] = false,
+    ["CastInterrupteFrom"] = true,
+    ["CastInterrupteIndicatorEnable"] = false,
+
 	["ExpballHelper"] = false,
 
 	["DctAura"] = {	
@@ -113,6 +118,23 @@ rs.V.DefaultSetting = {
     }, 
     ["DctColorAura"] = {
         [343502] = {0, 0, 1},   --鼓舞光环
+    },
+    ["DctInterrupteSpell"] = {
+        [147362] = true,    --LR:反制射击
+        [187707] = true,    --LR:压制(生存)
+
+        [2139] = true,      --FS:法术反制
+
+        [6552] = true,      --ZS:拳击
+
+        [106839] = true,    --XD:迎头痛击(熊,猫)
+        [78675] = true,     --XD:日光(鹌鹑)
+
+        [96231] = true,     --QS:责难(CJ,FQ)
+
+        [1766] = true,      --DZ:脚踢
+
+        [183752] = true,    --DH:瓦解
     }
 }
 
