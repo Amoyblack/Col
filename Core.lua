@@ -4,11 +4,11 @@
 
 -- Blizzard source frame  --> hook
 
--- New frame --> set event 
+-- New frame --> set event
 
--- Dont set event on blizzard np obj cuz it will overide its event 
+-- Dont set event on blizzard np obj cuz it will overide its event
 
--- so, compromise it by Hooking blizzard ui, Global Set Event on new ui obj that Got by C_N API (api still occupied cpu lightly)  
+-- so, compromise it by Hooking blizzard ui, Global Set Event on new ui obj that Got by C_N API (api still occupied cpu lightly)
 
 
 local ADDONName, rs = ...
@@ -90,7 +90,7 @@ local function MouseOverFrame_OnEvent(self, event, ...)
     end
 end
 
--- abandon test func 
+-- abandon test func
 local function CastingExpandFrame_OnHookScript(self, escape)
     local castingTime
     local unitframe = self:GetParent()
@@ -467,17 +467,17 @@ function rs.RefInterrupteIndicator(frame)
     end
     local notInterruptible
     notInterruptible = select(8, UnitCastingInfo(frame.unit))
-    if notInterruptible == nil then 
+    if notInterruptible == nil then
         notInterruptible = select(7, UnitChannelInfo(frame.unit))
     end
 
     -- unit is casting
-    if notInterruptible ~= nil then 
-        if notInterruptible == true then 
+    if notInterruptible ~= nil then
+        if notInterruptible == true then
             frame.CastingExpandFrame.InterrupteIndicator:Hide()
         else
-            for i,v in pairs(RSPlatesDB["DctInterrupteSpell"]) do 
-                if IsSpellKnown(i) then 
+            for i,v in pairs(RSPlatesDB["DctInterrupteSpell"]) do
+                if IsSpellKnown(i) then
                     local start, duration, enable = GetSpellCooldown(i)
                     if duration == 0 then
                         frame.CastingExpandFrame.InterrupteIndicator:Show()
@@ -836,7 +836,7 @@ local function UIObj_Event(self, event, ...)
 
     -- todo : 找出延迟的原因, UNIT_TARGET 可以解决部分但仍有少数情况失效，先延迟处理（逻辑上也更倾向于只判断初始阶段而非过程中UNIT_TARGET)
     elseif event == "UNIT_SPELLCAST_START" or event == "UNIT_SPELLCAST_CHANNEL_START" then
-        if RSPlatesDB["CastTarget"] or RSPlatesDB["CastInterrupteIndicatorEnable"] then 
+        if RSPlatesDB["CastTarget"] or RSPlatesDB["CastInterrupteIndicatorEnable"] then
             local unit, _, _ = ...
             if not string.match(unit, "nameplate") then return end
             local npbase = C_NamePlate.GetNamePlateForUnit(unit, false)
@@ -845,7 +845,7 @@ local function UIObj_Event(self, event, ...)
                     rs.RefCastingTarget(npbase.UnitFrame)
                 end)
             end
-            if npbase and RSPlatesDB["CastInterrupteIndicatorEnable"] then 
+            if npbase and RSPlatesDB["CastInterrupteIndicatorEnable"] then
                 rs.RefInterrupteIndicator(npbase.UnitFrame)
             end
         end
@@ -854,14 +854,15 @@ local function UIObj_Event(self, event, ...)
         -- local unit, _, _ = ...
 
     elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
-        if not RSPlatesDB["CastInterrupteFrom"] then return end
         local timestamp, subevent, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo()
         if subevent == "SPELL_INTERRUPT" then
             for npUnit, npGUID in pairs(tabGUID2unit) do
                 if npGUID == destGUID then
                     local npbase = C_NamePlate.GetNamePlateForUnit(npUnit)
-                    if npbase then 
+                    if npbase then
                         npbase.UnitFrame.CastingExpandFrame.CastingTarget:Hide()
+                        npbase.UnitFrame.CastingExpandFrame.InterrupteIndicator:Hide()
+                        if not RSPlatesDB["CastInterrupteFrom"] then return end
                         if sourceName then
                             local name, server = strsplit("-", sourceName)
                             -- print("-----", npUnit, npGUID , destGUID)
