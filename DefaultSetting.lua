@@ -4,7 +4,7 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "9.2.23",
+	["Version"] = "9.2.24",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
     ["BarTexture"] = "s1",
@@ -78,6 +78,8 @@ rs.V.DefaultSetting = {
 	["ShowStolenBuff"] = true,
 	["ShowQuestIcon"] = true,
     ["LockPlayerColor"] = true,
+    
+    ["ProfileByCharactor"] = false,
 
     ["CastTimer"] = false,
     ["CastTarget"] = false,

@@ -9,7 +9,7 @@
 
 
 ## SavedVariables: RSPlatesDB
-
+## SavedVariablesPerCharacter: RSPlatesDBPer
 
 libs\LibStub\LibStub.lua
 libs\CallbackHandler-1.0\CallbackHandler-1.0.lua

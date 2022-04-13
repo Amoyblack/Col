@@ -29,7 +29,7 @@ local tabGUID2unit = {}
 -------------------------------------------------
 function rs.RSOn()
 	rs.HookBlizzedFunc()
-	if RSPlatesDB["ExpballHelper"] then
+	if rs.tabDB[rs.iDBmark]["ExpballHelper"] then
 		rs.BallScanner()
 	end
 end
@@ -104,6 +104,7 @@ local function CastingExpandFrame_OnHookScript(self, escape)
     unitframe.CastingExpandFrame.CastingTimer:SetText(castingTime)
 end
 
+
 -- 0.1ms（to next test, old data) CPU per uf
 local function CastingTimerUpdate(self, escape)
         local castingTime
@@ -118,14 +119,14 @@ local function CastingTimerUpdate(self, escape)
         end
         self.CastingTimer:SetText(castingTime)
         self.CastingTimer:Show()
-        -- print(UnitFramecastBar, self, UnitFramecastBar.maxValue, UnitFramecastBar.value)
         -- print(castingTime)
 end
+
 
 local function CastingExpandFrame_OnSetEvent(self, event, ...)
     if event == "UNIT_SPELLCAST_SUCCEEDED" then
         local unit, castGUID, iSpell = ...
-        if unit == "player" and RSPlatesDB["DctInterrupteSpell"][iSpell] then
+        if unit == "player" and rs.tabDB[rs.iDBmark]["DctInterrupteSpell"][iSpell] then
             C_Timer.After(0.05, function()
                 local castBar = self:GetParent()
                 rs.RefInterrupteIndicator(castBar:GetParent())
@@ -134,9 +135,10 @@ local function CastingExpandFrame_OnSetEvent(self, event, ...)
     end
 end
 
+
 function rs.RegExtraUIEvent(unitFrame)
     -- remove 会 unRegallevent, release pool , 不要判断rsed, each time
-    if RSPlatesDB["MouseoverGlow"] then
+    if rs.tabDB[rs.iDBmark]["MouseoverGlow"] then
         unitFrame.MouseoverFrame:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
         unitFrame.MouseoverFrame:SetScript("OnEvent", MouseOverFrame_OnEvent)
     else
@@ -146,22 +148,20 @@ function rs.RegExtraUIEvent(unitFrame)
 
     -- +0.7s
     -- unitFrame.castBar:HookScript("OnUpdate", CastingExpandFrame_OnHookScript)
-    if RSPlatesDB["CastTimer"] then
+    if rs.tabDB[rs.iDBmark]["CastTimer"] then
         unitFrame.CastingExpandFrame:SetScript("OnUpdate", CastingTimerUpdate)
     else
         unitFrame.CastingExpandFrame:SetScript("OnUpdate", nil)
         unitFrame.CastingExpandFrame.CastingTimer:Hide()
     end
 
-    if RSPlatesDB["CastInterrupteIndicatorEnable"] then
+    if rs.tabDB[rs.iDBmark]["CastInterrupteIndicatorEnable"] then
         unitFrame.CastingExpandFrame:SetScript("OnEvent", CastingExpandFrame_OnSetEvent)
         unitFrame.CastingExpandFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
     else
         unitFrame.CastingExpandFrame:SetScript("OnEvent", nil)
         unitFrame.CastingExpandFrame.InterrupteIndicator:Hide()
     end
-
-
 end
 
 ---------------------------------------------------
@@ -174,9 +174,7 @@ function rs.CreateUIObj(unitFrame, namePlate)
         unitFrame.MouseoverFrame.unit = unit
     end
 
-
 	if not unitFrame.rsed then
-
 
         unitFrame.BuffFrame.UpdateBuffs = rs.UpdateBuffsRS
         unitFrame.BuffFrame.UpdateAnchor = rs.UpdateAnchor
@@ -188,7 +186,7 @@ function rs.CreateUIObj(unitFrame, namePlate)
 		unitFrame.castBar.Icon.iconborder = rs.CreateBG(unitFrame.castBar.Icon)
 		unitFrame.castBar.Icon.iconborder:SetDrawLayer("OVERLAY", -1)  -- IconLayer = 1
 
-		if not RSPlatesDB["NarrowCast"] then
+		if not rs.tabDB[rs.iDBmark]["NarrowCast"] then
 			unitFrame.castBar.Icon.iconborder:Hide()
 			unitFrame.castBar.castBG:Hide()
 		end
@@ -200,7 +198,7 @@ function rs.CreateUIObj(unitFrame, namePlate)
 		unitFrame.healthBar.value:SetShadowOffset(0.5,-0.5)
 		unitFrame.healthBar.value:SetTextColor(1,1,1)
 		unitFrame.healthBar.value:Hide()
-		if RSPlatesDB["CenterDetail"] then
+		if rs.tabDB[rs.iDBmark]["CenterDetail"] then
 			unitFrame.healthBar.value:SetPoint("BOTTOM", unitFrame.healthBar, "CENTER", 0, -4)
 		else
 			unitFrame.healthBar.value:SetPoint("BOTTOMRIGHT", unitFrame.healthBar, "RIGHT", 0, -4)
@@ -258,8 +256,6 @@ function rs.CreateUIObj(unitFrame, namePlate)
         unitFrame.CastingExpandFrame.InterrupteIndicator.Texture:SetAllPoints()
 
         unitFrame.CastingExpandFrame.InterrupteIndicator.around = rs.CreateBackDrop(unitFrame.CastingExpandFrame.InterrupteIndicator, unitFrame.CastingExpandFrame.InterrupteIndicator, 2)
-
-
 
 
 		-- 任务 new ui
@@ -339,14 +335,14 @@ function rs.SetBarColor(frame)
         local guid = UnitGUID(frame.unit)
         local _, _, _, _, _, id = strsplit("-", guid or "")
         local _, threatStatus = UnitDetailedThreatSituation("player", unit)
-        local NpcColor = RSPlatesDB["DctColorNpc"][tonumber(id)]
+        local NpcColor = rs.tabDB[rs.iDBmark]["DctColorNpc"][tonumber(id)]
 
         -- 锁定玩家颜色
-        if RSPlatesDB["LockPlayerColor"] and (UnitIsPlayer(unit) or UnitIsPossessed(unit) or UnitPlayerControlled(unit)) then
+        if rs.tabDB[rs.iDBmark]["LockPlayerColor"] and (UnitIsPlayer(unit) or UnitIsPossessed(unit) or UnitPlayerControlled(unit)) then
             do end
 
-        elseif RSPlatesDB["TargetColorEnable"] and UnitIsUnit("target", unit) and not UnitIsUnit("player", unit) then
-            r, g, b = RSPlatesDB["TargetColor"][1], RSPlatesDB["TargetColor"][2], RSPlatesDB["TargetColor"][3]
+        elseif rs.tabDB[rs.iDBmark]["TargetColorEnable"] and UnitIsUnit("target", unit) and not UnitIsUnit("player", unit) then
+            r, g, b = rs.tabDB[rs.iDBmark]["TargetColor"][1], rs.tabDB[rs.iDBmark]["TargetColor"][2], rs.tabDB[rs.iDBmark]["TargetColor"][3]
 
         -- 资源条不染色
         elseif UnitIsUnit("player", unit) then
@@ -361,11 +357,11 @@ function rs.SetBarColor(frame)
         elseif frame.healthBar.AuraColor then
             r, g, b = frame.healthBar.AuraColor[1], frame.healthBar.AuraColor[2], frame.healthBar.AuraColor[3]
         -- 3 斩杀
-        elseif RSPlatesDB["SlayEnable"] and rs.IsOnKillHealth(unit) then
-            r, g, b = RSPlatesDB["SlayColor"][1], RSPlatesDB["SlayColor"][2], RSPlatesDB["SlayColor"][3]
+        elseif rs.tabDB[rs.iDBmark]["SlayEnable"] and rs.IsOnKillHealth(unit) then
+            r, g, b = rs.tabDB[rs.iDBmark]["SlayColor"][1], rs.tabDB[rs.iDBmark]["SlayColor"][2], rs.tabDB[rs.iDBmark]["SlayColor"][3]
 
         -- 4 仇恨，目标与玩家处于战斗状态
-        elseif RSPlatesDB["ThreatColorEnable"] and threatStatus then
+        elseif rs.tabDB[rs.iDBmark]["ThreatColorEnable"] and threatStatus then
             r, g, b = rs.IsOnThreatList(frame.unit)
         end
 
@@ -382,7 +378,7 @@ function rs.SetBarColor(frame)
         else
             frame.selectionHighlight:SetVertexColor(1, 1, 1);
         end
-        if RSPlatesDB["BarBgCol"] then
+        if rs.tabDB[rs.iDBmark]["BarBgCol"] then
             if UnitIsUnit("player", unit) then
                 frame.healthBar.background:SetColorTexture(.5 , .5, .5,.1)
             else
@@ -399,11 +395,11 @@ function rs.SetName(frame)
         rs.SetNameMode(frame)
 
         if frame.name then
-            if RSPlatesDB["NameWhite"] then
+            if rs.tabDB[rs.iDBmark]["NameWhite"] then
                 frame.name:SetVertexColor(1, 1, 1)
             end
-            if RSPlatesDB["NameSizeEnable"] then
-                frame.name:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["NameSize"], nil)
+            if rs.tabDB[rs.iDBmark]["NameSizeEnable"] then
+                frame.name:SetFont(STANDARD_TEXT_FONT, rs.tabDB[rs.iDBmark]["NameSize"], nil)
             end
         end
     end
@@ -413,13 +409,13 @@ end
 function rs.ThinCastBar(self, event, ...)
     if rs.IsLegalUnit(self) then
         -- Thin cast bar
-        if RSPlatesDB["NarrowCast"]then
+        if rs.tabDB[rs.iDBmark]["NarrowCast"]then
             local function SetThin(self)
                 self.Icon:SetShown(true)
                 -- self.Icon:SetTexture(texture)
-                self:SetHeight(RSPlatesDB["CastHeight"])
+                self:SetHeight(rs.tabDB[rs.iDBmark]["CastHeight"])
                 self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -3, 0)
-                self.Icon:SetSize(RSPlatesDB["CastHeight"] + 13, RSPlatesDB["CastHeight"] + 13)  -- 13 + height
+                self.Icon:SetSize(rs.tabDB[rs.iDBmark]["CastHeight"] + 13, rs.tabDB[rs.iDBmark]["CastHeight"] + 13)  -- 13 + height
                 self.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
                 self.BorderShield:SetPoint("LEFT",self, "LEFT", -2, 0)
             end
@@ -434,7 +430,7 @@ end
 
 
 function rs.RefCastingTarget(frame)
-    if not RSPlatesDB["CastTarget"] then
+    if not rs.tabDB[rs.iDBmark]["CastTarget"] then
         frame.CastingExpandFrame.CastingTarget:Hide()
         return
     end
@@ -461,7 +457,7 @@ end
 
 function rs.RefInterrupteIndicator(frame)
     if not frame.unit then return end
-    if not RSPlatesDB["CastInterrupteIndicatorEnable"] then
+    if not rs.tabDB[rs.iDBmark]["CastInterrupteIndicatorEnable"] then
         frame.CastingExpandFrame.InterrupteIndicator:Hide()
         return
     end
@@ -476,7 +472,7 @@ function rs.RefInterrupteIndicator(frame)
         if notInterruptible == true then
             frame.CastingExpandFrame.InterrupteIndicator:Hide()
         else
-            for i,v in pairs(RSPlatesDB["DctInterrupteSpell"]) do
+            for i,v in pairs(rs.tabDB[rs.iDBmark]["DctInterrupteSpell"]) do
                 if IsSpellKnown(i) then
                     local start, duration, enable = GetSpellCooldown(i)
                     if duration == 0 then
@@ -495,7 +491,7 @@ function rs.RefInterrupteIndicator(frame)
 end
 
 function rs.GetDetailText(unit)
-	local iType = RSPlatesDB["DetailType"]
+	local iType = rs.tabDB[rs.iDBmark]["DetailType"]
 	if iType == "s1" then return "" end
 
 	local CurHealth = UnitHealth(unit)
@@ -504,7 +500,7 @@ function rs.GetDetailText(unit)
 	local fPer = string.format("%.0f%%",(CurHealth/MaxHealth*100))
 	local fCur
 
-	if RSPlatesDB["WesternDetail"] then
+	if rs.tabDB[rs.iDBmark]["WesternDetail"] then
 		if CurHealth > 1000 and CurHealth<1000000 then
 			fCur = string.format("%.1fK", CurHealth/1000)
 		elseif CurHealth > 1000000  then
@@ -538,16 +534,16 @@ end
 function rs.IsOnThreatList(unit)
 	local _, threatStatus = UnitDetailedThreatSituation("player", unit)
 	if threatStatus == 3 then  --穩定仇恨，當前坦克/securely tanking, highest threat
-        return RSPlatesDB["TankSafeColor"][1], RSPlatesDB["TankSafeColor"][2], RSPlatesDB["TankSafeColor"][3]
+        return rs.tabDB[rs.iDBmark]["TankSafeColor"][1], rs.tabDB[rs.iDBmark]["TankSafeColor"][2], rs.tabDB[rs.iDBmark]["TankSafeColor"][3]
 		-- return .9, .1, .4  --紅色/red
 	elseif threatStatus == 2 then  --非當前仇恨，當前坦克(已OT或坦克正在丟失仇恨)/insecurely tanking, another unit have higher threat but not tanking.
-        return RSPlatesDB["TankLoseColor"][1], RSPlatesDB["TankLoseColor"][2], RSPlatesDB["TankLoseColor"][3]
+        return rs.tabDB[rs.iDBmark]["TankLoseColor"][1], rs.tabDB[rs.iDBmark]["TankLoseColor"][2], rs.tabDB[rs.iDBmark]["TankLoseColor"][3]
 		-- return .9, .1, .9  --粉色/pink
 	elseif threatStatus == 1 then  --當前仇恨，非當前坦克(非坦克高仇恨或坦克正在獲得仇恨)/not tanking, higher threat than tank.
-        return RSPlatesDB["dpsOTColor"][1], RSPlatesDB["dpsOTColor"][2], RSPlatesDB["dpsOTColor"][3]
+        return rs.tabDB[rs.iDBmark]["dpsOTColor"][1], rs.tabDB[rs.iDBmark]["dpsOTColor"][2], rs.tabDB[rs.iDBmark]["dpsOTColor"][3]
 		-- return .4, .1, .9  --紫色/purple
 	elseif threatStatus == 0 then  --低仇恨，安全/not tanking, lower threat than tank.
-        return RSPlatesDB["dpsSafeColor"][1], RSPlatesDB["dpsSafeColor"][2], RSPlatesDB["dpsSafeColor"][3]
+        return rs.tabDB[rs.iDBmark]["dpsSafeColor"][1], rs.tabDB[rs.iDBmark]["dpsSafeColor"][2], rs.tabDB[rs.iDBmark]["dpsSafeColor"][3]
 		-- return .1, .7, .9  --藍色/blue
 	end
 end
@@ -556,7 +552,7 @@ end
 function rs.IsOnKillHealth(unit)
 	local CurHealth = UnitHealth(unit)
 	local MaxHealth = UnitHealthMax(unit)
-	return ((CurHealth/MaxHealth) < RSPlatesDB["Slayline"]/100);
+	return ((CurHealth/MaxHealth) < rs.tabDB[rs.iDBmark]["Slayline"]/100);
 end
 
 
@@ -567,7 +563,7 @@ function rs.SetSelectionHighlight(unitFrame)
         local namePlate = C_NamePlate.GetNamePlateForUnit(unit, false)
 
         if UnitIsUnit(unit, "target") and not UnitIsUnit(unit, "player") then
-            if RSPlatesDB["ShowArrow"] then
+            if rs.tabDB[rs.iDBmark]["ShowArrow"] then
                 unitFrame.healthBar.curTarget:Show()
             else
                 unitFrame.healthBar.curTarget:Hide()
@@ -587,8 +583,8 @@ function rs.SetSelectionHighlight(unitFrame)
             if UnitIsUnit(unit, "player") then
                 unitFrame:SetAlpha(1)
             else
-                unitFrame:SetAlpha(RSPlatesDB["UnSelectAlpha"])
-                -- unitFrame.castBar.Icon:SetAlpha(RSPlatesDB["UnSelectAlpha"])
+                unitFrame:SetAlpha(rs.tabDB[rs.iDBmark]["UnSelectAlpha"])
+                -- unitFrame.castBar.Icon:SetAlpha(rs.tabDB[rs.iDBmark]["UnSelectAlpha"])
             end
 
             -- Namemode Select Glow
@@ -597,7 +593,7 @@ function rs.SetSelectionHighlight(unitFrame)
             end
         end
         -- 精英图标
-        if not RSPlatesDB["EliteIcon"] then
+        if not rs.tabDB[rs.iDBmark]["EliteIcon"] then
             unitFrame.ClassificationFrame:Hide()
         else
             unitFrame.ClassificationFrame:Show()
@@ -609,7 +605,7 @@ end
 function rs.SetUnitQuestState(unitFrame)
     if rs.IsLegalUnit(unitFrame) then
         local inInstance, instanceType = IsInInstance()
-        if not inInstance and rs.IsQuestUnit(unitFrame.unit) and RSPlatesDB["ShowQuestIcon"] then
+        if not inInstance and rs.IsQuestUnit(unitFrame.unit) and rs.tabDB[rs.iDBmark]["ShowQuestIcon"] then
             unitFrame.healthBar.questIcon:Show()
             return
         end
@@ -621,7 +617,7 @@ end
 
 --血条材质
 function rs.SetBarTexture(unitFrame)
-    local texturePath = dctTexture[RSPlatesDB["BarTexture"]]
+    local texturePath = dctTexture[rs.tabDB[rs.iDBmark]["BarTexture"]]
     if texturePath then
 		unitFrame.healthBar:SetStatusBarTexture(texturePath)
 		unitFrame.castBar:SetStatusBarTexture(texturePath)
@@ -724,56 +720,49 @@ end
 
 local loadFrame = CreateFrame("FRAME");
 loadFrame:RegisterEvent("ADDON_LOADED");
--- loadFrame:RegisterEvent("PLAYER_LOGOUT");
 loadFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 loadFrame:RegisterEvent("LOADING_SCREEN_DISABLED")
 
 function loadFrame:OnEvent(event, arg1)
 	if event == "ADDON_LOADED" and arg1 == ADDONName then
-        rs.V.AddonFirstLoad = false
         local hasbeenForced
 		if not RSPlatesDB then
-			rs.V.AddonFirstLoad = true
 			RSPlatesDB = rs.V.DefaultSetting
-		else
-            -- 版本号不一样
-            if RSPlatesDB["Version"] ~= rs.V.DefaultSetting["Version"] then
-                rs.V.AddonFirstLoad = true
-                RSPlatesDB, hasbeenForced = rs.GetMarginDB(RSPlatesDB)
-                if not hasbeenForced then
-                    -- print (rs.L["UpdateInfo"])
-                    print ("|cffFFD700---RSPlates"..L["UpdateVersion"].."|r"..RSPlatesDB["Version"] )
-                else
-                    print(rs.L["UpdateForce"])
-                    print("|cffFFD700---RSPlates: "..L["UpdateVersion"].."|r"..RSPlatesDB["Version"] )
-                end
-            -- 版本号一样长度不一样 (因为意外导致版本升级时DB复写失败？ is possible????)
-            elseif rs.table_leng(RSPlatesDB) ~= rs.table_leng(rs.V.DefaultSetting) then
-                rs.V.AddonFirstLoad = true
-                RSPlatesDB, hasbeenForced = rs.GetMarginDB(RSPlatesDB)
-            end
+        end
+        
+        if not RSPlatesDBPer then
+            RSPlatesDBPer = rs.V.DefaultSetting
         end
 
-			-- -- 代码库与玩家存储的配置长度不一样时，直接更新
-			-- if (rs.table_leng(RSPlatesDB) ~= rs.table_leng(rs.V.DefaultSetting)) then
-			-- 	RSPlatesDB = rs.V.DefaultSetting
-			-- 	rs.V.AddonFirstLoad = true
-			-- 	print ("|cffFFD700---RSPlates : "..L["UpdateInfo"].." |r")
-			-- 	print ("|cffFFD700---".. L["UpdateVersion"]..": |r"..RSPlatesDB["Version"] )
+        -- Battle.net 版本号不一样
+        if RSPlatesDB["Version"] ~= rs.V.DefaultSetting["Version"] then
+            RSPlatesDB, hasbeenForced = rs.GetMarginDB(RSPlatesDB)
+            -- if not hasbeenForced then
+            --     -- print (rs.L["UpdateInfo"])
+            --     print ("|cffFFD700---RSPlates"..L["UpdateVersion"].."|r"..rs.tabDB[rs.iDBmark]["Version"] )
+            -- else
+            --     print(rs.L["UpdateForce"])
+            --     print("|cffFFD700---RSPlates: "..L["UpdateVersion"].."|r"..rs.tabDB[rs.iDBmark]["Version"] )
+            -- end
+        end
 
-			-- -- 长度一样，版本号不同，只更新版本号
-			-- elseif RSPlatesDB["Version"] ~= rs.V.DefaultSetting["Version"] then
-			-- 	-- RSPlatesDB["Version"] = rs.V.DefaultSetting["Version"]
-            --     RSPlatesDB = rs.V.DefaultSetting
-			-- 	rs.V.AddonFirstLoad = true
-            --     print ("|cffFFD700---RSPlates : "..L["UpdateInfo"].." |r")
-			-- 	print ("|cffFFD700---".. L["UpdateVersion"]..": |r"..RSPlatesDB["Version"] )
-			-- end
+        -- Charactor 版本号不一样
+        if RSPlatesDBPer["Version"] ~= rs.V.DefaultSetting["Version"] then
+            RSPlatesDBPer, hasbeenForced = rs.GetMarginDB(RSPlatesDBPer)
+        end
+
+        rs.tabDB = {RSPlatesDB, RSPlatesDBPer}
+
+        if RSPlatesDB["ProfileByCharactor"] then
+            rs.iDBmark = 2
+        else
+            rs.iDBmark = 1
+        end
 
         rs.OnColCheck()
 		rs.RSOn()
         rs.InitMinimapBtn()
-        -- rs.SwitchConfigGUI()
+
 
     -- time : entering_world --> WA set --> loading_screen_disabled
     elseif event == "PLAYER_ENTERING_WORLD" then
@@ -836,16 +825,16 @@ local function UIObj_Event(self, event, ...)
 
     -- todo : 找出延迟的原因, UNIT_TARGET 可以解决部分但仍有少数情况失效，先延迟处理（逻辑上也更倾向于只判断初始阶段而非过程中UNIT_TARGET)
     elseif event == "UNIT_SPELLCAST_START" or event == "UNIT_SPELLCAST_CHANNEL_START" then
-        if RSPlatesDB["CastTarget"] or RSPlatesDB["CastInterrupteIndicatorEnable"] then
+        if rs.tabDB[rs.iDBmark]["CastTarget"] or rs.tabDB[rs.iDBmark]["CastInterrupteIndicatorEnable"] then
             local unit, _, _ = ...
             if not string.match(unit, "nameplate") then return end
             local npbase = C_NamePlate.GetNamePlateForUnit(unit, false)
-            if npbase and RSPlatesDB["CastTarget"] then
+            if npbase and rs.tabDB[rs.iDBmark]["CastTarget"] then
                 C_Timer.After(0.1, function()
                     rs.RefCastingTarget(npbase.UnitFrame)
                 end)
             end
-            if npbase and RSPlatesDB["CastInterrupteIndicatorEnable"] then
+            if npbase and rs.tabDB[rs.iDBmark]["CastInterrupteIndicatorEnable"] then
                 rs.RefInterrupteIndicator(npbase.UnitFrame)
             end
         end
@@ -862,7 +851,7 @@ local function UIObj_Event(self, event, ...)
                     if npbase then
                         npbase.UnitFrame.CastingExpandFrame.CastingTarget:Hide()
                         npbase.UnitFrame.CastingExpandFrame.InterrupteIndicator:Hide()
-                        if not RSPlatesDB["CastInterrupteFrom"] then return end
+                        if not rs.tabDB[rs.iDBmark]["CastInterrupteFrom"] then return end
                         if sourceName then
                             local name, server = strsplit("-", sourceName)
                             -- print("-----", npUnit, npGUID , destGUID)

@@ -17,6 +17,7 @@ rs.V.enus = {
     Title6 = "Auras",
     Title7 = "Dungeon Helper",
     Title8 = "Others",
+    Title10 = "Profile",
 
     BarTexture = "Bar Texture",
     BarTextureTT = "If you want to customize the texture, rename your texture file to 'UI-TargetingFrame-BarFill' and place it in the directory [~/_retail_/Interface/TargetingFrame/your texture file], then select the source",
@@ -29,7 +30,7 @@ rs.V.enus = {
     EliteIconTT = "Show Elite Icon",
 
     BgCol = "HealthBar Background Color",
-    BgColTT = "Draw HealthBar background (health loss part) as a multiplier color which basic on HealthBar color, instead black background.",
+    BgColTT = "Draw HealthBar background (health loss part) as a multiplier color which basic on HealthBar color, instead black background.  |cff66CCFFNeed to reload UI to take effect when you disable it|r",
 
     Omen3 = "Threat Color Enable",
     Omen3TT = "Show threat Status as different bar color",
@@ -170,7 +171,11 @@ rs.V.enus = {
     QuestIconTT = "Show a mark on the top of the Quest Unit",
 
     LockPlayerColor = "Lock Player BarColor",
-    LockPlayerColorTT = "Do not color any player's healthbar color",
+    LockPlayerColorTT = "Do not color the healthbar of the player and player-controlled units",
+
+    ProfileByCharactor = "Profile Per Charactor",
+    ProfileByCharactorTT = "Save Addon Profile by Charactor, not shared Profile under Battle.net account",
+    ProfileByCharactorCheckTip = "Need to Reload UI when change this option, are you sure to change it and Reload UI now?",
 
     UpdateForce = "|cffFFD700---RSPlates: Version update has been detected, this version needs to reset the settings, the settings are now initialized|r",
     UpdateInfo = "|cffFFD700---RSPlates: Version update has been detected|r",

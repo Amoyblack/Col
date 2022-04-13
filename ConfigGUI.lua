@@ -15,10 +15,10 @@ local MapIconTexture  = "Interface\\AddOns\\RSPlates\\media\\rsicon"
 local options = {
     type = "group",
     name = "|cff00FF7FRS|rPlates",
-    get = function (info) return RSPlatesDB[info[#info]] end,
+    get = function (info) return rs.tabDB[rs.iDBmark][info[#info]] end,
     set = function (info, value) 
-        if RSPlatesDB[info[#info]] ~= nil then 
-            RSPlatesDB[info[#info]] = value 
+        if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+            rs.tabDB[rs.iDBmark][info[#info]] = value 
         end 
     end,
             args = {
@@ -36,8 +36,8 @@ local options = {
                     type = 'toggle',
                     order = 1,
                     set = function(info, value)
-                        if RSPlatesDB[info[#info]] ~= nil then 
-                            RSPlatesDB[info[#info]] = value 
+                        if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                            rs.tabDB[rs.iDBmark][info[#info]] = value 
                         end 
                         if value == true then 
                             AceMap:Show(addon)
@@ -72,8 +72,8 @@ options.args.basic = {
                     type = 'toggle',
                     order = 3,
                     set = function (info, value) 
-                        if RSPlatesDB[info[#info]] ~= nil then 
-                            RSPlatesDB[info[#info]] = value 
+                        if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                            rs.tabDB[rs.iDBmark][info[#info]] = value 
                         end
                         rs.UpdateAllNameplatesOnce() 
                     end,
@@ -95,8 +95,8 @@ options.args.basic = {
                     order = 6,
                     width = 2,
                     type = "select",
-                    get = function(info) return RSPlatesDB[info[#info]] end,
-                    set = function(info, value) RSPlatesDB[info[#info]] = value rs.UpdateAllNameplatesOnce()  end, 
+                    get = function(info) return rs.tabDB[rs.iDBmark][info[#info]] end,
+                    set = function(info, value) rs.tabDB[rs.iDBmark][info[#info]] = value rs.UpdateAllNameplatesOnce()  end, 
                     values = {
                         s1 = "|TInterface\\TargetingFrame\\UI-TargetingFrame-BarFill:10:150:0:0|t  "..L["BarTextureSource"],
                         s2 = "|TInterface\\AddOns\\RSPlates\\media\\bar_rs:10:150:0:0|t  rs",
@@ -132,10 +132,10 @@ options.args.basic = {
                         s4 = L["HealthBothShow"],
                     },
                     set = function (info, value)
-                    RSPlatesDB[info[#info]] = value 
+                    rs.tabDB[rs.iDBmark][info[#info]] = value 
                     rs.UpdateAllNameplatesOnce()
                     end,
-                    get = function (info) return RSPlatesDB[info[#info]] end
+                    get = function (info) return rs.tabDB[rs.iDBmark][info[#info]] end
 
                 },
                 CenterDetail = {
@@ -150,8 +150,8 @@ options.args.basic = {
                     type = "toggle",
                     order = 3,
                     set = function (info, value) 
-                        if RSPlatesDB[info[#info]] ~= nil then 
-                            RSPlatesDB[info[#info]] = value 
+                        if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                            rs.tabDB[rs.iDBmark][info[#info]] = value 
                         end 
                         rs.UpdateAllNameplatesOnce()
                     end,
@@ -182,8 +182,8 @@ options.args.basic = {
                     order = 2,
                     width = "full",
                     set = function (info, value) 
-                        if RSPlatesDB[info[#info]] ~= nil then 
-                            RSPlatesDB[info[#info]] = value 
+                        if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                            rs.tabDB[rs.iDBmark][info[#info]] = value 
                         end 
                         rs.UpdateAllNameplatesOnce()
                     end,
@@ -194,11 +194,11 @@ options.args.basic = {
                     inline = true, 
                     order = 3,
                     get = function(info)
-                        return RSPlatesDB[info[#info]][1], RSPlatesDB[info[#info]][2], RSPlatesDB[info[#info]][3]
+                        return rs.tabDB[rs.iDBmark][info[#info]][1], rs.tabDB[rs.iDBmark][info[#info]][2], rs.tabDB[rs.iDBmark][info[#info]][3]
                     end,
                     set = function(info, r, g, b, a)
                         -- print({r-r%0.01, g-g%0.01, b-b%0.01})
-                        RSPlatesDB[info[#info]] = {r-r%0.01, g-g%0.01, b-b%0.01}
+                        rs.tabDB[rs.iDBmark][info[#info]] = {r-r%0.01, g-g%0.01, b-b%0.01}
                     end,
                     args = {
                         dpsSafeColor = {
@@ -235,8 +235,8 @@ options.args.basic = {
                     order = 4,
                     width = "full",
                     set = function (info, value) 
-                        if RSPlatesDB[info[#info]] ~= nil then 
-                            RSPlatesDB[info[#info]] = value 
+                        if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                            rs.tabDB[rs.iDBmark][info[#info]] = value 
                         end 
                         rs.UpdateAllNameplatesOnce()
                     end,
@@ -260,10 +260,10 @@ options.args.basic = {
                             type = "color",
                             order = 10,
                             get = function(info)
-                                return RSPlatesDB[info[#info]][1], RSPlatesDB[info[#info]][2], RSPlatesDB[info[#info]][3]
+                                return rs.tabDB[rs.iDBmark][info[#info]][1], rs.tabDB[rs.iDBmark][info[#info]][2], rs.tabDB[rs.iDBmark][info[#info]][3]
                             end,
                             set = function(info, r, g, b, a)
-                                RSPlatesDB[info[#info]] = {r-r%0.01, g-g%0.01, b-b%0.01}
+                                rs.tabDB[rs.iDBmark][info[#info]] = {r-r%0.01, g-g%0.01, b-b%0.01}
                             end,
                         },
                     }
@@ -282,8 +282,8 @@ options.args.basic = {
             inline = true,
             order = 8,
             set = function (info, value) 
-                if RSPlatesDB[info[#info]] ~= nil then 
-                    RSPlatesDB[info[#info]] = value 
+                if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                    rs.tabDB[rs.iDBmark][info[#info]] = value 
                 end 
                 rs.UpdateAllNameplatesOnce()
             end,
@@ -308,7 +308,7 @@ options.args.basic = {
                     min = 5,
                     max = 30,
                     step = 1,
-                    disabled = function() return not RSPlatesDB["NameSizeEnable"] end,
+                    disabled = function() return not rs.tabDB[rs.iDBmark]["NameSizeEnable"] end,
                 },
             }
         },
@@ -328,7 +328,7 @@ options.args.basic = {
                     desc = L["MouseoverGlowTT"],
                     type = "toggle",
                     order = 1,
-                    set = function(info, value) RSPlatesDB[info[#info]] = value 
+                    set = function(info, value) rs.tabDB[rs.iDBmark][info[#info]] = value 
                         for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
                             local unitFrame = namePlate.UnitFrame
                             rs.RegExtraUIEvent(unitFrame)
@@ -341,8 +341,8 @@ options.args.basic = {
                     type = "toggle",
                     order = 2,
                     set = function (info, value) 
-                        if RSPlatesDB[info[#info]] ~= nil then 
-                            RSPlatesDB[info[#info]] = value 
+                        if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                            rs.tabDB[rs.iDBmark][info[#info]] = value 
                         end 
                         rs.UpdateAllNameplatesOnce()
                     end,
@@ -358,8 +358,8 @@ options.args.basic = {
                     -- softmax = 100,
                     step  = 0.1,
                     set = function (info, value) 
-                        if RSPlatesDB[info[#info]] ~= nil then 
-                            RSPlatesDB[info[#info]] = value 
+                        if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                            rs.tabDB[rs.iDBmark][info[#info]] = value 
                         end 
                         rs.UpdateAllNameplatesOnce()
                     end,
@@ -376,8 +376,8 @@ options.args.basic = {
                             type = "toggle",
                             order = 1,
                             set = function (info, value) 
-                                if RSPlatesDB[info[#info]] ~= nil then 
-                                    RSPlatesDB[info[#info]] = value 
+                                if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                                    rs.tabDB[rs.iDBmark][info[#info]] = value 
                                 end 
                                 rs.UpdateAllNameplatesOnce()
                             end,
@@ -387,10 +387,10 @@ options.args.basic = {
                             type = "color",
                             order = 2,
                             get = function(info)
-                                return RSPlatesDB[info[#info]][1], RSPlatesDB[info[#info]][2], RSPlatesDB[info[#info]][3]
+                                return rs.tabDB[rs.iDBmark][info[#info]][1], rs.tabDB[rs.iDBmark][info[#info]][2], rs.tabDB[rs.iDBmark][info[#info]][3]
                             end,
                             set = function(info, r, g, b, a)
-                                RSPlatesDB[info[#info]] = {r-r%0.01, g-g%0.01, b-b%0.01}
+                                rs.tabDB[rs.iDBmark][info[#info]] = {r-r%0.01, g-g%0.01, b-b%0.01}
                                 rs.UpdateAllNameplatesOnce()
                             end,
                         },
@@ -414,7 +414,7 @@ options.args.basic = {
                     desc = L["CastTimerTT"],
                     type = "toggle",
                     order = 1,
-                    set = function(info, value) RSPlatesDB[info[#info]] = value 
+                    set = function(info, value) rs.tabDB[rs.iDBmark][info[#info]] = value 
                         for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
                             local unitFrame = namePlate.UnitFrame
                             rs.RegExtraUIEvent(unitFrame)
@@ -426,7 +426,7 @@ options.args.basic = {
                     desc = L["CastTargetTT"],
                     type = "toggle",
                     order = 3,
-                    set = function(info, value) RSPlatesDB[info[#info]] = value 
+                    set = function(info, value) rs.tabDB[rs.iDBmark][info[#info]] = value 
                         rs.UpdateAllNameplatesOnce()
                     end,
                 },
@@ -447,7 +447,7 @@ options.args.basic = {
                             desc = L["CastInterrupteIndicatorEnableTT"],
                             type = "toggle",
                             order = 1,
-                            set = function(info, value) RSPlatesDB[info[#info]] = value 
+                            set = function(info, value) rs.tabDB[rs.iDBmark][info[#info]] = value 
                                 for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
                                     -- will not get forbidden unitframe
                                     local unitFrame = namePlate.UnitFrame
@@ -475,8 +475,8 @@ options.args.basic = {
                                     print(L["InterrupteSpellIDInputError"])
                                 else
                                     local name, rank, icon, castTime, minRange, maxRange, spellID = GetSpellInfo(iSpellID)
-                                    if not RSPlatesDB["DctInterrupteSpell"][iSpellID] and name then
-                                        RSPlatesDB["DctInterrupteSpell"][iSpellID] = true
+                                    if not rs.tabDB[rs.iDBmark]["DctInterrupteSpell"][iSpellID] and name then
+                                        rs.tabDB[rs.iDBmark]["DctInterrupteSpell"][iSpellID] = true
                                         print(L["InterrupteSpellIDAdded"]..name)
                                         rs.RefInterrupteSpellPanel()
                                     else
@@ -513,8 +513,8 @@ options.args.basic = {
                     type = "toggle",
                     order = 1,
                     set = function (info, value) 
-                        if RSPlatesDB[info[#info]] ~= nil then 
-                            RSPlatesDB[info[#info]] = value 
+                        if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                            rs.tabDB[rs.iDBmark][info[#info]] = value 
                         end 
                         rs.UpdateAllNameplatesOnce()
                     end,
@@ -549,14 +549,42 @@ options.args.basic = {
                     -- softmax = 100,
                     step  = 1,
                     set = function (info, value) 
-                        if RSPlatesDB[info[#info]] ~= nil then 
-                            RSPlatesDB[info[#info]] = value 
+                        if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                            rs.tabDB[rs.iDBmark][info[#info]] = value 
                         end 
                         rs.UpdateAllNameplatesOnce()
                     end,
                 },
-            }
-        }
+            },
+        },
+        gap7 = {
+            name = " ",
+            type = "description",
+            order = 15,
+        },
+        div10 = {
+            name = L["Title10"],
+            type = "group",
+            inline = true,
+            order = 20,
+            args = {
+                ProfileByCharactor = {
+                    name = L["ProfileByCharactor"],
+                    desc = L["ProfileByCharactorTT"],
+                    order = 1,
+                    type = "toggle",
+                    width = 1.5,
+                    get = function(info) return RSPlatesDB[info[#info]] end,
+                    set = function(info, value)
+                        local dialog = StaticPopup_Show("SetProfileSecondCheck")
+                        if dialog then
+                            dialog.data = {info[#info], value}
+                        end
+                        C_Timer.After(0, rs.SwitchConfigGUI)
+                    end,
+                }
+            },
+        },
     },
 }
 
@@ -598,8 +626,8 @@ options.args.dungeon = {
                             print(L["NpcIDInputError"])
                         else
                             local sNpcname = rs.GetNameByNpcID(iNpcID)
-                            if not RSPlatesDB["DctColorNpc"][iNpcID] and sNpcname then 
-                                RSPlatesDB["DctColorNpc"][iNpcID] = {0, 0, 1}
+                            if not rs.tabDB[rs.iDBmark]["DctColorNpc"][iNpcID] and sNpcname then 
+                                rs.tabDB[rs.iDBmark]["DctColorNpc"][iNpcID] = {0, 0, 1}
                                 print(L["NpcIDAdded"]..sNpcname)
                                 rs.RefDungeonNPCPanel()
                                 rs.UpdateAllNameplatesOnce()
@@ -647,8 +675,8 @@ options.args.dungeon = {
                             print(L["NpcAuraInputError"])
                         else
                             local auraName = GetSpellInfo(iAuraId)
-                            if not RSPlatesDB["DctColorAura"][iAuraId] and auraName then 
-                                RSPlatesDB["DctColorAura"][iAuraId] = {0, 0, 1}
+                            if not rs.tabDB[rs.iDBmark]["DctColorAura"][iAuraId] and auraName then 
+                                rs.tabDB[rs.iDBmark]["DctColorAura"][iAuraId] = {0, 0, 1}
                                 print(L["NpcAuraAdded"]..auraName)
                                 rs.RefDungeonAuraPanel()
                             else
@@ -683,10 +711,10 @@ options.args.cvars = {
             name = L["CvarEnable"],
             desc = L["CvarEnableTT"],
             type = "toggle",
-            get = function (info) return RSPlatesDB[info[#info]] end,
+            get = function (info) return rs.tabDB[rs.iDBmark][info[#info]] end,
             set = function(info, value)
-                if RSPlatesDB[info[#info]] ~= nil then 
-                    RSPlatesDB[info[#info]] = value 
+                if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                    rs.tabDB[rs.iDBmark][info[#info]] = value 
                 end 
                 if value == true then
                     rs.UpdateCvars()
@@ -704,11 +732,11 @@ options.args.cvars = {
             order = 5,
             type = "group",
             inline = true,
-            disabled = function(info) return not RSPlatesDB["EnableCvar"] end,
+            disabled = function(info) return not rs.tabDB[rs.iDBmark]["EnableCvar"] end,
             get = function(info) return tonumber(GetCVar(info[#info])) end,
             set = function (info, value) 
-                if RSPlatesDB[info[#info]] ~= nil then 
-                    RSPlatesDB[info[#info]] = value 
+                if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                    rs.tabDB[rs.iDBmark][info[#info]] = value 
                 end 
                 rs.UpdateCvars()
             end,
@@ -777,7 +805,7 @@ options.args.cvars = {
                     desc = L["ShowAllNPTT"],
                     type = "toggle",
                     get = function(info) if tonumber(GetCVar(info[#info])) == 1 then return true else return false end end,
-                    set = function(info, value) if value == true then RSPlatesDB[info[#info]] = 1 else RSPlatesDB[info[#info]] = 0 end rs.UpdateCvars() end,
+                    set = function(info, value) if value == true then rs.tabDB[rs.iDBmark][info[#info]] = 1 else rs.tabDB[rs.iDBmark][info[#info]] = 0 end rs.UpdateCvars() end,
                 },
         
                 nameplateShowFriendlyNPCs = {
@@ -786,7 +814,7 @@ options.args.cvars = {
                     desc = L["ShowNpcNPTT"],
                     type = "toggle",
                     get = function(info) if tonumber(GetCVar(info[#info])) == 1 then return true else return false end end,
-                    set = function(info, value) if value == true then RSPlatesDB[info[#info]] = 1 else RSPlatesDB[info[#info]] = 0 end rs.UpdateCvars() end,
+                    set = function(info, value) if value == true then rs.tabDB[rs.iDBmark][info[#info]] = 1 else rs.tabDB[rs.iDBmark][info[#info]] = 0 end rs.UpdateCvars() end,
                 },
                 cvargap2 = {
                     order = 23,
@@ -804,21 +832,21 @@ options.args.cvars = {
                             type = "toggle",
                             order = 1,
                             get = function(info) if tonumber(GetCVar(info[#info])) == 1 then return true else return false end end,
-                            set = function(info, value) if value == true then RSPlatesDB[info[#info]] = 1 else RSPlatesDB[info[#info]] = 0 end rs.UpdateCvars() end,
+                            set = function(info, value) if value == true then rs.tabDB[rs.iDBmark][info[#info]] = 1 else rs.tabDB[rs.iDBmark][info[#info]] = 0 end rs.UpdateCvars() end,
                         },
                         NameplatePersonalShowInCombat ={
                             name = L["NameplatePersonalShowInCombat"],
                             type = "toggle",
                             order = 2,
                             get = function(info) if tonumber(GetCVar(info[#info])) == 1 then return true else return false end end,
-                            set = function(info, value) if value == true then RSPlatesDB[info[#info]] = 1 else RSPlatesDB[info[#info]] = 0 end rs.UpdateCvars() end,
+                            set = function(info, value) if value == true then rs.tabDB[rs.iDBmark][info[#info]] = 1 else rs.tabDB[rs.iDBmark][info[#info]] = 0 end rs.UpdateCvars() end,
                         },
                         NameplatePersonalShowWithTarget ={
                             name = L["NameplatePersonalShowWithTarget"],
                             type = "toggle",
                             order = 3,
                             get = function(info) if tonumber(GetCVar(info[#info])) == 2 then return true else return false end end,
-                            set = function(info, value) if value == true then RSPlatesDB[info[#info]] = 2 else RSPlatesDB[info[#info]] = 0 end rs.UpdateCvars() end,
+                            set = function(info, value) if value == true then rs.tabDB[rs.iDBmark][info[#info]] = 2 else rs.tabDB[rs.iDBmark][info[#info]] = 0 end rs.UpdateCvars() end,
                         },
                         gap = {
                             name = "",
@@ -847,8 +875,8 @@ options.args.namemode = {
     desc = L["Title9TT"],
     type = "group",
     set = function (info, value) 
-        if RSPlatesDB[info[#info]] ~= nil then 
-            RSPlatesDB[info[#info]] = value 
+        if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+            rs.tabDB[rs.iDBmark][info[#info]] = value 
         end
         rs.UpdateAllNameplatesOnce() 
     end,
@@ -864,7 +892,7 @@ options.args.namemode = {
             order = 2,
             type = "group",
             inline = true,
-            disabled = function() return not RSPlatesDB["EnableNamemode"] end,
+            disabled = function() return not rs.tabDB[rs.iDBmark]["EnableNamemode"] end,
             args = {
                 NameModeFriendlyPlayer = {
                     order = 1,
@@ -872,7 +900,7 @@ options.args.namemode = {
                     type = "toggle",
                 },
                 NameModeFriendlyPlayerSize = {
-                    disabled = function() return not (RSPlatesDB["NameModeFriendlyPlayer"] and RSPlatesDB["EnableNamemode"]) end,
+                    disabled = function() return not (rs.tabDB[rs.iDBmark]["NameModeFriendlyPlayer"] and rs.tabDB[rs.iDBmark]["EnableNamemode"]) end,
                     order = 2,
                     name = L["NameModeNameSize"],
                     type = "range",
@@ -881,7 +909,7 @@ options.args.namemode = {
                     step = 1,
                 },
                 NameModePlayerOffY = {
-                    disabled = function() return not (RSPlatesDB["NameModeFriendlyPlayer"] and RSPlatesDB["EnableNamemode"])end,
+                    disabled = function() return not (rs.tabDB[rs.iDBmark]["NameModeFriendlyPlayer"] and rs.tabDB[rs.iDBmark]["EnableNamemode"])end,
                     order = 3,
                     name = L["NameModeHeightOffset"],
                     type = "range",
@@ -901,7 +929,7 @@ options.args.namemode = {
                     type = "toggle",
                 },
                 NameModeFriendlyNPCSize = {
-                    disabled = function() return not (RSPlatesDB["NameModeFriendlyNpc"] and RSPlatesDB["EnableNamemode"]) end,
+                    disabled = function() return not (rs.tabDB[rs.iDBmark]["NameModeFriendlyNpc"] and rs.tabDB[rs.iDBmark]["EnableNamemode"]) end,
                     order = 6,
                     name = L["NameModeNameSize"],
                     type = "range",
@@ -910,7 +938,7 @@ options.args.namemode = {
                     step = 1,
                 },
                 NameModeNpcOffY = {
-                    disabled = function() return not (RSPlatesDB["NameModeFriendlyNpc"] and RSPlatesDB["EnableNamemode"]) end,
+                    disabled = function() return not (rs.tabDB[rs.iDBmark]["NameModeFriendlyNpc"] and rs.tabDB[rs.iDBmark]["EnableNamemode"]) end,
                     order = 7,
                     name = L["NameModeHeightOffset"],
                     type = "range",
@@ -935,10 +963,10 @@ options.args.namemode = {
                         s3 = L["NameModeNameTypeTHICKOUTLINE"],
                     },
                     set = function (info, value)
-                    RSPlatesDB[info[#info]] = value 
+                    rs.tabDB[rs.iDBmark][info[#info]] = value 
                     rs.UpdateAllNameplatesOnce()
                     end,
-                    get = function (info) return RSPlatesDB[info[#info]] end
+                    get = function (info) return rs.tabDB[rs.iDBmark][info[#info]] end
 
                 },
             }
@@ -999,8 +1027,8 @@ options.args.auras = {
             inline = true,
             order = 2,
             set = function (info, value) 
-                if RSPlatesDB[info[#info]] ~= nil then 
-                    RSPlatesDB[info[#info]] = value 
+                if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                    rs.tabDB[rs.iDBmark][info[#info]] = value 
                 end
                 rs.RefBuffFrameDisplay() 
             end,
@@ -1043,7 +1071,7 @@ options.args.auras = {
                     min = 15,
                     max = 40,
                     step  = 1,
-                    disabled = function(info) return not RSPlatesDB["SquareAura"] end
+                    disabled = function(info) return not rs.tabDB[rs.iDBmark]["SquareAura"] end
                 },   
                 gapline2 = {
                     order = 7,
@@ -1064,7 +1092,7 @@ options.args.auras = {
                     min = 8,
                     max = 30,
                     step  = 1,
-                    disabled = function(info) return not RSPlatesDB["AuraTimer"] end
+                    disabled = function(info) return not rs.tabDB[rs.iDBmark]["AuraTimer"] end
                 },   
             }
         }
@@ -1097,8 +1125,8 @@ options.args.auras.args.whitelist = {
                     print(L["WhiteListInputError"])
                 else
                     local iconname = GetSpellInfo(iAuraId)
-                    if not RSPlatesDB["DctAura"][iAuraId] and iconname then 
-                        RSPlatesDB["DctAura"][iAuraId] = true
+                    if not rs.tabDB[rs.iDBmark]["DctAura"][iAuraId] and iconname then 
+                        rs.tabDB[rs.iDBmark]["DctAura"][iAuraId] = true
                         print(L["WhiteListAdd"]..iconname)
                         rs.RefWhitelistAuraPanel()
                     else
@@ -1121,7 +1149,7 @@ options.args.auras.args.whitelist = {
 
 function rs.InitMinimapBtn()
     local savedVarTable = {
-        hide = not RSPlatesDB["ShowMiniMapBtn"],
+        hide = not rs.tabDB[rs.iDBmark]["ShowMiniMapBtn"],
         minimapPos = 130,
         -- radius = 1,
     }
@@ -1163,7 +1191,7 @@ function rs.SwitchConfigGUI(page)
         -- if not ConfigFrameContainer then 
             ConfigFrameContainer = AceGUI: Create("Frame")
             -- ConfigFrameContainer:SetTitle("RSPsss")
-            ConfigFrameContainer:SetStatusText(format("%s%s",L["UpdateVersion"], RSPlatesDB["Version"]))
+            ConfigFrameContainer:SetStatusText(format("%s%s",L["UpdateVersion"], rs.tabDB[rs.iDBmark]["Version"]))
             ConfigFrameContainer:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
         -- end
         rs.RefInterrupteSpellPanel()
@@ -1202,7 +1230,7 @@ function rs.RefDungeonNPCPanel()
     local node = options.args.dungeon.args.NpcGroup.args.NpcColorGroup
     local v = 1
     node.args = {}
-    for i, k in pairs(RSPlatesDB["DctColorNpc"]) do 
+    for i, k in pairs(rs.tabDB[rs.iDBmark]["DctColorNpc"]) do 
         local sNpcName = rs.GetNameByNpcID(i)
         local sNpcID = tostring(i)
         if sNpcName then
@@ -1212,7 +1240,7 @@ function rs.RefDungeonNPCPanel()
                 order = v,
                 name = format("NpcID: %s  [ %s ]",sNpcID,sNpcName),
                 desc = L["RemoveCheckBoxTT"],
-                set = function(info,value) RSPlatesDB["DctColorNpc"][i] = nil rs.RefDungeonNPCPanel() 
+                set = function(info,value) rs.tabDB[rs.iDBmark]["DctColorNpc"][i] = nil rs.RefDungeonNPCPanel() 
                     print(L["NpcIDDeled"]..sNpcName)
                     rs.UpdateAllNameplatesOnce()
                 end 
@@ -1224,8 +1252,8 @@ function rs.RefDungeonNPCPanel()
                 desc = L["NpcIDColorSelectTT"],
                 width = "half",
                 order = v,
-                get = function(info) return RSPlatesDB["DctColorNpc"][i][1], RSPlatesDB["DctColorNpc"][i][2], RSPlatesDB["DctColorNpc"][i][3] end,
-                set = function(info,r,g,b,a) RSPlatesDB["DctColorNpc"][i] = {r-r%0.01, g-g%0.01, b-b%0.01} end,
+                get = function(info) return rs.tabDB[rs.iDBmark]["DctColorNpc"][i][1], rs.tabDB[rs.iDBmark]["DctColorNpc"][i][2], rs.tabDB[rs.iDBmark]["DctColorNpc"][i][3] end,
+                set = function(info,r,g,b,a) rs.tabDB[rs.iDBmark]["DctColorNpc"][i] = {r-r%0.01, g-g%0.01, b-b%0.01} end,
             }
             v = v + 1
             node.args[sNpcID.."DungeonNPCPanelgapline"] = {
@@ -1242,7 +1270,7 @@ end
 function rs.RefDungeonAuraPanel()
     local node = options.args.dungeon.args.AuraGroup.args.AuraColorGroup
     node.args = {}
-    for i, k in pairs(RSPlatesDB["DctColorAura"]) do 
+    for i, k in pairs(rs.tabDB[rs.iDBmark]["DctColorAura"]) do 
             local sAuraID = tostring(i)
             local iconname, _, icon = GetSpellInfo(i)
             local spellDes = GetSpellDescription(i)
@@ -1265,7 +1293,7 @@ function rs.RefDungeonAuraPanel()
                 name = iconname,
                 image = icon,
                 order = 1,
-                set = function(info,value) RSPlatesDB["DctColorAura"][i] = nil rs.RefDungeonAuraPanel() 
+                set = function(info,value) rs.tabDB[rs.iDBmark]["DctColorAura"][i] = nil rs.RefDungeonAuraPanel() 
                     print(L["NpcAuraDeled"]..iconname)
                 end 
             }
@@ -1275,8 +1303,8 @@ function rs.RefDungeonAuraPanel()
                 order = 2,
                 desc = L["NpcAuraColorSelectTT"],
                 width = "half",
-                get = function(info) return RSPlatesDB["DctColorAura"][i][1], RSPlatesDB["DctColorAura"][i][2], RSPlatesDB["DctColorAura"][i][3] end,
-                set = function(info,r,g,b,a) RSPlatesDB["DctColorAura"][i] = {r-r%0.01, g-g%0.01, b-b%0.01} end,
+                get = function(info) return rs.tabDB[rs.iDBmark]["DctColorAura"][i][1], rs.tabDB[rs.iDBmark]["DctColorAura"][i][2], rs.tabDB[rs.iDBmark]["DctColorAura"][i][3] end,
+                set = function(info,r,g,b,a) rs.tabDB[rs.iDBmark]["DctColorAura"][i] = {r-r%0.01, g-g%0.01, b-b%0.01} end,
             }
     end
 
@@ -1287,7 +1315,7 @@ end
 function rs.RefWhitelistAuraPanel()
     local node = options.args.auras.args.whitelist.args.whitelisticongroup 
     node.args = {} 
-    for i, v in pairs(RSPlatesDB["DctAura"]) do 
+    for i, v in pairs(rs.tabDB[rs.iDBmark]["DctAura"]) do 
         local sAuraID = tostring(i)
         local iconname, _, icon = GetSpellInfo(i)
         local spellDes = GetSpellDescription(i)
@@ -1302,8 +1330,8 @@ function rs.RefWhitelistAuraPanel()
             image = icon,
             desc = format("%s\n\n%s", des, L["RemoveCheckBoxTT"]),
             set = function(info, value)
-                if RSPlatesDB["DctAura"][i] then 
-                    RSPlatesDB["DctAura"][i] = nil
+                if rs.tabDB[rs.iDBmark]["DctAura"][i] then 
+                    rs.tabDB[rs.iDBmark]["DctAura"][i] = nil
                     print(L["WhiteListRemove"]..iconname)
                 end
                 rs.RefWhitelistAuraPanel()
@@ -1317,7 +1345,7 @@ function rs.RefInterrupteSpellPanel()
     local t = 1
     local node = options.args.basic.args.div6.args.InterrupteGroup.args.InterrupteSepllGroup
     node.args = {}
-    for i, v in pairs(RSPlatesDB["DctInterrupteSpell"]) do
+    for i, v in pairs(rs.tabDB[rs.iDBmark]["DctInterrupteSpell"]) do
         local sSpell = tostring(i)
         local iconname, _, icon = GetSpellInfo(i)
         local spellDes = GetSpellDescription(i)
@@ -1333,8 +1361,8 @@ function rs.RefInterrupteSpellPanel()
             order = t,
             desc = format("|cffFFD700%s|r\n\n%s\n\n%s",iconname, des, L["RemoveCheckBoxTT"]),
             set = function(info, value)
-                if RSPlatesDB["DctInterrupteSpell"][i] then 
-                    RSPlatesDB["DctInterrupteSpell"][i] = nil
+                if rs.tabDB[rs.iDBmark]["DctInterrupteSpell"][i] then 
+                    rs.tabDB[rs.iDBmark]["DctInterrupteSpell"][i] = nil
                     print(L["InterrupteSpellIDRemoved"]..iconname)
                 end
                 rs.RefInterrupteSpellPanel()
@@ -1372,7 +1400,7 @@ local function CreateBlizzardOptionPanel(frame)
 
         frame.version = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
         frame.version:SetPoint("LEFT", frame, "TOPLEFT", 20, -200);  
-        frame.version:SetText(L["Version"] .. RSPlatesDB["Version"])
+        frame.version:SetText(L["Version"] .. rs.tabDB[rs.iDBmark]["Version"])
         frame.version:SetFont(STANDARD_TEXT_FONT, 20)
 
         frame.largeStyleInfo = frame:CreateFontString(nil, "OVERLAY")
@@ -1460,6 +1488,23 @@ function rs.SwitchBugReportWindow()
 end
 
 
+StaticPopupDialogs.SetProfileSecondCheck = { 
+    text = L["ProfileByCharactorCheckTip"],
+    button1 = ACCEPT,
+    button2 = CANCEL,
+    OnAccept =  function(self, data)
+        local ProfileIndexName = data[1]
+        local flag = data[2]
+        RSPlatesDB[ProfileIndexName] = flag
+        ReloadUI()
+    end,
+    timeout = 0,
+    whileDead = 1,
+    hideOnEscape = true,
+    preferredIndex = 1,
+} 
+
+
 
 
 ---- 不产生任何新逻辑   仅刷新界面----
@@ -1470,11 +1515,11 @@ function rs.UpdateAllNameplatesOnce()
 		rs.On_NpRefreshOnce(unitFrame)
         rs.ThinCastBar(unitFrame.castBar)
         if unitFrame.name then 
-            if RSPlatesDB["NameWhite"] then 
+            if rs.tabDB[rs.iDBmark]["NameWhite"] then 
                 unitFrame.name:SetVertexColor(1, 1, 1)
             end
-            if RSPlatesDB["NameSizeEnable"] then 
-                unitFrame.name:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["NameSize"], nil)
+            if rs.tabDB[rs.iDBmark]["NameSizeEnable"] then 
+                unitFrame.name:SetFont(STANDARD_TEXT_FONT, rs.tabDB[rs.iDBmark]["NameSize"], nil)
             end
         end
 	end	
@@ -1490,14 +1535,16 @@ function rs.RefBuffFrameDisplay()
 			for i = 1, BUFF_MAX_DISPLAY do
 				if self.buffList[i] then 
 					--计时器
-					self.buffList[i].Cooldown:SetHideCountdownNumbers(not RSPlatesDB["AuraTimer"])
+					self.buffList[i].Cooldown:SetHideCountdownNumbers(not rs.tabDB[rs.iDBmark]["AuraTimer"])
 					--计时器大小
                     local regon = self.buffList[i].Cooldown:GetRegions()
                     if regon.GetText then 
-                        regon:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["AuraTimerSize"], nil)  --Default : 15 "OUTLINE"
+                        regon:SetFont(STANDARD_TEXT_FONT, rs.tabDB[rs.iDBmark]["AuraTimerSize"], nil)  --Default : 15 "OUTLINE"
                     end			
 				end
 			end
 		end
 	end	
 end
+
+

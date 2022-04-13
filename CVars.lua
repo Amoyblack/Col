@@ -29,9 +29,9 @@ end
 
 
 function rs.UpdateCvars()
-    if RSPlatesDB["EnableCvar"] then 
+    if rs.tabDB[rs.iDBmark]["EnableCvar"] then 
         for _, k in pairs(dctCVar) do 
-            SetCVar(k, RSPlatesDB[k])
+            SetCVar(k, rs.tabDB[rs.iDBmark][k])
         end
 
         --不让血条随距离改变而改变大小和透明度,fix blizzard perfomance issue
@@ -46,7 +46,7 @@ end
 -- function rs.GenerateLocalCVar()
 --     for _, k in pairs(dctCVar) do 
 --         print(k, GetCVar(k))
---         RSPlatesDB[k] = tonumber(GetCVar(k))
+--         rs.tabDB[rs.iDBmark][k] = tonumber(GetCVar(k))
 --     end
 -- end
 

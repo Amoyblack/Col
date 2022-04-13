@@ -17,6 +17,7 @@ rs.V.zhcn = {
     Title6 = "光环",
     Title7 = "地下城助手",
     Title8 = "其它",
+    Title10 = "插件配置",
 
     BarTexture = "血条材质",
     BarTextureTT = "若需要自定义材质，将你的材质改名为UI-TargetingFrame-BarFill后放置于目录 [~/_retail_/Interface/TargetingFrame/你的材质], 然后选择源生即可",
@@ -29,7 +30,7 @@ rs.V.zhcn = {
     EliteIconTT = "显示精英图标",
 
     BgCol = "渲染血条背景色",
-    BgColTT = "用血条自身的颜色渲染背景 (空血的部分), 而非黑色",
+    BgColTT = "用血条自身的颜色渲染背景 (空血的部分), 而非黑色。 |cff66CCFF关闭时需要重载界面生效|r",
 
     Omen3 = "启用仇恨染色",
     Omen3TT = "根据单位与你的仇恨对血条进行染色",
@@ -170,7 +171,11 @@ rs.V.zhcn = {
     QuestIconTT = "在任务单位血条上显示标记图标",
 
     LockPlayerColor = "锁定玩家颜色",
-    LockPlayerColorTT = "不对玩家血条染色",
+    LockPlayerColorTT = "不对玩家及玩家控制的单位血条染色",
+
+    ProfileByCharactor = "按角色保存独立配置",
+    ProfileByCharactorTT = "按角色保存独立配置，而非战网账号下共用配置",
+    ProfileByCharactorCheckTip = "修改此选项时需要重载界面，确定修改并现在重载界面吗",
 
     UpdateForce = "|cffFFD700---RSPlates: 已检测到版本更新,该版本需要重置设置,现已将设置初始化|r",
     UpdateInfo = "|cffFFD700---RSPlates: 已检测到版本更新|r",

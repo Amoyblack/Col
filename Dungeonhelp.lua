@@ -1,36 +1,70 @@
 local addon, rs  = ...
 
+
+
+
+-- C_NP.GetNamePlates效率很高，否则这种处理可以以空间换时间，优化一倍的效率
+-- 但要注意内存回收
 local function OnlyShowBall()
-	local haskey = false
+    local NpCache = {}
+    local flag = false
+    for i, namePlate in pairs(C_NamePlate.GetNamePlates()) do
+        if rs.IsExpBall(nil, namePlate.UnitFrame) then
+            NpCache[namePlate.UnitFrame] = true
+            flag = true
+        else
+            NpCache[namePlate.UnitFrame] = false
+        end
+    end
 
-	for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
-        if rs.IsExpBall(nil, namePlate.UnitFrame) then 
-			haskey = true
-		end
-	end	
-
-	-- 场上存在易爆球
-	if haskey then 
-            -- 隐藏球之外的血条框架
-			for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
-                local unitFrame = namePlate.UnitFrame
-                if rs.IsExpBall(nil, namePlate.UnitFrame) then 
-					unitFrame:Show()
-                else
-                    if not UnitIsUnit("player", unitFrame.unit) then 
-					    unitFrame:Hide()
-                    end
-				end
-			end
-	else
-            -- 显示所有血条框架
-			for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
-				local unitFrame = namePlate.UnitFrame
-				unitFrame:Show()
-			end		
-
-	end
+    if flag then 
+        for np, mark in pairs(NpCache) do 
+            if mark then 
+                np:Show()
+            else
+                np:Hide()
+            end
+        end
+    else
+        for np, _ in pairs(NpCache) do
+            np:Show()
+        end
+    end
 end
+
+
+-- local function OnlyShowBall()
+-- 	local haskey = false
+
+-- 	for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+--         if rs.IsExpBall(nil, namePlate.UnitFrame) then 
+-- 			haskey = true
+-- 		end
+-- 	end	
+
+-- 	-- 场上存在易爆球
+-- 	if haskey then 
+--             -- 隐藏球之外的血条框架
+-- 			for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+--                 local unitFrame = namePlate.UnitFrame
+--                 if rs.IsExpBall(nil, namePlate.UnitFrame) then 
+-- 					unitFrame:Show()
+--                 else
+--                     if not UnitIsUnit("player", unitFrame.unit) then 
+-- 					    unitFrame:Hide()
+--                     end
+-- 				end
+-- 			end
+-- 	else
+--             -- 显示所有血条框架
+-- 			for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+-- 				local unitFrame = namePlate.UnitFrame
+-- 				unitFrame:Show()
+-- 			end		
+
+-- 	end
+-- end
+
 
 -- 每0.2秒执行一次 
 
@@ -65,6 +99,9 @@ function rs.IsExpBall(unit, unitFrame)
 end
 
 
+
+
+
 function rs.BallScannerPvP()
 	if boomFrame then return end 
 	boomFrame = CreateFrame("Frame")
@@ -87,6 +124,9 @@ function rs.IsExpBallPvP(unit, unitFrame)
         return false
     end
 end
+
+
+
 
 
 -------------------------------------------------------
@@ -116,8 +156,8 @@ rs.V.pvpHideNpc = {
 -- 即场上有上面表格中的NPC时，会立刻隐藏其余所有单位的血条，直到其消失为止。添加新NPC按上面格式即可，数字是NPC ID
 
 
--- rs.BallScanner = rs.BallScannerPvP
--- rs.IsExpBall = rs.IsExpBallPvP
+--rs.BallScanner = rs.BallScannerPvP
+--rs.IsExpBall = rs.IsExpBallPvP
 
 
 

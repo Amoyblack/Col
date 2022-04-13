@@ -56,14 +56,14 @@ function rs.SetNameMode(unitFrame)
 
         unitFrame:Show()
 
-        -- if rs.IsExpBall(unit) and RSPlatesDB["ExpballHelper"] then 
+        -- if rs.IsExpBall(unit) and rs.tabDB[rs.iDBmark]["ExpballHelper"] then 
         --     unitFrame:Hide()
         -- else
         --     unitFrame:Show()
         -- end
         
         -- 再匹配
-        if RSPlatesDB["EnableNamemode"] then 
+        if rs.tabDB[rs.iDBmark]["EnableNamemode"] then 
             local NpcTitle = GetNpcTitle(unit)
             local name, _ = UnitName(unit)
             local reaction = UnitReaction("player", unit)
@@ -73,7 +73,7 @@ function rs.SetNameMode(unitFrame)
 
             -- print(UnitName(unit), reaction, IsFriendly, "canattack: ", CanAttack)
             -- NPC Friendly
-            if reaction >= 5 and not IsPlayer and RSPlatesDB["NameModeFriendlyNpc"] then 
+            if reaction >= 5 and not IsPlayer and rs.tabDB[rs.iDBmark]["NameModeFriendlyNpc"] then 
                 if NpcTitle then 
                     sTitle = NpcTitle
                 else
@@ -83,11 +83,11 @@ function rs.SetNameMode(unitFrame)
                 unitFrame:Hide()
                 namePlate.NpcNameRS:Show()
                 namePlate.NpcNameRS:SetText(format("|cff94FF80%s|r\n%s",name, sTitle))
-                namePlate.NpcNameRS:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["NameModeFriendlyNPCSize"], outlinetable[RSPlatesDB["NameModeNameType"]])
-                namePlate.NpcNameRS:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, RSPlatesDB["NameModeNpcOffY"])
+                namePlate.NpcNameRS:SetFont(STANDARD_TEXT_FONT, rs.tabDB[rs.iDBmark]["NameModeFriendlyNPCSize"], outlinetable[rs.tabDB[rs.iDBmark]["NameModeNameType"]])
+                namePlate.NpcNameRS:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, rs.tabDB[rs.iDBmark]["NameModeNpcOffY"])
 
             -- NPC Not Friendly
-            elseif reaction < 5 and not IsPlayer and not CanAttack and RSPlatesDB["NameModeFriendlyNpc"] then 
+            elseif reaction < 5 and not IsPlayer and not CanAttack and rs.tabDB[rs.iDBmark]["NameModeFriendlyNpc"] then 
                 local r, g, b, a = UnitSelectionColor(unit, true)
                 if NpcTitle then 
                     sTitle = NpcTitle
@@ -98,12 +98,12 @@ function rs.SetNameMode(unitFrame)
                 namePlate.NpcNameRS:Show()
                 namePlate.NpcNameRS:SetText(format("%s\n|cffFFFFFF%s|r",name, sTitle))
                 namePlate.NpcNameRS:SetTextColor(r,g,b,a)
-                namePlate.NpcNameRS:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["NameModeFriendlyNPCSize"], outlinetable[RSPlatesDB["NameModeNameType"]])
-                namePlate.NpcNameRS:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, RSPlatesDB["NameModeNpcOffY"])
+                namePlate.NpcNameRS:SetFont(STANDARD_TEXT_FONT, rs.tabDB[rs.iDBmark]["NameModeFriendlyNPCSize"], outlinetable[rs.tabDB[rs.iDBmark]["NameModeNameType"]])
+                namePlate.NpcNameRS:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, rs.tabDB[rs.iDBmark]["NameModeNpcOffY"])
 
                 
             -- Player
-            elseif IsFriendly and IsPlayer and not CanAttack and RSPlatesDB["NameModeFriendlyPlayer"] then 
+            elseif IsFriendly and IsPlayer and not CanAttack and rs.tabDB[rs.iDBmark]["NameModeFriendlyPlayer"] then 
                 local r, g, b, a
                 local _, englishClass = UnitClass(unit)
                 local classColor = rs.V.Ccolors[englishClass]
@@ -111,10 +111,10 @@ function rs.SetNameMode(unitFrame)
                 
                 unitFrame:Hide()
                 namePlate.NpcNameRS:Show()
-                namePlate.NpcNameRS:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["NameModeFriendlyPlayerSize"], outlinetable[RSPlatesDB["NameModeNameType"]])
+                namePlate.NpcNameRS:SetFont(STANDARD_TEXT_FONT, rs.tabDB[rs.iDBmark]["NameModeFriendlyPlayerSize"], outlinetable[rs.tabDB[rs.iDBmark]["NameModeNameType"]])
                 namePlate.NpcNameRS:SetText(name)
                 namePlate.NpcNameRS:SetTextColor(r,g,b,a)
-                namePlate.NpcNameRS:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, RSPlatesDB["NameModePlayerOffY"])
+                namePlate.NpcNameRS:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, rs.tabDB[rs.iDBmark]["NameModePlayerOffY"])
                 
             end
         end

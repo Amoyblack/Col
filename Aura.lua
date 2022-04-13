@@ -43,13 +43,13 @@ function rs.OnUnitAuraUpdateRS(self, unit, isFullUpdate, updatedAuraInfos)
     local isBarColorAura
     if updatedAuraInfos then 
         for _, oAura in pairs(updatedAuraInfos) do 
-            if RSPlatesDB["ShowStolenBuff"] and oAura.isHelpful then 
+            if rs.tabDB[rs.iDBmark]["ShowStolenBuff"] and oAura.isHelpful then 
                 isStolenAura = true 
             end
-            if RSPlatesDB["DctColorAura"][oAura.spellId] then 
+            if rs.tabDB[rs.iDBmark]["DctColorAura"][oAura.spellId] then 
                 isBarColorAura = true 
             end
-            if RSPlatesDB["AuraWhite"] and RSPlatesDB["DctAura"][oAura.spellId] then 
+            if rs.tabDB[rs.iDBmark]["AuraWhite"] and rs.tabDB[rs.iDBmark]["DctAura"][oAura.spellId] then 
                 isWhitelistAura = true 
             end
             -- print(oAura.name)
@@ -91,9 +91,9 @@ end
 function rs:UpdateAnchor()
     if not (self:GetParent() and self:GetParent().unit) then return end 
     if UnitIsUnit("player", self:GetParent().unit) then 
-        self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, RSPlatesDB["SelfAuraHeight"]);
+        self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, rs.tabDB[rs.iDBmark]["SelfAuraHeight"]);
     else
-        self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, RSPlatesDB["AuraHeight"]);
+        self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, rs.tabDB[rs.iDBmark]["AuraHeight"]);
     end
 end
 
@@ -134,15 +134,15 @@ function rs.UpdateBuffsRS(self, unit, filter, showAll)
 		local index = 1;
 		AuraUtil.ForEachAura(unit, filter, BUFF_MAX_DISPLAY, function(...)
 			local name, texture, count, debuffType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellId, _, _, _, nameplateShowAll = ...;
-            if RSPlatesDB["DctColorAura"][spellId] then 
-                hasColorAura = RSPlatesDB["DctColorAura"][spellId]
+            if rs.tabDB[rs.iDBmark]["DctColorAura"][spellId] then 
+                hasColorAura = rs.tabDB[rs.iDBmark]["DctColorAura"][spellId]
             end
 
-            if buffIndex > RSPlatesDB["AuraNum"] then return nil end
+            if buffIndex > rs.tabDB[rs.iDBmark]["AuraNum"] then return nil end
 
-			local ShouldShow = self:ShouldShowBuff(name, caster, nameplateShowPersonal, nameplateShowAll or showAll, duration) and RSPlatesDB["AuraDefault"]
-			local WhiteList = RSPlatesDB["AuraWhite"] and RSPlatesDB["DctAura"][spellId]
-			local notPlayerself = RSPlatesDB["AuraOnlyMe"] and caster ~= "player"
+			local ShouldShow = self:ShouldShowBuff(name, caster, nameplateShowPersonal, nameplateShowAll or showAll, duration) and rs.tabDB[rs.iDBmark]["AuraDefault"]
+			local WhiteList = rs.tabDB[rs.iDBmark]["AuraWhite"] and rs.tabDB[rs.iDBmark]["DctAura"][spellId]
+			local notPlayerself = rs.tabDB[rs.iDBmark]["AuraOnlyMe"] and caster ~= "player"
 			if ((ShouldShow or WhiteList) and not notPlayerself) then
 				if (not self.buffList[buffIndex]) then
 					self.buffList[buffIndex] = CreateFrame("Frame", nil, self, "NameplateBuffButtonTemplate");
@@ -152,16 +152,16 @@ function rs.UpdateBuffsRS(self, unit, filter, showAll)
                 
                 local buff = self.buffList[buffIndex];
                 
-                if RSPlatesDB["SquareAura"] then 
-                    buff:SetSize(RSPlatesDB["AuraSize"],RSPlatesDB["AuraSize"])
+                if rs.tabDB[rs.iDBmark]["SquareAura"] then 
+                    buff:SetSize(rs.tabDB[rs.iDBmark]["AuraSize"],rs.tabDB[rs.iDBmark]["AuraSize"])
                     buff.Icon:SetPoint("TOPLEFT", buff,"TOPLEFT", 1, -1)
                     buff.Icon:SetPoint("BOTTOMRIGHT", buff,"BOTTOMRIGHT", -1, 1)
                     buff.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
                 end
-                buff.Cooldown:SetHideCountdownNumbers(not RSPlatesDB["AuraTimer"])
+                buff.Cooldown:SetHideCountdownNumbers(not rs.tabDB[rs.iDBmark]["AuraTimer"])
                 local regon = buff.Cooldown:GetRegions()
                 if regon.GetText then 
-                    regon:SetFont(STANDARD_TEXT_FONT, RSPlatesDB["AuraTimerSize"], nil)  --Default : 15 "OUTLINE"
+                    regon:SetFont(STANDARD_TEXT_FONT, rs.tabDB[rs.iDBmark]["AuraTimerSize"], nil)  --Default : 15 "OUTLINE"
                 end
 
 				buff:SetID(index);
@@ -187,10 +187,10 @@ function rs.UpdateBuffsRS(self, unit, filter, showAll)
         
         AuraUtil.ForEachAura(unit, "HELPFUL", BUFF_MAX_DISPLAY, function(...)
             local name, texture, count, debuffType, duration, expirationTime, caster, canStealOrPurge, nameplateShowPersonal, spellId, _, _, _, nameplateShowAll = ...;
-            if RSPlatesDB["DctColorAura"][spellId] then 
-                hasColorAura = RSPlatesDB["DctColorAura"][spellId]
+            if rs.tabDB[rs.iDBmark]["DctColorAura"][spellId] then 
+                hasColorAura = rs.tabDB[rs.iDBmark]["DctColorAura"][spellId]
             end
-            if canStealOrPurge and RSPlatesDB["ShowStolenBuff"] then 
+            if canStealOrPurge and rs.tabDB[rs.iDBmark]["ShowStolenBuff"] then 
                 hasStolenAura = {texture, expirationTime, duration}
             end
             return false   -- BUFF全部遍历

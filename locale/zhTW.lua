@@ -17,6 +17,7 @@ rs.V.zhtw = {
     Title6 = "光環",
     Title7 = "地城助手",
     Title8 = "其他",
+    Title10 = "插件配置",
 
     BarTexture = "血條材質",
     BarTextureTT = "若需要自定義材質，將你的材質改名為UI-TargetingFrame-BarFill後放置於目錄 [~/_retail_/Interface/TargetingFrame/你的材質], 然後選擇源生即可",
@@ -29,7 +30,7 @@ rs.V.zhtw = {
     EliteIconTT = "顯示精英圖標",
 
     BgCol = "渲染血量條底色",
-    BgColTT = "渲染血量條本身的顏色作為背景（空血的部分）的底色，而非純黑色。",
+    BgColTT = "渲染血量條本身的顏色作為背景（空血的部分）的底色，而非純黑色。 |cff66CCFF關閉時需要重載介面後生效|r。",
 
     Omen3 = "開啟威脅值染色",
     Omen3TT = "根據單位與你的仇恨對血量條進行染色",
@@ -170,7 +171,11 @@ rs.V.zhtw = {
     QuestIconTT = "在任務單位血條上顯示標記圖標",
 
     LockPlayerColor = "鎖定玩家顏色",
-    LockPlayerColorTT = "不對玩家血條染色",
+    LockPlayerColorTT = "不對玩家及玩家控制的單位血條染色",
+
+    ProfileByCharactor = "按角色保存獨立配置",
+    ProfileByCharactorTT = "按角色保存獨立配置，而非戰網賬號下共用配置",
+    ProfileByCharactorCheckTip = "修改此選項時需要重載界面，確定修改並現在重載界面嗎",
 
     UpdateForce = "|cffFFD700---RSPlates: 已檢測到版本更新,該版本需要重置設置,現已將設置初始化|r",
     UpdateInfo = "|cffFFD700---RSPlates: 已檢測到版本更新|r",
