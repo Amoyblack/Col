@@ -662,8 +662,9 @@ end
 function rs.HookBlizzedFunc()
     -- print('---> hoocsuccessful')
 
-    -- Size Change
+    -- Size Change or Options Change
     hooksecurefunc(NamePlateDriverFrame, "UpdateNamePlateOptions", function()
+        rs.UpdateCvars()
         for k, namePlate in pairs(C_NamePlate.GetNamePlates()) do
             rs.On_NpRefreshOnce(namePlate.UnitFrame)
         end
