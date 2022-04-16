@@ -39,6 +39,7 @@ function rs.UpdateCvars()
         SetCVar("nameplateMaxScale", 1) 
         SetCVar("nameplateMinAlpha", 1) 
         SetCVar("nameplateShowOnlyNames", 0) 
+        -- C_NamePlate.SetNamePlateFriendlySize(1, -20)
     end
 end
 

@@ -392,8 +392,6 @@ end
 
 function rs.SetName(frame)
     if rs.IsLegalUnit(frame) then
-        rs.SetNameMode(frame)
-
         if frame.name then
             if rs.tabDB[rs.iDBmark]["NameWhite"] then
                 frame.name:SetVertexColor(1, 1, 1)
@@ -643,6 +641,8 @@ function rs.On_NpRefreshOnce(unitFrame)
 
     rs.SetName(unitFrame)
 
+    rs.SetNameMode(unitFrame)
+
     rs.RefCastingTarget(unitFrame)
 
     rs.RefInterrupteIndicator(unitFrame)
@@ -815,6 +815,13 @@ local function UIObj_Event(self, event, ...)
         if not string.match(unit, "nameplate") then return end
         rs:OnUnitAuraUpdateRS(unit, isFullUpdate, updatedAuraInfos)
 
+    elseif event == "UNIT_NAME_UPDATE" then 
+        local unit = ...
+        local frame = C_NamePlate.GetNamePlateForUnit(unit, false)
+        if frame then 
+            rs.SetNameMode(frame.UnitFrame)
+        end
+
     elseif event == "UNIT_TARGET" then
         -- local unit = ...
         -- if not string.match(unit, "nameplate") then return end
@@ -878,6 +885,7 @@ local UIObjectDriveFrame = CreateFrame("Frame", "RS_Plates", UIParent)
 UIObjectDriveFrame:SetScript("OnEvent", UIObj_Event)
 UIObjectDriveFrame:RegisterEvent("UNIT_HEALTH")
 UIObjectDriveFrame:RegisterEvent("UNIT_AURA")
+UIObjectDriveFrame:RegisterEvent("UNIT_NAME_UPDATE")
 UIObjectDriveFrame:RegisterEvent("NAME_PLATE_UNIT_ADDED")
 UIObjectDriveFrame:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
 

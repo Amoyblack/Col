@@ -49,18 +49,15 @@ function rs.SetNameMode(unitFrame)
             return 
         end
         
+        --  "pvp", "arena"  "raid"
+
         local inInstance, instanceType = IsInInstance()
         if inInstance and instanceType == "party" then 
             return 
         end
 
         unitFrame:Show()
-
-        -- if rs.IsExpBall(unit) and rs.tabDB[rs.iDBmark]["ExpballHelper"] then 
-        --     unitFrame:Hide()
-        -- else
-        --     unitFrame:Show()
-        -- end
+        unitFrame.hasShownAsName = false
         
         -- 再匹配
         if rs.tabDB[rs.iDBmark]["EnableNamemode"] then 
@@ -81,6 +78,7 @@ function rs.SetNameMode(unitFrame)
                 end
 
                 unitFrame:Hide()
+                unitFrame.hasShownAsName = true
                 namePlate.NpcNameRS:Show()
                 namePlate.NpcNameRS:SetText(format("|cff94FF80%s|r\n%s",name, sTitle))
                 namePlate.NpcNameRS:SetFont(STANDARD_TEXT_FONT, rs.tabDB[rs.iDBmark]["NameModeFriendlyNPCSize"], outlinetable[rs.tabDB[rs.iDBmark]["NameModeNameType"]])
@@ -95,6 +93,7 @@ function rs.SetNameMode(unitFrame)
                     sTitle = ""
                 end
                 unitFrame:Hide()
+                unitFrame.hasShownAsName = true
                 namePlate.NpcNameRS:Show()
                 namePlate.NpcNameRS:SetText(format("%s\n|cffFFFFFF%s|r",name, sTitle))
                 namePlate.NpcNameRS:SetTextColor(r,g,b,a)
@@ -110,6 +109,7 @@ function rs.SetNameMode(unitFrame)
                 r, g, b, a = classColor.r , classColor.g, classColor.b, 1
                 
                 unitFrame:Hide()
+                unitFrame.hasShownAsName = true
                 namePlate.NpcNameRS:Show()
                 namePlate.NpcNameRS:SetFont(STANDARD_TEXT_FONT, rs.tabDB[rs.iDBmark]["NameModeFriendlyPlayerSize"], outlinetable[rs.tabDB[rs.iDBmark]["NameModeNameType"]])
                 namePlate.NpcNameRS:SetText(name)
