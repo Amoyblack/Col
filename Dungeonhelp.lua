@@ -158,7 +158,7 @@ rs.V.pvpHideNpc = {
 -- 目前表上只加了易爆球，需要加其他的按格式加进去即可，上面已经列了一些pvp单位，数字是NPC ID
 
 
-rs.BallScanner = rs.BallScannerAnyWhere
+-- rs.BallScanner = rs.BallScannerAnyWhere
 
 
 

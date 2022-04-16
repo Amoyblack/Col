@@ -247,6 +247,9 @@ rs.V.enus = {
     NameModeNameTypeOUTLINE = "OUTLINE",
     NameModeNameTypeTHICKOUTLINE = "THICKOUTLINE",
 
+    NameModeImitateOverlap = "Imitate Friendly Nameplates Overlaping",
+    NameModeImitateOverlapTT = "Make the names of friendly units always close to the top of the unit, instead of causing the gap between multiple names to be too large that occurs when Stacking Nameplates is enable especially when the camera moves. (This is achieved by changing the size and clickable area of the friendly nameplates. If you need to see the healthbar of the friendly unit instead of the name, please do not enable this).  |cff66CCFFNeed to reload UI to take effect when you disable it|r",
+
     NameModeHeightOffset = "Height Offset",
 
     GetSpellDesFailInfo = "The spell has no description Or the Addon is not received due to blizzard server delay. If the latter, Re-open the RSPlates settings interface, it can be displayed normally",

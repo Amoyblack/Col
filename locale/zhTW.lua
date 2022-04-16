@@ -246,6 +246,9 @@ rs.V.zhtw = {
     NameModeNameTypeOUTLINE = "細邊",
     NameModeNameTypeTHICKOUTLINE = "粗邊",
 
+    NameModeImitateOverlap = "模擬友方姓名板重疊",
+    NameModeImitateOverlapTT = "讓友方單位的名字始終緊貼著單位頭頂，而不會因開啟姓名板堆疊導致多個單位名字之間的間隔過大或視角移動時發生的跳躍現象。 (這是通過改變友方姓名板大小與可點擊區域大小實現的，若你需要看友方單位的血條而非名字時請不要開啟。 |cff66CCFF關閉時需要重載介面後生效|r",
+
     NameModeHeightOffset = "高度偏移",
 
     GetSpellDesFailInfo = "該技能沒有描述  或  服務器延遲導致插件未接收到，如是後者重新打開設置界面即可正常顯示",

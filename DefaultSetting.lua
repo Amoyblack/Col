@@ -4,7 +4,7 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "9.2.24",
+	["Version"] = "9.2.25",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
     ["BarTexture"] = "s1",
@@ -55,6 +55,7 @@ rs.V.DefaultSetting = {
     ["NameModeNameType"] = "s2",
     ["NameModeNpcOffY"] = 0,
     ["NameModePlayerOffY"] = 0,
+    ["NameModeImitateOverlap"] = false,
 
 	["AuraNum"] = 3,
 	["AuraDefault"] = true,
@@ -108,6 +109,7 @@ rs.V.DefaultSetting = {
         [44544]= true, --寒冰指
         [102342]= true, --树皮术
         [107574]= true, --天神下凡
+        [336892]= true, --无懈警戒4套装
         [193530]= true, --绿叶
         [19574]= true, --红人
         [31884]= true, --翅膀

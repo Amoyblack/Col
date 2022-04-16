@@ -33,13 +33,18 @@ function rs.UpdateCvars()
         for _, k in pairs(dctCVar) do 
             SetCVar(k, rs.tabDB[rs.iDBmark][k])
         end
+        
+    end
+    
+    --不让血条随距离改变而改变大小和透明度, Fix Blizzard Performance Issue
+    SetCVar("nameplateMinScale", 1) 
+    SetCVar("nameplateMaxScale", 1) 
+    SetCVar("nameplateMinAlpha", 1) 
+    SetCVar("nameplateShowOnlyNames", 0)
 
-        --不让血条随距离改变而改变大小和透明度,fix blizzard perfomance issue
-        SetCVar("nameplateMinScale", 1) 
-        SetCVar("nameplateMaxScale", 1) 
-        SetCVar("nameplateMinAlpha", 1) 
-        SetCVar("nameplateShowOnlyNames", 0) 
-        -- C_NamePlate.SetNamePlateFriendlySize(1, -20)
+    -- Need Load Delay, so put here
+    if rs.tabDB[rs.iDBmark]["NameModeImitateOverlap"] then
+        C_NamePlate.SetNamePlateFriendlySize(1, -20)
     end
 end
 
