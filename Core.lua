@@ -877,7 +877,11 @@ local function UIObj_Event(self, event, ...)
                 end
             end
         end
-
+    elseif event == "PLAYER_REGEN_ENABLED" then
+        if rs.inLock then
+            rs.UpdateCvars()
+            rs.inLock = false
+        end
     end
 end
 
@@ -895,6 +899,8 @@ UIObjectDriveFrame:RegisterEvent("UNIT_SPELLCAST_START")
 UIObjectDriveFrame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START")
 -- UIObjectDriveFrame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
 UIObjectDriveFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+
+UIObjectDriveFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
 
 
 

@@ -29,6 +29,12 @@ end
 
 
 function rs.UpdateCvars()
+
+    if InCombatLockdown() then
+        rs.inLock = true
+        return
+    end
+
     if rs.tabDB[rs.iDBmark]["EnableCvar"] then 
         for _, k in pairs(dctCVar) do 
             SetCVar(k, rs.tabDB[rs.iDBmark][k])
