@@ -176,7 +176,7 @@ function rs.CreateUIObj(unitFrame, namePlate)
 
 	if not unitFrame.rsed then
 
-        unitFrame.BuffFrame.UpdateBuffs = rs.UpdateBuffsRS
+        unitFrame.BuffFrame.UpdateBuffs = function() return end
         unitFrame.BuffFrame.UpdateAnchor = rs.UpdateAnchor
 
 		-- 施法条毛玻璃边
@@ -652,7 +652,7 @@ end
 function rs.RefAuraForOneNp(unitFrame)
 	local unit = unitFrame.unit
 	if not unit then return end
-    NamePlateDriverFrame:OnUnitAuraUpdate(unit, true, nil)
+    rs:OnUnitAuraUpdateRS(unit, true, nil)
 end
 
 

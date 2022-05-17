@@ -582,6 +582,16 @@ options.args.basic = {
                         end
                         C_Timer.After(0, rs.SwitchConfigGUI)
                     end,
+                },
+                ResetAddonSetting = {
+                    name = L["ResetAddonSetting"],
+                    desc = L["ResetAddonSettingTT"],
+                    order = 2,
+                    type = "execute",
+                    func = function(info, value) 
+                        local dialog = StaticPopup_Show("ResetAddonSetting")
+                        C_Timer.After(0, rs.SwitchConfigGUI)
+                    end,
                 }
             },
         },
@@ -992,51 +1002,36 @@ options.args.auras = {
     type = "group",
     order = 6,
     args = {
-        auraneedshowlable = {
-            name = L["AuraText1"],
-            type = 'group',
-            inline = true,
+        auraglobalheader = {
+            name = L["AuraTitleGlobal"],
+            desc = "xxxx",
+            type = "header",
+            order = 0,
+        },
+        auragap0 = {
+            name = " ",
+            type = "description",
             order = 1,
-            args = {
-                AuraNum = {
-                    name = L["AuraNum"],
-                    desc = L["AuraNumTT"],
-                    type = "range",
-                    order = 0,
-                    min = 0,
-                    max = 10,
-                    step  = 1,
-                },    
-                gapline = {
-                    type = "description",
-                    order = 1,
-                    name = " ",
-                },
-                AuraDefault = {
-                    name = L["AuraDeault"],
-                    desc = L["AuraDeaultTT"],
-                    type = "toggle",
-                    order = 2,
-                },                     
-                AuraWhite = {
-                    name = L["AuraWL"],
-                    desc = L["AuraWLTT"],
-                    type = "toggle",
-                    order = 3,
-                },                     
-                AuraOnlyMe = {
-                    name = L["AuraOnlyMe"],
-                    desc = L["AuraOnlyMeTT"],
-                    type = "toggle",
-                    order = 4,
-                },   
-            }
+        },
+        AuraNum = {
+            name = L["AuraNum"],
+            desc = L["AuraNumTT"],
+            type = "range",
+            order = 2,
+            min = 0,
+            max = 10,
+            step  = 1,
+        },    
+        auragap1 = {
+            name = " \n ",
+            type = "description",
+            order = 3,
         },
         aurastyle = {
             name = L["AuraText2"],
             type = "group",
             inline = true,
-            order = 2,
+            order = 4,
             set = function (info, value) 
                 if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
                     rs.tabDB[rs.iDBmark][info[#info]] = value 
@@ -1106,7 +1101,215 @@ options.args.auras = {
                     disabled = function(info) return not rs.tabDB[rs.iDBmark]["AuraTimer"] end
                 },   
             }
-        }
+        },
+        auragap2 = {
+            name = " \n ",
+            type = "description",
+            order = 5,
+        },
+        aurahelpheader = {
+            name = L["AuraFilterTitle"],
+            type = "header",
+            order = 6,
+        },
+        aurahelpbtn = {
+            name = " ",
+            desc = L["AuraFilterHelpBtnTT"],
+            type = "execute",
+            image = "Interface\\common\\help-i",
+            order = 7,
+            width = "full",
+        },
+        personalNp = {
+            name = L["AuraFilterPersonalTitle"],
+            type = "group",
+            inline = true, 
+            order = 8,
+            set = function (info, value) 
+                if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                    rs.tabDB[rs.iDBmark][info[#info]] = value 
+                end 
+                rs.UpdateAllNameplatesOnce()
+            end,
+            args = {
+                personalNpBuffEnable = {
+                    name = L["AuraFilterEnableBuff"],
+                    type = "toggle",
+                    order= 1,
+                },
+                personalNpdeBuffEnable = {
+                    name = L["AuraFilterEnableDeBuff"],
+                    type = "toggle",
+                    order= 2,
+                },
+                personalNpBuffFilter = {
+                    name = "BUFF",
+                    type = "group",
+                    inline = true,
+                    order = 3,
+                    args ={
+                        personalNpBuffFilterAll = {
+                            name = L["AuraFilterAll"],
+                            desc = L["AuraFilterAllTT"],
+                            type = "toggle",
+                            order = 1,
+                            width = 0.7,
+                        },
+                        personalNpBuffFilterBlizzard = {
+                            name = L["AuraFilterBlizzard"],
+                            desc = L["AuraFilterBlizzardTT"],
+                            type = "toggle",
+                            order = 2,
+                            width = 0.7,
+                        },
+                        personalNpBuffFilterWatchList = {
+                            name = L["AuraFilterWhiteList"],
+                            desc = L["AuraFilterWhiteListTT"],
+                            type = "toggle",
+                            order = 3,
+                            width = 0.7,
+                        },
+                        personalNpBuffFilterLessMinite= {
+                            name = L["AuraFilterLessMinite"],
+                            desc = L["AuraFilterLessMiniteTT"],
+                            type = "toggle",
+                            order = 4,
+                            width = 0.7,
+                        },
+                    }
+                },
+                personalNpdeBuffFilter = {
+                    name = "DEBUFF",
+                    type = "group",
+                    inline = true,
+                    order = 4,
+                    args ={
+                        personalNpdeBuffFilterAll = {
+                            name = L["AuraFilterAll"],
+                            desc = L["AuraFilterAllTT"],
+                            type = "toggle",
+                            order = 1,
+                            width = 0.7,
+                        },
+                        personalNpdeBuffFilterWatchList = {
+                            name = L["AuraFilterWhiteList"],
+                            desc = L["AuraFilterWhiteListTT"],
+                            type = "toggle",
+                            order = 3,
+                            width = 0.7,
+                        },
+                        personalNpdeBuffFilterLessMinite= {
+                            name = L["AuraFilterLessMinite"],
+                            desc = L["AuraFilterLessMiniteTT"],
+                            type = "toggle",
+                            order = 4,
+                            width = 0.7,
+                        },
+                    }
+                },
+            }
+        },
+        auragap3 = {
+            name = " \n ",
+            type = "description",
+            order = 9,
+        },
+        otherNp = {
+            name = L["AuraFilterOtherTitle"],
+            type = "group",
+            inline = true, 
+            order = 10,
+            set = function (info, value) 
+                if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                    rs.tabDB[rs.iDBmark][info[#info]] = value 
+                end 
+                rs.UpdateAllNameplatesOnce()
+            end,
+            args = {
+                otherNpBuffEnable = {
+                    name = L["AuraFilterEnableBuff"],
+                    type = "toggle",
+                    order= 1,
+                },
+                otherNpdeBuffEnable = {
+                    name = L["AuraFilterEnableDeBuff"],
+                    type = "toggle",
+                    order= 2,
+                },
+                otherNpBuffFilter = {
+                    name = "BUFF",
+                    type = "group",
+                    inline = true,
+                    order = 3,
+                    args ={
+                        otherNpBuffFilterAll = {
+                            name = L["AuraFilterAll"],
+                            desc = L["AuraFilterAllTT"],
+                            type = "toggle",
+                            order = 1,
+                            width = 0.7,
+                        },
+                        otherNpBuffFilterWatchList = {
+                            name = L["AuraFilterWhiteList"],
+                            desc = L["AuraFilterWhiteListTT"],
+                            type = "toggle",
+                            order = 3,
+                            width = 0.7,
+                        },
+                        otherNpBuffFilterLessMinite= {
+                            name = L["AuraFilterLessMinite"],
+                            desc = L["AuraFilterLessMiniteTT"],
+                            type = "toggle",
+                            order = 4,
+                            width = 0.7,
+                        },
+                    }
+                },
+                otherNpdeBuffFilter = {
+                    name = "DEBUFF",
+                    type = "group",
+                    inline = true,
+                    order = 4,
+                    args ={
+                        otherNpdeBuffFilterAll = {
+                            name = L["AuraFilterAll"],
+                            desc = L["AuraFilterAllTT"],
+                            type = "toggle",
+                            order = 1,
+                            width = 0.7,
+                        },
+                        otherNpdeBuffFilterBlizzard = {
+                            name = L["AuraFilterBlizzard"],
+                            desc = L["AuraFilterBlizzardTT"],
+                            type = "toggle",
+                            order = 2,
+                            width = 0.7,
+                        },
+                        otherNpdeBuffFilterWatchList = {
+                            name = L["AuraFilterWhiteList"],
+                            desc = L["AuraFilterWhiteListTT"],
+                            type = "toggle",
+                            order = 3,
+                            width = 0.7,
+                        },
+                        otherNpdeBuffFilterLessMinite = {
+                            name = L["AuraFilterLessMinite"],
+                            desc = L["AuraFilterLessMiniteTT"],
+                            type = "toggle",
+                            order = 4,
+                            width = 0.7,
+                        },
+                        otherNpdeBuffFilterOnlyMe = {
+                            name = L["AuraFilterOnlyMe"],
+                            desc = L["AuraFilterOnlyMeTT"],
+                            type = "toggle",
+                            order = 5,
+                            width = 0.7,
+                        },
+                    }
+                },
+            }
+        },
     }
 }
 
@@ -1116,7 +1319,7 @@ options.args.auras.args.whitelist = {
     order = 8,
     args = {
         whitelistDesc = {
-            name = L["AuraWLTT"],
+            name = L["WhiteListDesc"],
             type = "description",
             order = 1,
         },
@@ -1149,6 +1352,54 @@ options.args.auras.args.whitelist = {
         whitelisticongroup = {
             order = 11,
             name = L["MenuWhiteList"],
+            type = "group",
+            inline = true, 
+            args = {
+                
+            }
+        }
+    }
+}
+
+options.args.auras.args.blacklist = {
+    name = L["MenuBlackList"],
+    type = "group",
+    order = 9,
+    args = {
+        blacklistDesc = {
+            name = L["BlacklistDesc"],
+            type = "description",
+            order = 1,
+        },
+
+        blackinputAura = {
+            name = L["BlackListInput"],
+            desc = L["BlackListInputTT"],
+            width = "full",
+            type = "input",
+            order = 10,
+            -- validate = function(info, value) print(value) return "" end,
+            set = function(info, value)
+                local iAuraId = tonumber(value)
+                if not iAuraId then 
+                    print(L["BlackListInputError"])
+                elseif iAuraId/1000000000 >= 1 then 
+                    print(L["BlackListInputError"])
+                else
+                    local iconname = GetSpellInfo(iAuraId)
+                    if not rs.tabDB[rs.iDBmark]["BlackList"][iAuraId] and iconname then 
+                        rs.tabDB[rs.iDBmark]["BlackList"][iAuraId] = true
+                        print(L["BlackListAdd"]..iconname)
+                        rs.RefBlacklistAuraPanel()
+                    else
+                        print(L["BlackListInputError"])
+                    end
+                end
+            end
+        },
+        blacklisticongroup = {
+            order = 11,
+            name = L["MenuBlackList"],
             type = "group",
             inline = true, 
             args = {
@@ -1207,6 +1458,7 @@ function rs.SwitchConfigGUI(page)
         -- end
         rs.RefInterrupteSpellPanel()
         rs.RefWhitelistAuraPanel()
+        rs.RefBlacklistAuraPanel()
         rs.RefDungeonNPCPanel()
         rs.RefDungeonAuraPanel()
         AceConfigDialog:SetDefaultSize(addon, 800, 600)
@@ -1351,6 +1603,35 @@ function rs.RefWhitelistAuraPanel()
     end
 end
 
+-- 黑名单
+function rs.RefBlacklistAuraPanel()
+    local node = options.args.auras.args.blacklist.args.blacklisticongroup 
+    node.args = {} 
+    for i, v in pairs(rs.tabDB[rs.iDBmark]["BlackList"]) do 
+        local sAuraID = tostring(i)
+        local iconname, _, icon = GetSpellInfo(i)
+        local spellDes = GetSpellDescription(i)
+        if spellDes == "" then
+            spellDes = L["GetSpellDesFailInfo"]
+        end
+        local des = format("AuraID: %s\n\n%s", sAuraID, spellDes)
+        -- tode node.args. sAuraID  not work
+        node.args[sAuraID.."BlacklistAuraPanel"] = {
+            name = iconname,
+            type = "toggle",
+            image = icon,
+            desc = format("%s\n\n%s", des, L["RemoveCheckBoxTT"]),
+            set = function(info, value)
+                if rs.tabDB[rs.iDBmark]["BlackList"][i] then 
+                    rs.tabDB[rs.iDBmark]["BlackList"][i] = nil
+                    print(L["BlackListRemove"]..iconname)
+                end
+                rs.RefBlacklistAuraPanel()
+            end
+        }
+    end
+end
+
 -- 打断指示器 技能
 function rs.RefInterrupteSpellPanel()
     local t = 1
@@ -1487,11 +1768,11 @@ function rs.SwitchBugReportWindow()
         bugReportFrame:AddChild(Input2)
 
         local Info3 = AceGUI:Create("Label")
-        Info3:SetText("GitHub")
+        Info3:SetText("中文社区")
         bugReportFrame:AddChild(Info3)
     
         local Input3 = AceGUI:Create("EditBox")
-        Input3:SetText("https://github.com/Amoyblack/Col")
+        Input3:SetText("https://bbs.nga.cn/read.php?tid=16229958")
         Input3:SetRelativeWidth(1)
         bugReportFrame:AddChild(Input3)
 
@@ -1515,6 +1796,20 @@ StaticPopupDialogs.SetProfileSecondCheck = {
     preferredIndex = 1,
 } 
 
+StaticPopupDialogs.ResetAddonSetting = {
+    text = L["ProfileByCharactorCheckTip"],
+    button1 = ACCEPT,
+    button2 = CANCEL,
+    OnAccept =  function(self, data)
+        RSPlatesDB = rs.V.DefaultSetting
+        RSPlatesDBPer = rs.V.DefaultSetting
+        ReloadUI()
+    end,
+    timeout = 0,
+    whileDead = 1,
+    hideOnEscape = true,
+    preferredIndex = 1,
+}
 
 
 

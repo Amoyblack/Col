@@ -8,6 +8,7 @@ rs.V.zhtw = {
 
 	MenuBasis = "選項",
 	MenuWhiteList = "白名單",
+    MenuBlackList = "黑名單",
 	Version = "版本 - ",
 
     Title1 = "風格",
@@ -93,16 +94,17 @@ rs.V.zhtw = {
     AuraOnlyMe = "只檢測我施放的",
     AuraOnlyMeTT = "只檢測來源於我和我的寵物的光環。",
 
+    AuraTitleGlobal = "全局",
     AuraText2 = "光環樣式",
 
-    AuraHeight = "框體間距",
-    AuraHeightTT = "光環圖示的框體與血量條的距離。",
+    AuraHeight = "姓名板光環高度",
+    AuraHeightTT = "光環圖示的框體與姓名板的高度距離",
 
     SelfAuraHeight = "個人資源條光環高度",
-    SelfAuraHeightTT = "光環圖標相對於個人資源條的高度",
+    SelfAuraHeightTT = "光環圖標相對於個人資源條的高度距離",
 
-    AuraNum = "光環顯示數量",
-    AuraNumTT = "0：不顯示",
+    AuraNum = "光環數量",
+    AuraNumTT = "姓名板(包括個人資源條)上光環顯示的最大數量",
 
     SquareAura = "正方形光環圖標",
 
@@ -115,6 +117,22 @@ rs.V.zhtw = {
 
     CounterSize = "計時器字型大小",
 
+    AuraFilterTitle = "Buff & Debuff 過濾器",
+    AuraFilterHelpBtnTT = "|cff00FF7F暴雪默認在個人資源條上僅顯示buff, 其餘姓名板上僅顯示debuff.|r \n\nRSPlates可以讓你更自由的定義如何以及在哪裡顯示它們. \n\n如你需要關注敵對單位的buff如|TInterface\\ICONS\\Spell_shadow_bloodboil:0:1:0:1|t膿血/|TInterface\\ICONS\\Ability_warrior_focusedrage:0:1:0:1|t狂怒/|TInterface\\ICONS\\Ability_socererking_arcanefortification:0:1:0:1|t激勵等,請開啟姓名板過濾器下的buff開關並配置過濾器範圍 \n\n如你需要關注自身的debuff如|TInterface\\ICONS\\Ability_ironmaidens_whirlofblood:0:1:0:1|t爆裂等,請開啟個人資源條過濾器下的debuff開關並配置過濾器範圍 \n\n上面所列舉到的光環均以加入插件的初始白名單中，如你的白名單中沒有，可以嘗試初始化插件配置或手動添加它們",
+    AuraFilterPersonalTitle = "- 個人資源條",
+    AuraFilterOtherTitle = "- 姓名板",
+    AuraFilterEnableBuff = "顯示BUFF",
+    AuraFilterEnableDeBuff = "顯示DBUFF",
+    AuraFilterAll = "所有",
+    AuraFilterAllTT = "顯示所有",
+    AuraFilterBlizzard = "暴雪默認",
+    AuraFilterBlizzardTT = "暴雪默認需要顯示的光環",
+    AuraFilterWhiteList = "白名單",
+    AuraFilterWhiteListTT = "顯示白名單裡的光環",
+    AuraFilterLessMinite = "小於1分鐘",
+    AuraFilterLessMiniteTT = "只顯示剩餘時間小於1分鐘的光環",
+    AuraFilterOnlyMe = "只來源於我的",
+    AuraFilterOnlyMeTT = "只顯示來源於我和我寵物的光環",
 
     Exp = "火爆詞綴助手",
     ExpTT = "場上有炸藥小球時，自動隱藏其他所有單位的名條，直到場上沒有球為止",
@@ -175,17 +193,28 @@ rs.V.zhtw = {
 
     ProfileByCharactor = "按角色保存獨立配置",
     ProfileByCharactorTT = "按角色保存獨立配置，而非戰網賬號下共用配置",
-    ProfileByCharactorCheckTip = "修改此選項時需要重載界面，確定修改並現在重載界面嗎",
+    ProfileByCharactorCheckTip = "該操作需要重載界面，確定現在立即重載界面嗎",
+
+    ResetAddonSetting = "初始化插件設置",
+    ResetAddonSettingTT = "初始化當前登錄角色和戰網賬號共用的插件配置",
 
     UpdateForce = "|cffFFD700---RSPlates: 已檢測到版本更新,該版本需要重置設置,現已將設置初始化|r",
     UpdateInfo = "|cffFFD700---RSPlates: 已檢測到版本更新|r",
     UpdateVersion = "當前版本:  ",
 
+    WhiteListDesc = "白名單中可以配置buff與debuff, 它們將根據你配置的過濾器範圍顯示在對應的姓名板上 (包括個人資源條)",
     WhiteListInput = "輸入光環ID",
     WhiteListInputTT = "輸入光環ID添加進白名單，點擊圖標移除出白名單",
     WhiteListInputError = "|cffFFD700---RSPlates:|r 請輸入正確的光環ID",
     WhiteListAdd = "|cffFFD700---RSPlates:|r 白名單成功添加 ",
     WhiteListRemove = "|cffFFD700---RSPlates:|r 白名单成功刪除 ",
+
+    BlacklistDesc = "黑名單中可以配置buff與debuff, 它們將不會顯示在任何姓名板上 (包括個人資源條)",
+    BlackListInput = "輸入光環ID",
+    BlackListInputTT = "輸入光環ID添加進黑名單，點擊圖標移除出黑名單",
+    BlackListInputError = "|cffFFD700---RSPlates:|r 請輸入正確的光環ID",
+    BlackListAdd = "|cffFFD700---RSPlates:|r 黑名單成功添加 ",
+    BlackListRemove = "|cffFFD700---RSPlates:|r 黑名單成功刪除 ",
 
     BlizzardPanelInfo = "|cffFFD700/rs|r 打開設置",
     BlizzardPanelReportInfo = "問題/Bug反饋: https://www.curseforge.com/wow/addons/rsplates",

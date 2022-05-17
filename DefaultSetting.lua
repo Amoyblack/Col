@@ -4,7 +4,7 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "9.2.27",
+	["Version"] = "9.2.70",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
     ["BarTexture"] = "s1",
@@ -69,6 +69,33 @@ rs.V.DefaultSetting = {
 	["AuraTimer"] = false,
 	["AuraTimerSize"] = 10,
 
+    ["personalNpBuffEnable"] = true,
+    ["personalNpdeBuffEnable"] = false,
+
+    ["personalNpBuffFilterAll"] = false,
+    ["personalNpBuffFilterBlizzard"] = true,
+    ["personalNpBuffFilterWatchList"] = true,
+    ["personalNpBuffFilterLessMinite"] = false,
+
+    ["personalNpdeBuffFilterAll"] = false,
+    ["personalNpdeBuffFilterWatchList"] = true,
+    ["personalNpdeBuffFilterLessMinite"] = false,
+
+
+    ["otherNpBuffEnable"] = false,
+    ["otherNpdeBuffEnable"] = true,
+    
+    ["otherNpBuffFilterAll"] = false,
+    ["otherNpBuffFilterWatchList"] = true,
+    ["otherNpBuffFilterLessMinite"] = false,
+
+    ["otherNpdeBuffFilterAll"] = false,
+    ["otherNpdeBuffFilterBlizzard"] = true,
+    ["otherNpdeBuffFilterWatchList"] = true,
+    ["otherNpdeBuffFilterLessMinite"] = false,
+    ["otherNpdeBuffFilterOnlyMe"] = false,
+
+
 	["CastHeight"] = 8,
 	["UnSelectAlpha"] = 1.0,
 
@@ -90,31 +117,44 @@ rs.V.DefaultSetting = {
 	["ExpballHelper"] = false,
 
 	["DctAura"] = {	
-        [3355] = true,	--冰冻陷阱
-        [51514]	= true, --妖术
-        [118]	= true, --羊
-        [710]	= true, -- 放逐
-        [30283]	= true, --暗怒
-        [2094]	= true, -- 致盲
-        [6770]	= true, -- 闷棍
-        [853]	= true, --制裁
-        [115078]= true, --点穴
-        [221562]= true, --窒息
-        [132168]= true, --震荡波
-        [179057]= true, --混沌
-        [217832]= true, --dh禁锢
-        [102359]= true, --群缠绕
-        [12472]= true, --冰冷血脉
+        -- [3355] = true,	--冰冻陷阱
+        -- [51514]	= true, --妖术
+        -- [118]	= true, --羊
+        -- [710]	= true, -- 放逐
+        -- [30283]	= true, --暗怒
+        -- [2094]	= true, -- 致盲
+        -- [6770]	= true, -- 闷棍
+        -- [853]	= true, --制裁
+        -- [115078]= true, --点穴
+        -- [221562]= true, --窒息
+        -- [132168]= true, --震荡波
+        -- [179057]= true, --混沌
+        -- [217832]= true, --dh禁锢
+        -- [102359]= true, --群缠绕
+        -- [12472]= true, --冰冷血脉
         [190446]= true, --冰冷智慧
         [44544]= true, --寒冰指
-        [102342]= true, --树皮术
-        [107574]= true, --天神下凡
+        -- [102342]= true, --树皮术
+        -- [107574]= true, --天神下凡
         [336892]= true, --无懈警戒4套装
         [193530]= true, --绿叶
-        [19574]= true, --红人
-        [31884]= true, --翅膀
-        [642]= true, --无敌
+        -- [19574]= true, --红人
+        -- [31884]= true, --翅膀
+        -- [642]= true, --无敌
+        [226512] = true,  -- 血池，鲜血脓液
+        [226510] = true,  -- 血池，鲜血脓液
+        [228318] = true,  -- 暴怒
+        [209859] = true,  -- 激励
+        [243237] = true,  -- 崩裂
 	},
+
+    ["BlackList"] = {
+        [363544] = true, -- 冰法四件套
+        [270339] = true, -- 蓝炸弹
+        [271049] = true, -- 绿炸弹
+        [270343] = true, -- 内出血
+        [259277] = true, -- 杀戮命令
+    },
     ["DctColorNpc"] = {
         [120651] = {0.2, 1, 0.2},   --易爆球
         [174773] = {0, 0, 1},   -- 怨毒影魔

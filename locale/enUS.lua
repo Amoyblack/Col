@@ -8,6 +8,7 @@ rs.V.enus = {
 
     MenuBasis = "General",
     MenuWhiteList = "WhiteList",
+    MenuBlackList = "BlackList",
     Version = "Version - ",
 
     Title1 = "Style",
@@ -93,16 +94,17 @@ rs.V.enus = {
     AuraOnlyMe = "Self Only",
     AuraOnlyMeTT = "Show only auras cast by self or pets.",
 
+    AuraTitleGlobal = "Global",
     AuraText2 = "Auras Style",
 
-    AuraHeight = "Aura Space",
-    AuraHeightTT = "The space between Health bar and aura frame",
+    AuraHeight = "Nameplates Aura Space",
+    AuraHeightTT = "The space between Nameplates and aura frame",
 
     SelfAuraHeight = "Personal resource bar Aura Space",
     SelfAuraHeightTT = "The space between Personal resource bar and aura frame",
 
-    AuraNum = "Aura Number",
-    AuraNumTT = "How many aura display. 0: not display",
+    AuraNum = "Aura Numbers",
+    AuraNumTT = "Maximum number of auras displayed on Nameplates (including personal resource bar)",
 
     SquareAura = "Square Aura Icon",
 
@@ -115,6 +117,22 @@ rs.V.enus = {
 
     CounterSize = "Timer Text Size",
 
+    AuraFilterTitle = "Buff & Debuff Filter",
+    AuraFilterHelpBtnTT = "|cff00FF7FBy default, Blizzard only shows buffs on the personal resource bar, and only debuffs on the rest of the nameplates.|r \n\nRSPlates allows you to define more freely how and where to display them. \n\nFor example, If you need to pay attention to hostiles unit's buffs such as |TInterface\\ICONS\\Spell_shadow_bloodboil:0:1:0:1|tSanguine/|TInterface\\ICONS\\Ability_warrior_focusedrage:0:1:0:1|tRaging/|TInterface\\ICONS\\Ability_socererking_arcanefortification:0:1:0:1|tBolster, etc., please turn on the buff switch under the nameplates filter and configure it.\n\nFor example,If you need to pay attention to your own debuffs such as |TInterface\\ICONS\\Ability_ironmaidens_whirlofblood:0:1:0:1|tBursting, etc., please turn on the debuff switch under the personal resource bar filter and configure it \n\nThe auras that example listed above are all written into the addon's initialization whitelist. If you don't have them, you can reset the addon's configuration or add them manually.",
+    AuraFilterPersonalTitle = "- Personal Resource Bar",
+    AuraFilterOtherTitle = "- Nameplates",
+    AuraFilterEnableBuff = "Show BUFF",
+    AuraFilterEnableDeBuff = "Show DEBUFF",
+    AuraFilterAll = "All",
+    AuraFilterAllTT = "Show All",
+    AuraFilterBlizzard = "Blizzard Default",
+    AuraFilterBlizzardTT = "the aura that Blizzard default to show",
+    AuraFilterWhiteList = "Whitelist",
+    AuraFilterWhiteListTT = "Show the aura in the whitelist",
+    AuraFilterLessMinite = "Less One Min",
+    AuraFilterLessMiniteTT = "Only show auras with less than 1 minute remaining",
+    AuraFilterOnlyMe = "Only From Me",
+    AuraFilterOnlyMeTT = "Only show auras from me and my pets",
 
     Exp = "Explosive Helper",
     ExpTT = "When Explosives spawn, all of other nameplates will be hidden until there is no more Explosives alive",
@@ -175,17 +193,28 @@ rs.V.enus = {
 
     ProfileByCharactor = "Profile Per Charactor",
     ProfileByCharactorTT = "Save Addon Profile by Charactor, not shared Profile under Battle.net account",
-    ProfileByCharactorCheckTip = "Need to Reload UI when change this option, are you sure to change it and Reload UI now?",
+    ProfileByCharactorCheckTip = "This operation needs to reload UI. Are you sure to reload UI now?",
+
+    ResetAddonSetting = "Initialize Addon Settings",
+    ResetAddonSettingTT = "Initialize the addon configuration of the current login charactor and the configuration shared by current Battle.net account ",
 
     UpdateForce = "|cffFFD700---RSPlates: Version update has been detected, this version needs to reset the settings, the settings are now initialized|r",
     UpdateInfo = "|cffFFD700---RSPlates: Version update has been detected|r",
     UpdateVersion = "Current Version:  ",
 
+    WhiteListDesc = "Buffs and debuffs can be configured in the whitelist, and they will be displayed on the corresponding nameplates (including the personal resource bar) according to the filter range you configure.",
     WhiteListInput = "Enter  Aura ID",
     WhiteListInputTT = "Enter Aura id to add it to the whitelist, click the aura icon to remove it from the whitelist",
     WhiteListInputError = "|cffFFD700---RSPlates:|r Please enter the correct AuraID",
     WhiteListAdd = "|cffFFD700---RSPlates:|r Whitelist added successfully ",
     WhiteListRemove = "|cffFFD700---RSPlates:|r Whitelist deleted successfully ",
+
+    BlacklistDesc = "Buffs and debuffs can be configured in the blacklist, they will not be displayed on any nameplates (including the personal resource bar)",
+    BlackListInput = "Enter  Aura ID",
+    BlackListInputTT = "Enter Aura id to add it to the blacklist, click the aura icon to remove it from the blacklist",
+    BlackListInputError = "|cffFFD700---RSPlates:|r Please enter the correct AuraID",
+    BlackListAdd = "|cffFFD700---RSPlates:|r Blacklist added successfully ",
+    BlackListRemove = "|cffFFD700---RSPlates:|r Blacklist deleted successfully ",
 
     BlizzardPanelInfo = "|cffFFD700/rs|r   Open Config",
     BlizzardPanelReportInfo = "Advice/Bug Report: https://www.curseforge.com/wow/addons/rsplates",
