@@ -183,7 +183,7 @@ rs.V.zhcn = {
     InterrupteSpellIDRemoved = "|cffFFD700---RSPlates:|r 法术成功删除 ",
     
     StolenBuff = "显示可驱散/偷取BUFF",
-    StolenBuffTT = "在单位血条右侧高亮显示可偷取或驱散的BUFF",
+    StolenBuffTT = "在单位血条右侧高亮显示可偷取或驱散的BUFF (你当前角色有对应驱散/偷取能力时才会显示)",
 
     QuestIcon = "任务标记",
     QuestIconTT = "在任务单位血条上显示标记图标",
@@ -283,7 +283,7 @@ rs.V.zhcn = {
 
     NameModeHeightOffset = "高度偏移",
 
-    GetSpellDesFailInfo = "该技能没有描述  或  服务器延迟导致插件未接收到，如是后者重新打开设置界面即可正常显示",
+    GetSpellDesFailInfo = "|cffFF0000该技能没有描述  或  服务器延迟导致插件未接收到，如是后者重新打开设置界面即可正常显示|r",
 
     ShowAllNP = "始终显示姓名板",
     ShowAllNPTT = "关闭时只在战斗中显示姓名板(或 在名字模式下的名字)，开启后会始终显示。  与暴雪界面设置里的 <显示所有姓名板> 是同一个选项",

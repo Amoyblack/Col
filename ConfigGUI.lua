@@ -1,5 +1,6 @@
 local addon, rs = ...
 local L = rs.L
+local Spell = Spell
 
 local ConfigFrameContainer
 local MarginInfoFrame
@@ -11,6 +12,40 @@ local AceConfigDialog = LibStub('AceConfigDialog-3.0')
 local AceMap = LibStub("LibDBIcon-1.0")
 
 local MapIconTexture  = "Interface\\AddOns\\RSPlates\\media\\rsicon"
+
+local tabSpellDesc = {}
+local tabSpellName = {
+    "DctInterrupteSpell",
+    "DctColorAura",
+    "BlackList",
+    "DctAura",
+}
+
+function rs.GenerateSpellDescCacheAll()
+    for n,m in pairs(tabSpellName) do 
+        for i,k in pairs(rs.tabDB[rs.iDBmark][m]) do 
+            local reqSpell = Spell:CreateFromSpellID(i)
+            reqSpell:ContinueOnSpellLoad(function()
+                -- local name = reqSpell:GetSpellName()
+                local desc = reqSpell:GetSpellDescription()
+                tabSpellDesc[i] = desc
+                -- print(desc)
+            end)
+        end
+    end
+end
+
+local function GenerateSingleSpellDesc(iSpellID, cbFunc)
+    local reqSpell = Spell:CreateFromSpellID(iSpellID)
+    reqSpell:ContinueOnSpellLoad(function()
+        -- local name = reqSpell:GetSpellName()
+        local desc = reqSpell:GetSpellDescription()
+        tabSpellDesc[iSpellID] = desc
+        if cbFunc then 
+            cbFunc()
+        end
+    end)
+end
 
 local options = {
     type = "group",
@@ -478,6 +513,7 @@ options.args.basic = {
                                     if not rs.tabDB[rs.iDBmark]["DctInterrupteSpell"][iSpellID] and name then
                                         rs.tabDB[rs.iDBmark]["DctInterrupteSpell"][iSpellID] = true
                                         print(L["InterrupteSpellIDAdded"]..name)
+                                        GenerateSingleSpellDesc(iSpellID)
                                         rs.RefInterrupteSpellPanel()
                                     else
                                         print(L["InterrupteSpellIDInputError"])
@@ -688,6 +724,7 @@ options.args.dungeon = {
                             if not rs.tabDB[rs.iDBmark]["DctColorAura"][iAuraId] and auraName then 
                                 rs.tabDB[rs.iDBmark]["DctColorAura"][iAuraId] = {0, 0, 1}
                                 print(L["NpcAuraAdded"]..auraName)
+                                GenerateSingleSpellDesc(iAuraId)
                                 rs.RefDungeonAuraPanel()
                             else
                                 print(L["NpcAuraInputError"])
@@ -1159,14 +1196,14 @@ options.args.auras = {
                             name = L["AuraFilterBlizzard"],
                             desc = L["AuraFilterBlizzardTT"],
                             type = "toggle",
-                            order = 2,
+                            order = 3,
                             width = 0.7,
                         },
                         personalNpBuffFilterWatchList = {
                             name = L["AuraFilterWhiteList"],
                             desc = L["AuraFilterWhiteListTT"],
                             type = "toggle",
-                            order = 3,
+                            order = 2,
                             width = 0.7,
                         },
                         personalNpBuffFilterLessMinite= {
@@ -1282,14 +1319,14 @@ options.args.auras = {
                             name = L["AuraFilterBlizzard"],
                             desc = L["AuraFilterBlizzardTT"],
                             type = "toggle",
-                            order = 2,
+                            order = 3,
                             width = 0.7,
                         },
                         otherNpdeBuffFilterWatchList = {
                             name = L["AuraFilterWhiteList"],
                             desc = L["AuraFilterWhiteListTT"],
                             type = "toggle",
-                            order = 3,
+                            order = 2,
                             width = 0.7,
                         },
                         otherNpdeBuffFilterLessMinite = {
@@ -1342,6 +1379,7 @@ options.args.auras.args.whitelist = {
                     if not rs.tabDB[rs.iDBmark]["DctAura"][iAuraId] and iconname then 
                         rs.tabDB[rs.iDBmark]["DctAura"][iAuraId] = true
                         print(L["WhiteListAdd"]..iconname)
+                        GenerateSingleSpellDesc(iAuraId)
                         rs.RefWhitelistAuraPanel()
                     else
                         print(L["WhiteListInputError"])
@@ -1390,6 +1428,7 @@ options.args.auras.args.blacklist = {
                     if not rs.tabDB[rs.iDBmark]["BlackList"][iAuraId] and iconname then 
                         rs.tabDB[rs.iDBmark]["BlackList"][iAuraId] = true
                         print(L["BlackListAdd"]..iconname)
+                        GenerateSingleSpellDesc(iAuraId)
                         rs.RefBlacklistAuraPanel()
                     else
                         print(L["BlackListInputError"])
@@ -1536,11 +1575,6 @@ function rs.RefDungeonAuraPanel()
     for i, k in pairs(rs.tabDB[rs.iDBmark]["DctColorAura"]) do 
             local sAuraID = tostring(i)
             local iconname, _, icon = GetSpellInfo(i)
-            local spellDes = GetSpellDescription(i)
-            if spellDes == "" then
-                spellDes = L["GetSpellDesFailInfo"]
-            end
-            local des = format("AuraID: %s\n\n%s", sAuraID, spellDes)
             node.args["group"..sAuraID] = {
                 type = "group",
                 name = "",
@@ -1551,7 +1585,15 @@ function rs.RefDungeonAuraPanel()
             }
             node.args["group"..sAuraID].args[sAuraID.."DungeonAuraPanelName"] = {
                 type = "toggle",
-                desc = format("%s\n\n%s", des, L["RemoveCheckBoxTT"]),
+                desc = function()
+                    local spellDes = tabSpellDesc[i]
+                    if not spellDes or spellDes == "" then
+                        spellDes = L["GetSpellDesFailInfo"]
+                    end
+                    local des = format("AuraID: %s\n\n%s", sAuraID, spellDes)
+                    return format("%s\n\n%s", des, L["RemoveCheckBoxTT"])
+                end,
+                -- desc = format("%s\n\n%s", des, L["RemoveCheckBoxTT"]),
                 width = "double",
                 name = iconname,
                 image = icon,
@@ -1581,17 +1623,21 @@ function rs.RefWhitelistAuraPanel()
     for i, v in pairs(rs.tabDB[rs.iDBmark]["DctAura"]) do 
         local sAuraID = tostring(i)
         local iconname, _, icon = GetSpellInfo(i)
-        local spellDes = GetSpellDescription(i)
-        if spellDes == "" then
-            spellDes = L["GetSpellDesFailInfo"]
-        end
-        local des = format("AuraID: %s\n\n%s", sAuraID, spellDes)
+
         -- tode node.args. sAuraID  not work
         node.args[sAuraID.."WhitelistAuraPanel"] = {
             name = iconname,
             type = "toggle",
             image = icon,
-            desc = format("%s\n\n%s", des, L["RemoveCheckBoxTT"]),
+            desc = function()
+                local spellDes = tabSpellDesc[i]
+                if not spellDes or spellDes == "" then
+                    spellDes = L["GetSpellDesFailInfo"]
+                end
+                local des = format("AuraID: %s\n\n%s", sAuraID, spellDes)
+                return format("%s\n\n%s", des, L["RemoveCheckBoxTT"])
+            end,
+            -- desc = format("%s\n\n%s", des, L["RemoveCheckBoxTT"]),
             set = function(info, value)
                 if rs.tabDB[rs.iDBmark]["DctAura"][i] then 
                     rs.tabDB[rs.iDBmark]["DctAura"][i] = nil
@@ -1610,17 +1656,21 @@ function rs.RefBlacklistAuraPanel()
     for i, v in pairs(rs.tabDB[rs.iDBmark]["BlackList"]) do 
         local sAuraID = tostring(i)
         local iconname, _, icon = GetSpellInfo(i)
-        local spellDes = GetSpellDescription(i)
-        if spellDes == "" then
-            spellDes = L["GetSpellDesFailInfo"]
-        end
-        local des = format("AuraID: %s\n\n%s", sAuraID, spellDes)
+
         -- tode node.args. sAuraID  not work
         node.args[sAuraID.."BlacklistAuraPanel"] = {
             name = iconname,
             type = "toggle",
             image = icon,
-            desc = format("%s\n\n%s", des, L["RemoveCheckBoxTT"]),
+            desc = function()
+                local spellDes = tabSpellDesc[i]
+                if not spellDes or spellDes == "" then
+                    spellDes = L["GetSpellDesFailInfo"]
+                end
+                local des = format("AuraID: %s\n\n%s", sAuraID, spellDes)
+                return format("%s\n\n%s", des, L["RemoveCheckBoxTT"])
+            end,
+            -- desc = format("%s\n\n%s", des, L["RemoveCheckBoxTT"]),
             set = function(info, value)
                 if rs.tabDB[rs.iDBmark]["BlackList"][i] then 
                     rs.tabDB[rs.iDBmark]["BlackList"][i] = nil
@@ -1640,18 +1690,22 @@ function rs.RefInterrupteSpellPanel()
     for i, v in pairs(rs.tabDB[rs.iDBmark]["DctInterrupteSpell"]) do
         local sSpell = tostring(i)
         local iconname, _, icon = GetSpellInfo(i)
-        local spellDes = GetSpellDescription(i)
-        if spellDes == "" then
-            spellDes = L["GetSpellDesFailInfo"]
-        end
-        local des = format("SpellID: %s\n\n%s", sSpell, spellDes)
+
         node.args[sSpell.."Interrupte"] = {
             name = " ",
             type = "toggle",
             image = icon,
             width = 0.3,
             order = t,
-            desc = format("|cffFFD700%s|r\n\n%s\n\n%s",iconname, des, L["RemoveCheckBoxTT"]),
+            desc = function()
+                local spellDes = tabSpellDesc[i]
+                if not spellDes or spellDes == "" then
+                    spellDes = L["GetSpellDesFailInfo"]
+                end
+                local des = format("SpellID: %s\n\n%s", sSpell, spellDes)
+                return format("|cffFFD700%s|r\n\n%s\n\n%s",iconname, des, L["RemoveCheckBoxTT"])
+            end,
+            -- desc = format("|cffFFD700%s|r\n\n%s\n\n%s",iconname, des, L["RemoveCheckBoxTT"]),
             set = function(info, value)
                 if rs.tabDB[rs.iDBmark]["DctInterrupteSpell"][i] then 
                     rs.tabDB[rs.iDBmark]["DctInterrupteSpell"][i] = nil

@@ -90,12 +90,17 @@ end
 
 
 function rs:UpdateAnchor()
-    if not (self:GetParent() and self:GetParent().unit) then return end 
-    if UnitIsUnit("player", self:GetParent().unit) then 
-        self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, rs.tabDB[rs.iDBmark]["SelfAuraHeight"]);
-    else
-        self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, rs.tabDB[rs.iDBmark]["AuraHeight"]);
-    end
+    local isPlayer = self:GetParent().unit and UnitIsUnit("player", self:GetParent().unit)
+    local isTarget = self:GetParent().unit and UnitIsUnit(self:GetParent().unit, "target");
+	local targetYOffset = self:GetBaseYOffset() + (isTarget and self:GetTargetYOffset() or 0.0);
+    if isPlayer then 
+        self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, 5 + targetYOffset + rs.tabDB[rs.iDBmark]["SelfAuraHeight"]);
+	elseif (self:GetParent().unit and ShouldShowName(self:GetParent())) then
+		self:SetPoint("BOTTOM", self:GetParent(), "TOP", 0, targetYOffset + rs.tabDB[rs.iDBmark]["AuraHeight"]);
+	else
+		self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, 5 + targetYOffset + rs.tabDB[rs.iDBmark]["AuraHeight"]);
+	end
+
 end
 
 

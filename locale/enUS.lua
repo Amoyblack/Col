@@ -183,7 +183,7 @@ rs.V.enus = {
     InterrupteSpellIDRemoved = "|cffFFD700---RSPlates:|r Spell successfully removed ",
     
     StolenBuff = "Extra display canStealOrPurge BUFF",
-    StolenBuffTT = "Highlight the buff that can be stolen or purged on the right side of the unit health bar",
+    StolenBuffTT = "Highlight the buff that can be stolen or purged on the right side of the unit health bar (It will only be displayed when your current character has the corresponding dispel/steal ability)",
 
     QuestIcon = "QuestMarker",
     QuestIconTT = "Show a mark on the top of the Quest Unit",
@@ -281,7 +281,7 @@ rs.V.enus = {
 
     NameModeHeightOffset = "Height Offset",
 
-    GetSpellDesFailInfo = "The spell has no description Or the Addon is not received due to blizzard server delay. If the latter, Re-open the RSPlates settings interface, it can be displayed normally",
+    GetSpellDesFailInfo = "|cffFF0000The spell has no description Or the Addon is not received due to blizzard server delay. If the latter, Re-open the RSPlates settings interface, it can be displayed normally|r",
 
     ShowAllNP = "Always Show Nameplates",
     ShowAllNPTT = "When off it only shows the nameplates (or Name in name-mode) in battle, when on it will always show. Same option as <Always Show Nameplates> in Blizzard UI settings",

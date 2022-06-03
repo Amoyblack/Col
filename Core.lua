@@ -763,6 +763,7 @@ function loadFrame:OnEvent(event, arg1)
         rs.OnColCheck()
 		rs.RSOn()
         rs.InitMinimapBtn()
+        rs.GenerateSpellDescCacheAll()
 
 
     -- time : entering_world --> WA set --> loading_screen_disabled
@@ -847,19 +848,26 @@ local function UIObj_Event(self, event, ...)
             end
         end
 
-        -- elseif event == "UNIT_SPELLCAST_INTERRUPTED" then
-        -- local unit, _, _ = ...
+    elseif event == "UNIT_SPELLCAST_INTERRUPTED" then
+        local unit, _, _ = ...
+        if string.match(unit, "nameplate") then 
+            local npbase = C_NamePlate.GetNamePlateForUnit(unit, false)
+            if npbase then
+                npbase.UnitFrame.CastingExpandFrame.CastingTarget:Hide()
+                npbase.UnitFrame.CastingExpandFrame.InterrupteIndicator:Hide()
+            end
+        end
 
     elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
         local timestamp, subevent, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo()
         if subevent == "SPELL_INTERRUPT" then
+            if not rs.tabDB[rs.iDBmark]["CastInterrupteFrom"] then return end
             for npUnit, npGUID in pairs(tabGUID2unit) do
                 if npGUID == destGUID then
                     local npbase = C_NamePlate.GetNamePlateForUnit(npUnit)
                     if npbase then
-                        npbase.UnitFrame.CastingExpandFrame.CastingTarget:Hide()
-                        npbase.UnitFrame.CastingExpandFrame.InterrupteIndicator:Hide()
-                        if not rs.tabDB[rs.iDBmark]["CastInterrupteFrom"] then return end
+                        -- npbase.UnitFrame.CastingExpandFrame.CastingTarget:Hide()
+                        -- npbase.UnitFrame.CastingExpandFrame.InterrupteIndicator:Hide()
                         if sourceName then
                             local name, server = strsplit("-", sourceName)
                             -- print("-----", npUnit, npGUID , destGUID)
@@ -877,6 +885,7 @@ local function UIObj_Event(self, event, ...)
                 end
             end
         end
+
     elseif event == "PLAYER_REGEN_ENABLED" then
         if rs.inLock then
             rs.UpdateCvars()
@@ -897,7 +906,8 @@ UIObjectDriveFrame:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
 -- UIObjectDriveFrame:RegisterEvent("UNIT_TARGET")
 UIObjectDriveFrame:RegisterEvent("UNIT_SPELLCAST_START")
 UIObjectDriveFrame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START")
--- UIObjectDriveFrame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
+UIObjectDriveFrame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
+--UIObjectDriveFrame:RegisterEvent("UNIT_SPELLCAST_FAILED")
 UIObjectDriveFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
 UIObjectDriveFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
