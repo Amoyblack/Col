@@ -28,6 +28,9 @@ local dctTexture = {
 local tabGUID2unit = {}
 -------------------------------------------------
 function rs.RSOn()
+    if not rs.tabDB[rs.iDBmark]["DynamicHeightOffSet"] then 
+        rs.UpdateAnchor = rs.UpdateAnchorFixRS
+    end
 	rs.HookBlizzedFunc()
 	if rs.tabDB[rs.iDBmark]["ExpballHelper"] then
 		rs.BallScanner()
@@ -337,10 +340,15 @@ function rs.SetBarColor(frame)
         local _, threatStatus = UnitDetailedThreatSituation("player", unit)
         local NpcColor = rs.tabDB[rs.iDBmark]["DctColorNpc"][tonumber(id)]
 
+        -- 焦点
+        if UnitIsUnit("focus", unit) and rs.tabDB[rs.iDBmark]["FocusColorEnable"] then
+            r, g, b = rs.tabDB[rs.iDBmark]["FocusColor"][1], rs.tabDB[rs.iDBmark]["FocusColor"][2], rs.tabDB[rs.iDBmark]["FocusColor"][3]
+
         -- 锁定玩家颜色
-        if rs.tabDB[rs.iDBmark]["LockPlayerColor"] and (UnitIsPlayer(unit) or UnitIsPossessed(unit) or UnitPlayerControlled(unit)) then
+        elseif rs.tabDB[rs.iDBmark]["LockPlayerColor"] and (UnitIsPlayer(unit) or UnitIsPossessed(unit) or UnitPlayerControlled(unit)) then
             do end
 
+        -- 目标颜色
         elseif rs.tabDB[rs.iDBmark]["TargetColorEnable"] and UnitIsUnit("target", unit) and not UnitIsUnit("player", unit) then
             r, g, b = rs.tabDB[rs.iDBmark]["TargetColor"][1], rs.tabDB[rs.iDBmark]["TargetColor"][2], rs.tabDB[rs.iDBmark]["TargetColor"][3]
 
@@ -824,6 +832,12 @@ local function UIObj_Event(self, event, ...)
             rs.SetNameMode(frame.UnitFrame)
         end
 
+    elseif event == "PLAYER_FOCUS_CHANGED" then 
+        for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+            local unitFrame = namePlate.UnitFrame
+            rs.SetBarColor(unitFrame)
+        end
+        
     elseif event == "UNIT_TARGET" then
         -- local unit = ...
         -- if not string.match(unit, "nameplate") then return end
@@ -900,6 +914,7 @@ UIObjectDriveFrame:SetScript("OnEvent", UIObj_Event)
 UIObjectDriveFrame:RegisterEvent("UNIT_HEALTH")
 UIObjectDriveFrame:RegisterEvent("UNIT_AURA")
 UIObjectDriveFrame:RegisterEvent("UNIT_NAME_UPDATE")
+UIObjectDriveFrame:RegisterEvent("PLAYER_FOCUS_CHANGED")
 UIObjectDriveFrame:RegisterEvent("NAME_PLATE_UNIT_ADDED")
 UIObjectDriveFrame:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
 

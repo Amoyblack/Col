@@ -36,10 +36,14 @@ rs.V.zhtw = {
     Omen3 = "開啟威脅值染色",
     Omen3TT = "根據單位與你的仇恨對血量條進行染色",
 
-    dpsLowthreat = "DPS低威脅",
-    dpsGainthreat = "DPS即將獲得威脅(即將ot)",
-    Tankstablethreat = "T威脅穩定",
-    Tanklosethreat = "T即將丟失威脅",
+    dpsLowthreat = "低威脅",
+    dpsLowthreatTT = "|cffFFD700DPS|r  安全低威脅 \n|cffFFD700TANK|r  完全丟失威脅",
+    dpsGainthreat = "高威脅(臨界)",
+    dpsGainthreatTT = "|cffFFD700DPS|r  已到達OT的臨界值，但此時單位的目標還不會切換成你 \n|cffFFD700TANK|r  已到達丟失仇恨的臨界值，但此時單位的目標仍然是你",
+    Tankstablethreat = "高威脅(穩定)",
+    TankstablethreatTT = "|cffFFD700DPS|r  已OT \n|cffFFD700TANK|r  穩定的高仇恨，大幅領先第二仇恨",
+    Tanklosethreat = "高威脅(超過臨界)",
+    TanklosethreatTT = "|cffFFD700DPS|r  已OT，單位開始切換目標攻擊你 \n|cffFFD700TANK|r  已丟失仇恨，單位從你身上切換目標",
 
     Health = "血量",
     HealthValue = "數值",
@@ -83,6 +87,10 @@ rs.V.zhtw = {
     NameSize = "名字大小",
     NameSizeTT = "關閉時需要重載界面生效",
 
+    FocusTitle = "專注目標",
+    FocusColorEnable = "啟用專注目標染色",
+    FocusColor = "專注目標顏色",
+
     AuraText1 = "需要顯示的光環",
 
     AuraDeault = "系統預設",
@@ -96,6 +104,9 @@ rs.V.zhtw = {
 
     AuraTitleGlobal = "全局",
     AuraText2 = "光環樣式",
+
+    DynamicHeightOffSet = "動態浮動高度",
+    DynamicHeightOffSetTT = "在隱藏了姓名的姓名板上，光環會動態向下浮動佔用姓名的空間來嘗試緊貼在血條上，這是暴雪源生姓名板的做法。取消勾選則固定高度 |cff66CCFF 重載生效|r",
 
     AuraHeight = "姓名板光環高度",
     AuraHeightTT = "光環圖示的框體與姓名板的高度距離",
@@ -118,7 +129,7 @@ rs.V.zhtw = {
     CounterSize = "計時器字型大小",
 
     AuraFilterTitle = "Buff & Debuff 過濾器",
-    AuraFilterHelpBtnTT = "|cff00FF7F暴雪默認在個人資源條上僅顯示buff, 其餘姓名板上僅顯示debuff.|r \n\nRSPlates可以讓你更自由的定義如何以及在哪裡顯示它們. \n\n如你需要關注敵對單位的buff如|TInterface\\ICONS\\Spell_shadow_bloodboil:0:1:0:1|t膿血/|TInterface\\ICONS\\Ability_warrior_focusedrage:0:1:0:1|t狂怒/|TInterface\\ICONS\\Ability_socererking_arcanefortification:0:1:0:1|t激勵等,請開啟姓名板過濾器下的buff開關並配置過濾器範圍 \n\n如你需要關注自身的debuff如|TInterface\\ICONS\\Ability_ironmaidens_whirlofblood:0:1:0:1|t爆裂等,請開啟個人資源條過濾器下的debuff開關並配置過濾器範圍 \n\n上面所列舉到的光環均以加入插件的初始白名單中，如你的白名單中沒有，可以嘗試初始化插件配置或手動添加它們",
+    AuraFilterHelpBtnTT = "|cff00FF7F暴雪默認在個人資源條上僅顯示buff, 其餘姓名板上僅顯示debuff.|r \n\nRSPlates可以讓你更自由的定義如何以及在哪裡顯示它們. \n\n如你需要關注敵對單位的buff如|TInterface\\ICONS\\Spell_shadow_bloodboil:0:1:0:1|t膿血/|TInterface\\ICONS\\Ability_warrior_focusedrage:0:1:0:1|t狂怒/|TInterface\\ICONS\\Ability_socererking_arcanefortification:0:1:0:1|t激勵等,請開啟|cffFFD700姓名板|r過濾器下的buff開關並配置過濾器範圍 \n\n如你需要關注自身的debuff如|TInterface\\ICONS\\Ability_ironmaidens_whirlofblood:0:1:0:1|t爆裂等,請開啟|cffFFD700個人資源條|r過濾器下的debuff開關並配置過濾器範圍 \n\n上面所列舉到的光環均以加入插件的初始白名單中，如你的白名單中沒有，可以嘗試初始化插件配置或手動添加它們",
     AuraFilterPersonalTitle = "- 個人資源條",
     AuraFilterOtherTitle = "- 姓名板",
     AuraFilterEnableBuff = "顯示BUFF",

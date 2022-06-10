@@ -36,10 +36,14 @@ rs.V.enus = {
     Omen3 = "Threat Color Enable",
     Omen3TT = "Show threat Status as different bar color",
 
-    dpsLowthreat = "DPS Low Threat",
-    dpsGainthreat = "DPS High Threat(OT Soon)",
-    Tankstablethreat = "Tank Stable Threat",
-    Tanklosethreat = "Tank Lose Threat Soon",
+    dpsLowthreat = "Low Threat",
+    dpsLowthreatTT = "|cffFFD700DPS|r  Safe Low Threat \n|cffFFD700TANK|r  Total loss of Threat",
+    dpsGainthreat = "High Threat(threshold)",
+    dpsGainthreatTT = "|cffFFD700DPS|r  The OT threshold has been reached, but the unit's target has not yet switched to you \n|cffFFD700TANK|r  The threshold for losing threat has been reached, but the unit's target is still you",
+    Tankstablethreat = "High Threat(Stablize)",
+    TankstablethreatTT = "|cffFFD700DPS|r  Already OT \n|cffFFD700TANK|r  Steady high threat, leading the second by a wide margin",
+    Tanklosethreat = "High Threat(over threshold)",
+    TanklosethreatTT = "|cffFFD700DPS|r  Already OT, the unit starts to switch targets to attack you \n|cffFFD700TANK|r  Lost threat, units switch targets from you",
 
     Health = "Health Text",
     HealthValue = "Value",
@@ -83,6 +87,10 @@ rs.V.enus = {
     NameSize = "Name Size",
     NameSizeTT = "Need to reload UI to take effect when you disable it",
 
+    FocusTitle = "Focus",
+    FocusColorEnable = "Focus Color Enable",
+    FocusColor = "Focus Color",
+
     AuraText1 = "Auras need to show",
 
     AuraDeault = "Default list",
@@ -96,6 +104,9 @@ rs.V.enus = {
 
     AuraTitleGlobal = "Global",
     AuraText2 = "Auras Style",
+
+    DynamicHeightOffSet = "Dynamic Aura Space",
+    DynamicHeightOffSetTT = "On the nameplates with the name hidden, the Aura will dynamically float down to occupy the space of the name to try to stick to the health bar, which is the way of the Blizzard Source Nameplates. Uncheck to fix space |cff66CCFF Take effect after reload|r",
 
     AuraHeight = "Nameplates Aura Space",
     AuraHeightTT = "The space between Nameplates and aura frame",
@@ -118,7 +129,7 @@ rs.V.enus = {
     CounterSize = "Timer Text Size",
 
     AuraFilterTitle = "Buff & Debuff Filter",
-    AuraFilterHelpBtnTT = "|cff00FF7FBy default, Blizzard only shows buffs on the personal resource bar, and only debuffs on the rest of the nameplates.|r \n\nRSPlates allows you to define more freely how and where to display them. \n\nFor example, If you need to pay attention to hostiles unit's buffs such as |TInterface\\ICONS\\Spell_shadow_bloodboil:0:1:0:1|tSanguine/|TInterface\\ICONS\\Ability_warrior_focusedrage:0:1:0:1|tRaging/|TInterface\\ICONS\\Ability_socererking_arcanefortification:0:1:0:1|tBolster, etc., please turn on the buff switch under the nameplates filter and configure it.\n\nFor example,If you need to pay attention to your own debuffs such as |TInterface\\ICONS\\Ability_ironmaidens_whirlofblood:0:1:0:1|tBursting, etc., please turn on the debuff switch under the personal resource bar filter and configure it \n\nThe auras that example listed above are all written into the addon's initialization whitelist. If you don't have them, you can reset the addon's configuration or add them manually.",
+    AuraFilterHelpBtnTT = "|cff00FF7FBy default, Blizzard only shows buffs on the personal resource bar, and only debuffs on the rest of the nameplates.|r \n\nRSPlates allows you to define more freely how and where to display them. \n\nFor example, If you need to pay attention to hostiles unit's buffs such as |TInterface\\ICONS\\Spell_shadow_bloodboil:0:1:0:1|tSanguine/|TInterface\\ICONS\\Ability_warrior_focusedrage:0:1:0:1|tRaging/|TInterface\\ICONS\\Ability_socererking_arcanefortification:0:1:0:1|tBolster, etc., please turn on the buff switch in |cffFFD700Nameplates|r filter and configure it.\n\nFor example,If you need to pay attention to your own debuffs such as |TInterface\\ICONS\\Ability_ironmaidens_whirlofblood:0:1:0:1|tBursting, etc., please turn on the debuff switch in |cffFFD700Personal Resource Bar|r filter and configure it \n\nThe auras that example listed above are all written into the addon's initialization whitelist. If you don't have them, you can reset the addon's configuration or add them manually.",
     AuraFilterPersonalTitle = "- Personal Resource Bar",
     AuraFilterOtherTitle = "- Nameplates",
     AuraFilterEnableBuff = "Show BUFF",

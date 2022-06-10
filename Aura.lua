@@ -88,7 +88,7 @@ function rs.OnUnitAuraUpdateRS(self, unit, isFullUpdate, updatedAuraInfos)
 end
 
 
-
+-- Source
 function rs:UpdateAnchor()
     local isPlayer = self:GetParent().unit and UnitIsUnit("player", self:GetParent().unit)
     local isTarget = self:GetParent().unit and UnitIsUnit(self:GetParent().unit, "target");
@@ -101,6 +101,16 @@ function rs:UpdateAnchor()
 		self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, 5 + targetYOffset + rs.tabDB[rs.iDBmark]["AuraHeight"]);
 	end
 
+end
+
+--RS Fixed 
+function rs:UpdateAnchorFixRS()
+    if not (self:GetParent() and self:GetParent().unit) then return end 
+    if UnitIsUnit("player", self:GetParent().unit) then 
+        self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, rs.tabDB[rs.iDBmark]["SelfAuraHeight"]);
+    else
+        self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, rs.tabDB[rs.iDBmark]["AuraHeight"]);
+    end
 end
 
 

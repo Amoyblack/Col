@@ -238,14 +238,17 @@ options.args.basic = {
                     args = {
                         dpsSafeColor = {
                             name = L["dpsLowthreat"],
+                            desc = L["dpsLowthreatTT"],
                             type = "color",
+                            width = 1.3,
                             order = 3,
                         },
                         dpsOTColor = {
                             name = L["dpsGainthreat"],
+                            desc = L["dpsGainthreatTT"],
                             type = "color",
                             order = 4,
-                            width = 1.2,
+                            width = 1.3,
                         },
                         gap = {
                             name = "",
@@ -254,13 +257,17 @@ options.args.basic = {
                         },
                         TankLoseColor = {
                             name = L["Tanklosethreat"],
+                            desc = L["TanklosethreatTT"],
                             type = "color",
+                            width = 1.3,
                             order = 6,
                         },
                         TankSafeColor = {
                             name = L["Tankstablethreat"],
+                            desc = L["TankstablethreatTT"],
                             type = "color",
                             order = 7,
+                            width = 1.3,
                         },
                     }
                 },
@@ -352,11 +359,48 @@ options.args.basic = {
             type = "description",
             order = 9,
         },
+        divFocus = {
+            name = L["FocusTitle"],
+            type = "group",
+            order = 10,
+            inline = true,
+            args = {
+                FocusColorEnable = {
+                    name = L["FocusColorEnable"],
+                    type = "toggle",
+                    order = 1,
+                    width = 1.05,
+                    set = function (info, value) 
+                        if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                            rs.tabDB[rs.iDBmark][info[#info]] = value 
+                        end 
+                        rs.UpdateAllNameplatesOnce()
+                    end,
+                },
+                FocusColor = {
+                    name = L["FocusColor"],
+                    type = "color",
+                    order = 2,
+                    get = function(info)
+                        return rs.tabDB[rs.iDBmark][info[#info]][1], rs.tabDB[rs.iDBmark][info[#info]][2], rs.tabDB[rs.iDBmark][info[#info]][3]
+                    end,
+                    set = function(info, r, g, b, a)
+                        rs.tabDB[rs.iDBmark][info[#info]] = {r-r%0.01, g-g%0.01, b-b%0.01}
+                        rs.UpdateAllNameplatesOnce()
+                    end,
+                },
+            },
+        },
+        gapFocus = {
+            name = " ",
+            type = "description",
+            order = 11,
+        },
         div5 = {
             name = L["TargetGroup"],
             type = "group",
             inline = true,
-            order = 10,
+            order = 20,
             args = {
                 MouseoverGlow = {
                     name = L["MouseoverGlow"],
@@ -436,13 +480,13 @@ options.args.basic = {
         gap5 = {
             name = " ",
             type = "description",
-            order = 11,
+            order = 21,
         },
         div6 = {
             name = L["CastingTitle"],
             type = "group",
             inline = true,
-            order = 12,
+            order = 22,
             args = {
                 CastTimer = {
                     name = L["CastTimer"],
@@ -535,13 +579,13 @@ options.args.basic = {
         gap6 = {
             name = " ",
             type = "description",
-            order = 13,
+            order = 23,
         },
         div7 = {
             name = L["Title8"],
             type = "group",
             inline = true,
-            order = 14,
+            order = 24,
             args = {
                 ShowQuestIcon = {
                     name = L["QuestIcon"],
@@ -596,13 +640,13 @@ options.args.basic = {
         gap7 = {
             name = " ",
             type = "description",
-            order = 15,
+            order = 25,
         },
         div10 = {
             name = L["Title10"],
             type = "group",
             inline = true,
-            order = 20,
+            order = 26,
             args = {
                 ProfileByCharactor = {
                     name = L["ProfileByCharactor"],
@@ -1076,12 +1120,23 @@ options.args.auras = {
                 rs.RefBuffFrameDisplay() 
             end,
             args = {
+                DynamicHeightOffSet = {
+                    name = L["DynamicHeightOffSet"],
+                    desc = L["DynamicHeightOffSetTT"],
+                    type = "toggle",
+                    order = 1,
+                },
+                gapDynamic = {
+                    name = " ",
+                    type = "description",
+                    order = 2,
+                },
                 AuraHeight = {
                     name = L["AuraHeight"],
                     desc = L["AuraHeightTT"],
                     type = "range",
-                    order = 0,
-                    min = -40,
+                    order = 3,
+                    min = -70,
                     max = 70,
                     step  = 1,
                 },  
@@ -1089,13 +1144,13 @@ options.args.auras = {
                     name = L["SelfAuraHeight"],
                     desc = L["SelfAuraHeightTT"],
                     type = "range",
-                    order = 1,
+                    order = 5,
                     min = -70,
                     max = 70,
                     step  = 1,
                 },  
                 gapline1 = {
-                    order = 2,
+                    order = 7,
                     type = "description",
                     name = "",
                     -- width = "full",
@@ -1104,20 +1159,20 @@ options.args.auras = {
                     name = L["SquareAura"],
                     desc = L["needReload"],
                     type = "toggle",
-                    order = 5,
+                    order = 9,
                 },
                 AuraSize = {
                     name = L["AuraSize"],
                     desc = L["AuraSizeTT"]..L["needReload"],
                     type = "range",
-                    order = 6,
+                    order = 11,
                     min = 15,
                     max = 40,
                     step  = 1,
                     disabled = function(info) return not rs.tabDB[rs.iDBmark]["SquareAura"] end
                 },   
                 gapline2 = {
-                    order = 7,
+                    order = 13,
                     type = "description",
                     name = "",
                     -- width = "full",
@@ -1126,12 +1181,12 @@ options.args.auras = {
                     name = L["Counter"],
                     desc = L["CounterTT"],
                     type = "toggle",
-                    order = 8,
+                    order = 15,
                 },
                 AuraTimerSize = {
                     name = L["CounterSize"],
                     type = "range",
-                    order = 9,
+                    order = 17,
                     min = 8,
                     max = 30,
                     step  = 1,

@@ -4,7 +4,7 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "9.2.71",
+	["Version"] = "9.2.72",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
     ["BarTexture"] = "s1",
@@ -47,6 +47,9 @@ rs.V.DefaultSetting = {
     ["NameSizeEnable"] = false,
     ["NameSize"] = 12,
 
+    ["FocusColorEnable"] = false,
+    ["FocusColor"] = {.74, 1 ,.82},
+
     ["EnableNamemode"] = false,
     ["NameModeFriendlyPlayer"] = false,
     ["NameModeFriendlyNpc"] = false,
@@ -62,6 +65,7 @@ rs.V.DefaultSetting = {
 	["AuraWhite"] = true,
 	["AuraOnlyMe"] = false,
 
+    ["DynamicHeightOffSet"] = true,
 	["AuraHeight"] = 0,
     ["SelfAuraHeight"] = 0,
     ["SquareAura"] = false,
