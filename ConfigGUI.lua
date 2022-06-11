@@ -1160,6 +1160,12 @@ options.args.auras = {
                     desc = L["needReload"],
                     type = "toggle",
                     order = 9,
+                    set = function (info, value) 
+                        if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                            rs.tabDB[rs.iDBmark][info[#info]] = value 
+                        end
+                        -- rs.RefBuffFrameDisplay() 
+                    end,
                 },
                 AuraSize = {
                     name = L["AuraSize"],
@@ -1169,7 +1175,13 @@ options.args.auras = {
                     min = 15,
                     max = 40,
                     step  = 1,
-                    disabled = function(info) return not rs.tabDB[rs.iDBmark]["SquareAura"] end
+                    disabled = function(info) return not rs.tabDB[rs.iDBmark]["SquareAura"] end,
+                    set = function (info, value) 
+                        if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                            rs.tabDB[rs.iDBmark][info[#info]] = value 
+                        end
+                        -- rs.RefBuffFrameDisplay() 
+                    end,
                 },   
                 gapline2 = {
                     order = 13,
