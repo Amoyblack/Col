@@ -881,7 +881,7 @@ options.args.cvars = {
                     name = L["nameplateOccludedAlphaMult"],
                     type = "range",
                     order = 16,
-                    min = 0.1,
+                    min = 0,
                     max = 1,
                     step  = 0.1,                
                 },

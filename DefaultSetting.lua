@@ -4,7 +4,7 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "9.2.72",
+	["Version"] = "9.2.73",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
     ["BarTexture"] = "s1",
@@ -162,8 +162,8 @@ rs.V.DefaultSetting = {
     ["DctColorNpc"] = {
         [120651] = {0.2, 1, 0.2},   --易爆球
         [174773] = {0, 0, 1},   -- 怨毒影魔
-        [185685] = {0, 0, 1},   -- U型圣物
-        [184911] = {0, 0, 1},   -- U大怪
+        -- [185685] = {0, 0, 1},   -- U型圣物
+        -- [184911] = {0, 0, 1},   -- U大怪
     }, 
     ["DctColorAura"] = {
         [343502] = {0, 0, 1},   --鼓舞光环
