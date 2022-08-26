@@ -162,42 +162,43 @@ local function CreateSingleBuff(self, buffIndex, index, texture, count, expirati
     
     -- buff.tool = CreateFrame("GameTooltip", "mybufftooltip", nil, "GameTooltipTemplate")
     
-    buff:SetScript("OnEnter", function()
-        GameTooltip:SetOwner(UIParent,"ANCHOR_CURSOR")
-        -- GameTooltip:SetOwner(buff,"TOPLEFT")
-        -- GameTooltip:AddLine(name)
-        -- local desc = GetSpellDescription(spellID)
-        -- GameTooltip:AddLine(desc)
-        if type == "buff" then 
-            -- GameTooltip:SetUnitAura(self.unit, 1)
-            GameTooltip:SetUnitBuff(self.unit, index)
-        elseif type == "debuff" then 
-            GameTooltip:SetUnitDebuff(self.unit, index)
-        end
-        GameTooltip:Show()
-    --     local desc = GetSpellDescription(spellID)
-    --     buff.tool:SetOwner(buff, "ANCHOR_LEFT")
-    --     buff.tool:AddLine(name)
-    --     buff.tool:AddLine(string.format("|cffFFFFFF%s|r", desc))
-    --     buff.tool:Show()
-    --     buff.tooltip:SetOwner(buff, "ANCHOR_LEFT")
+    -- buff:SetScript("OnEnter", function()
+    --     GameTooltip:SetOwner(UIParent,"ANCHOR_CURSOR")
+    --     -- GameTooltip:SetOwner(buff,"TOPLEFT")
+    --     -- GameTooltip:AddLine(name)
+    --     -- local desc = GetSpellDescription(spellID)
+    --     -- GameTooltip:AddLine(desc)
+    --     if type == "buff" then 
+    --         -- GameTooltip:SetUnitAura(self.unit, 1)
+    --         GameTooltip:SetUnitBuff(self.unit, index)
+    --     elseif type == "debuff" then 
+    --         GameTooltip:SetUnitDebuff(self.unit, index)
+    --     end
+    --     GameTooltip:Show()
+    -- --     local desc = GetSpellDescription(spellID)
+    -- --     buff.tool:SetOwner(buff, "ANCHOR_LEFT")
+    -- --     buff.tool:AddLine(name)
+    -- --     buff.tool:AddLine(string.format("|cffFFFFFF%s|r", desc))
+    -- --     buff.tool:Show()
+    -- --     buff.tooltip:SetOwner(buff, "ANCHOR_LEFT")
 
-    --     local desc = GetSpellDescription(spellID)
-    --     local spellMixin = Spell:CreateFromSpellID(spellID)
-    --     spellMixin:ContinueOnSpellLoad(function()
-    --         local desc = spellMixin:GetSpellDescription()
-    --         buff.tooltip:AddLine(name)
-    --         buff.tooltip:AddLine(string.format("|cffFFFFFF%s|r", desc))
-    --     end)
-    --     buff.tooltip:Show()
-    end)
+    -- --     local desc = GetSpellDescription(spellID)
+    -- --     local spellMixin = Spell:CreateFromSpellID(spellID)
+    -- --     spellMixin:ContinueOnSpellLoad(function()
+    -- --         local desc = spellMixin:GetSpellDescription()
+    -- --         buff.tooltip:AddLine(name)
+    -- --         buff.tooltip:AddLine(string.format("|cffFFFFFF%s|r", desc))
+    -- --     end)
+    -- --     buff.tooltip:Show()
+    -- end)
 
-    buff:SetScript("OnLeave", function()
-        GameTooltip:ClearLines()
-        GameTooltip:Hide()
-    end)
+    -- buff:SetScript("OnLeave", function()
+    --     GameTooltip:ClearLines()
+    --     GameTooltip:Hide()
+    -- end)
 
-    -- buff:SetID(index);
+
+    buff:SetID(index);
 
     buff.Icon:SetTexture(texture);
     if (count > 1) then
