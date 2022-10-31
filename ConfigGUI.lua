@@ -128,19 +128,20 @@ options.args.basic = {
                     name = "|cffFFFFFF "..L["BarTexture"].."|r",
                     desc = L["BarTextureTT"],
                     order = 6,
-                    width = 2,
+                    width = 2.1,
                     type = "select",
                     get = function(info) return rs.tabDB[rs.iDBmark][info[#info]] end,
                     set = function(info, value) rs.tabDB[rs.iDBmark][info[#info]] = value rs.UpdateAllNameplatesOnce()  end, 
                     values = {
                         s1 = "|TInterface\\TargetingFrame\\UI-TargetingFrame-BarFill:10:150:0:0|t  "..L["BarTextureSource"],
-                        s2 = "|TInterface\\AddOns\\RSPlates\\media\\bar_rs:10:150:0:0|t  rs",
-                        s3 = "|TInterface\\AddOns\\RSPlates\\media\\bar_rs_bright:10:150:0:0|t  rs_L",
-                        s4 = "|TInterface\\AddOns\\RSPlates\\media\\bar_raid:10:150:0:0|t  raid",
-                        s5 = "|TInterface\\AddOns\\RSPlates\\media\\bar_raid_bright:10:150:0:0|t  raid_L",
-                        s6 = "|TInterface\\AddOns\\RSPlates\\media\\bar_solid:10:150:0:0|t  solid",
+                        s2 = "|TInterface\\TargetingFrame\\UI-TargetingFrame-BarFill:10:150:0:0|t  ".."7.0 LEG "..L["BarTextureSource"],
+                        s3 = "|TInterface\\AddOns\\RSPlates\\media\\bar_rs:10:150:0:0|t  rs",
+                        s4 = "|TInterface\\AddOns\\RSPlates\\media\\bar_rs_bright:10:150:0:0|t  rs_L",
+                        s5 = "|TInterface\\AddOns\\RSPlates\\media\\bar_raid:10:150:0:0|t  raid",
+                        s6 = "|TInterface\\AddOns\\RSPlates\\media\\bar_raid_bright:10:150:0:0|t  raid_L",
+                        s7 = "|TInterface\\AddOns\\RSPlates\\media\\bar_solid:10:150:0:0|t  solid",
+                        s8 = "|TInterface\\AddOns\\RSPlates\\media\\myrstexture:10:150:0:0|t  Customize",
                     }
-                    
                 }
             }
         },
@@ -1102,6 +1103,12 @@ options.args.auras = {
             min = 0,
             max = 10,
             step  = 1,
+            set = function (info, value) 
+                if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                    rs.tabDB[rs.iDBmark][info[#info]] = value 
+                end
+                rs.RefBuffFrameDisplay() 
+            end,
         },    
         auragap1 = {
             name = " \n ",
@@ -1164,7 +1171,7 @@ options.args.auras = {
                         if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
                             rs.tabDB[rs.iDBmark][info[#info]] = value 
                         end
-                        -- rs.RefBuffFrameDisplay() 
+                        rs.RefBuffFrameDisplay() 
                     end,
                 },
                 AuraSize = {
@@ -1180,7 +1187,7 @@ options.args.auras = {
                         if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
                             rs.tabDB[rs.iDBmark][info[#info]] = value 
                         end
-                        -- rs.RefBuffFrameDisplay() 
+                        rs.RefBuffFrameDisplay() 
                     end,
                 },   
                 gapline2 = {
@@ -1665,6 +1672,7 @@ function rs.RefDungeonAuraPanel()
                     return format("%s\n\n%s", des, L["RemoveCheckBoxTT"])
                 end,
                 -- desc = format("%s\n\n%s", des, L["RemoveCheckBoxTT"]),
+                -- width = "double",
                 width = "double",
                 name = iconname,
                 image = icon,
@@ -1962,19 +1970,9 @@ function rs.RefBuffFrameDisplay()
 		unitFrame.BuffFrame:UpdateAnchor()
 		if unitFrame.unit then 
 			local self = unitFrame.BuffFrame
-            local buffid 
-			for i = 1, BUFF_MAX_DISPLAY do
-				if self.buffList[i] then 
-					--计时器
-					self.buffList[i].Cooldown:SetHideCountdownNumbers(not rs.tabDB[rs.iDBmark]["AuraTimer"])
-					--计时器大小
-                    local regon = self.buffList[i].Cooldown:GetRegions()
-                    if regon.GetText then 
-                        regon:SetFont(STANDARD_TEXT_FONT, rs.tabDB[rs.iDBmark]["AuraTimerSize"], nil)  --Default : 15 "OUTLINE"
-                    end			
-				end
-			end
-		end
+            -- 重新init全更新一遍所有buff
+            rs.UpdateBuffsRSV(self, unitFrame.unit, nil, {})
+        end
 	end	
 end
 

@@ -1,4 +1,4 @@
-## Interface: 90207
+## Interface: 100000
 ## Title: |cff00FF7FRS|rPlates
 ## Author: Rs 
 # (Thanks for the localization part of EK)
@@ -34,6 +34,7 @@ DefaultSetting.lua
 Core.lua
 Quest.lua
 Aura.lua
+AuraTemp.lua
 Dungeonhelp.lua
 CVars.lua
 NameMode.lua

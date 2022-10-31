@@ -20,8 +20,8 @@ rs.V.enus = {
     Title8 = "Others",
     Title10 = "Profile",
 
-    BarTexture = "Bar Texture",
-    BarTextureTT = "If you want to customize the texture, rename your texture file to 'UI-TargetingFrame-BarFill' and place it in the directory [~/_retail_/Interface/TargetingFrame/your texture file], then select the source",
+    BarTexture = "Texture",
+    BarTextureTT = "|cffFFD700source|r Current Version(10.0 DF)Blizzard default texture  \n\n|cffFFD7007.0 LEG source|r 7.0 LEG ~ 9.0 SL Version Blizzard default texture \n\n|cffFFD700Customize|r If you need a custom texture, rename your texture file to <myrstexture>, store it in ~/_retail_/Interface/AddOns/RSPlates/media/myrstexture, and select this option \n\n|cff66CCFFWhen select the first option - <source>, you may need to reload UI to take effect|r",
     BarTextureSource = "source",
 
     NarrowCastBar = "Narrow CastBar",

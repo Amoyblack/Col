@@ -18,14 +18,22 @@ local arrorTexture = "Interface\\AddOns\\RSPlates\\media\\arrorH"
 local questTexture = "Interface\\AddOns\\RSPlates\\media\\questQuestion"
 local dctTexture = {
     ["s1"] = "Interface\\TargetingFrame\\UI-TargetingFrame-BarFill",
-    ["s2"] = "Interface\\AddOns\\RSPlates\\media\\bar_rs",
-    ["s3"] = "Interface\\AddOns\\RSPlates\\media\\bar_rs_bright",
-    ["s4"] = "Interface\\AddOns\\RSPlates\\media\\bar_raid",
-    ["s5"] = "Interface\\AddOns\\RSPlates\\media\\bar_raid_bright",
-    ["s6"] = "Interface\\AddOns\\RSPlates\\media\\bar_solid",
+    ["s2"] = "Interface\\TargetingFrame\\UI-TargetingFrame-BarFill",
+    ["s3"] = "Interface\\AddOns\\RSPlates\\media\\bar_rs",
+    ["s4"] = "Interface\\AddOns\\RSPlates\\media\\bar_rs_bright",
+    ["s5"] = "Interface\\AddOns\\RSPlates\\media\\bar_raid",
+    ["s6"] = "Interface\\AddOns\\RSPlates\\media\\bar_raid_bright",
+    ["s7"] = "Interface\\AddOns\\RSPlates\\media\\bar_solid",
+    ["s8"] = "Interface\\AddOns\\RSPlates\\media\\myrstexture",
 }
 
 local tabGUID2unit = {}
+
+local rgbYello = {245/256, 161/256, 5/256}
+local rgbGreen = {0/256, 250/256, 0/256}
+local rgbGrey = {180/256, 180/256, 180/256}
+local rgbRed = {256/256, 0/256, 0/256}
+
 -------------------------------------------------
 function rs.RSOn()
     if not rs.tabDB[rs.iDBmark]["DynamicHeightOffSet"] then 
@@ -177,9 +185,17 @@ function rs.CreateUIObj(unitFrame, namePlate)
         unitFrame.MouseoverFrame.unit = unit
     end
 
+    unitFrame.ColorAura = {}
+    unitFrame.StolenAura = {}
+
 	if not unitFrame.rsed then
 
         unitFrame.BuffFrame.UpdateBuffs = function() return end
+        -- unitFrame.BuffFrame.UpdateAnchor = rs.UpdateAnchor
+
+        -- unitFrame.BuffFrame.OnUnitAuraUpdate = rs.OnUnitAuraUpdateRSV
+        -- unitFrame.BuffFrame.UpdateBuffs = rs.UpdateBuffsRSV
+        -- unitFrame.BuffFrame.ParseAllAuras = rs.ParseAllAurasRSV
         unitFrame.BuffFrame.UpdateAnchor = rs.UpdateAnchor
 
 		-- 施法条毛玻璃边
@@ -339,6 +355,12 @@ function rs.SetBarColor(frame)
         local _, _, _, _, _, id = strsplit("-", guid or "")
         local _, threatStatus = UnitDetailedThreatSituation("player", unit)
         local NpcColor = rs.tabDB[rs.iDBmark]["DctColorNpc"][tonumber(id)]
+        local AuraColor 
+        if frame.ColorAura then 
+            for k, v in pairs(frame.ColorAura) do
+                AuraColor = v
+            end
+        end
 
         -- 焦点
         if UnitIsUnit("focus", unit) and rs.tabDB[rs.iDBmark]["FocusColorEnable"] then
@@ -362,8 +384,8 @@ function rs.SetBarColor(frame)
         elseif NpcColor then
             r, g, b = NpcColor[1], NpcColor[2], NpcColor[3]
         -- 2 携带自定义光环
-        elseif frame.healthBar.AuraColor then
-            r, g, b = frame.healthBar.AuraColor[1], frame.healthBar.AuraColor[2], frame.healthBar.AuraColor[3]
+        elseif AuraColor then
+            r, g, b = AuraColor[1], AuraColor[2], AuraColor[3]
         -- 3 斩杀
         elseif rs.tabDB[rs.iDBmark]["SlayEnable"] and rs.IsOnKillHealth(unit) then
             r, g, b = rs.tabDB[rs.iDBmark]["SlayColor"][1], rs.tabDB[rs.iDBmark]["SlayColor"][2], rs.tabDB[rs.iDBmark]["SlayColor"][3]
@@ -624,17 +646,51 @@ end
 --血条材质
 function rs.SetBarTexture(unitFrame)
     local texturePath = dctTexture[rs.tabDB[rs.iDBmark]["BarTexture"]]
+    
     if texturePath then
-		unitFrame.healthBar:SetStatusBarTexture(texturePath)
-		unitFrame.castBar:SetStatusBarTexture(texturePath)
-		ClassNameplateManaBarFrame:SetStatusBarTexture(texturePath)
+        if rs.tabDB[rs.iDBmark]["BarTexture"] == "s1" then 
+            unitFrame.healthBar:SetStatusBarTexture(texturePath)
+            -- unitFrame.castBar:SetStatusBarTexture(texturePath)
+            ClassNameplateManaBarFrame:SetStatusBarTexture(texturePath)
+        else
+            unitFrame.healthBar:SetStatusBarTexture(texturePath)
+            unitFrame.castBar:SetStatusBarTexture(texturePath)
+            ClassNameplateManaBarFrame:SetStatusBarTexture(texturePath)
+            -- background will not be changed by Obj OnShow or OnEvent Event, So just set one time
+            unitFrame.castBar.Background:SetTexture(dctTexture[rs.tabDB[rs.iDBmark]["BarTexture"]])
+            unitFrame.castBar.Background:SetColorTexture(.2, .2, .2)
+            unitFrame.castBar.Background:SetPoint("TOPLEFT", unitFrame.castBar, 1, 0)
+            unitFrame.castBar.Background:SetPoint("BOTTOMRIGHT", unitFrame.castBar, -1, 0)
+        end
 	end
 end
 
+function rs.SetStolen(unitFrame)
+    local stolenAura
+    if unitFrame.StolenAura then
+        for k, v in pairs(unitFrame.StolenAura) do
+            stolenAura = v
+        end
+    end
+    if stolenAura then
+        unitFrame.StolenFrame:Show()
+        unitFrame.StolenFrame.Texture:SetTexture(stolenAura[1])
+        unitFrame.StolenFrame.Cooldown:SetCooldown(stolenAura[2] - stolenAura[3], stolenAura[3])
+        unitFrame.healthBar.curTarget:SetPoint("LEFT", unitFrame.StolenFrame, "RIGHT", 0, 0)
+    else
+        unitFrame.StolenFrame:Hide()
+        unitFrame.healthBar.curTarget:SetPoint("LEFT", unitFrame.healthBar, "RIGHT", 0, 0)
+    end
+end
 
 
 ---手动设置一次需要设置的
 function rs.On_NpRefreshOnce(unitFrame)
+    if unitFrame:IsForbidden() then return end
+    --Stolen/ColorAura
+    rs.UpdateUnitAurasFull(unitFrame.unit, unitFrame)
+    rs.SetStolen(unitFrame)
+
 	rs.SetBarTexture(unitFrame)
 
 	rs.SetBloodText(unitFrame)
@@ -645,7 +701,7 @@ function rs.On_NpRefreshOnce(unitFrame)
 
 	rs.SetUnitQuestState(unitFrame)
 
-	rs.RefAuraForOneNp(unitFrame)
+	-- rs.RefAuraForOneNp(unitFrame)
 
     rs.SetName(unitFrame)
 
@@ -653,14 +709,57 @@ function rs.On_NpRefreshOnce(unitFrame)
 
     rs.RefCastingTarget(unitFrame)
 
+    rs.RefCastingBar(unitFrame)
+
     rs.RefInterrupteIndicator(unitFrame)
+
+    rs.RefUnitAuraTotally(unitFrame)
 end
 
+function rs.RefUnitAuraTotally(unitFrame)
+    local unit = unitFrame.unit
+    -- unitFrame.BuffFrame:UpdateBuffs(unit, nil, {})
+    rs.UpdateBuffsRSV(unitFrame.BuffFrame, unit, nil, {})
+    -- rs.UpdateBuffsRSV(unitFrame.BuffFrame, unit, nil, {})
+end
+-- function rs.RefAuraForOneNp(unitFrame)
+-- 	local unit = unitFrame.unit
+-- 	if not unit then return end
+--     rs:OnUnitAuraUpdateRS(unit, true, nil)
+-- end
 
-function rs.RefAuraForOneNp(unitFrame)
-	local unit = unitFrame.unit
-	if not unit then return end
-    rs:OnUnitAuraUpdateRS(unit, true, nil)
+function rs.RefCastingBar(unitFrame)
+    local self = unitFrame.castBar
+    local unit = self.unit
+    if unit then 
+        rs.ThinCastBar(self)
+
+        local r, g, b
+        if rs.tabDB[rs.iDBmark]["BarTexture"] ~= "s1" then
+            local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(unit);
+            if name then
+                if notInterruptible then
+                    r, g, b = rgbGrey[1], rgbGrey[2], rgbGrey[3]
+                else
+                    r, g, b = rgbYello[1], rgbYello[2], rgbYello[3]
+                end
+            end
+
+            local name, text, texture, startTime, endTime, isTradeSkill, notInterruptible, spellID, _, numStages = UnitChannelInfo(unit);
+            if name then
+                if notInterruptible then
+                    r, g, b = rgbGrey[1], rgbGrey[2], rgbGrey[3]
+                else
+                    r, g, b = rgbGreen[1], rgbGreen[2], rgbGreen[3]
+                end
+            end
+
+            if r and g and b then
+                self:SetStatusBarColor(r, g, b)
+                self:SetStatusBarTexture(dctTexture[rs.tabDB[rs.iDBmark]["BarTexture"]])
+            end
+        end
+    end
 end
 
 
@@ -685,16 +784,78 @@ function rs.HookBlizzedFunc()
         if npbase then
             rs.On_NpRefreshOnce(npbase.UnitFrame)
         end
-            -- print("OnUnitFactionChanged", unit, UnitName(unit))
+        -- print("OnUnitFactionChanged", unit, UnitName(unit))
+    end)
+    
+    -- Thin CastBar
+    hooksecurefunc(CastingBarMixin, "FinishSpell", function(self)
+        if rs.tabDB[rs.iDBmark]["BarTexture"] ~= "s1" then
+            if self:IsForbidden() then return end
+            self:SetStatusBarTexture(dctTexture[rs.tabDB[rs.iDBmark]["BarTexture"]])
+        end
     end)
 
-    -- Thin CastBar
-    hooksecurefunc("CastingBarFrame_OnEvent", function(self, event, ...)
-        rs.ThinCastBar(self, event, ...)
+    hooksecurefunc(CastingBarMixin, "OnEvent", function(self, event, ...)
+        local arg1 = ...;
+        if ( arg1 ~= self.unit ) then return end
+        if self:IsForbidden() then return end
+
+
+        rs.ThinCastBar(self)
+
+        local unit = self.unit
+        local r, g, b
+        local onlyTexture
+
+        if rs.tabDB[rs.iDBmark]["BarTexture"] ~= "s1" then
+            if event == "UNIT_SPELLCAST_START" then
+                local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(unit);
+                if notInterruptible then
+                    r, g, b = rgbGrey[1], rgbGrey[2], rgbGrey[3]
+                else
+                    r, g, b = rgbYello[1], rgbYello[2], rgbYello[3]
+                end
+
+            elseif event == "UNIT_SPELLCAST_CHANNEL_START" then
+                local name, text, texture, startTime, endTime, isTradeSkill, notInterruptible, spellID, _, numStages = UnitChannelInfo(unit);
+                if notInterruptible then
+                    r, g, b = rgbGrey[1], rgbGrey[2], rgbGrey[3]
+                else
+                    r, g, b = rgbGreen[1], rgbGreen[2], rgbGreen[3]
+                end
+
+            elseif ( event == "UNIT_SPELLCAST_STOP" or event == "UNIT_SPELLCAST_CHANNEL_STOP" or event == "UNIT_SPELLCAST_EMPOWER_STOP") then
+                onlyTexture = true
+
+                -- 施法完成，被打断(先触发UNIT_SPELLCAST_INTERRUPTED)
+            elseif ( event == "UNIT_SPELLCAST_FAILED" or event == "UNIT_SPELLCAST_INTERRUPTED" ) then
+                r, g, b = rgbRed[1], rgbRed[2], rgbRed[3]
+            elseif ( event == "UNIT_SPELLCAST_INTERRUPTIBLE" or event == "UNIT_SPELLCAST_NOT_INTERRUPTIBLE" ) then
+                onlyTexture = true
+                -- print(event)
+            elseif ( event == "UNIT_SPELLCAST_DELAYED" ) then
+                onlyTexture = true
+                -- print(event)
+            end
+
+            -- local npbase = C_NamePlate.GetNamePlateForUnit(self.unit, false)
+            if r and g and b then
+                self:SetStatusBarColor(r, g, b)
+                self:SetStatusBarTexture(dctTexture[rs.tabDB[rs.iDBmark]["BarTexture"]])
+            end
+
+            if onlyTexture then
+                self:SetStatusBarTexture(dctTexture[rs.tabDB[rs.iDBmark]["BarTexture"]])
+            end
+        end
     end)
-    hooksecurefunc("CastingBarFrame_OnShow", function(self)
-    	rs.ThinCastBar(self)
-    end)
+
+    -- hooksecurefunc("CastingBarFrame_OnEvent", function(self, event, ...)
+    --     rs.ThinCastBar(self, event, ...)
+    -- end)
+    -- hooksecurefunc("CastingBarFrame_OnShow", function(self)
+    -- 	rs.ThinCastBar(self)
+    -- end)
 
 
     -- Do nothing  + 0.8ms
@@ -814,16 +975,31 @@ local function UIObj_Event(self, event, ...)
 
     elseif event == "UNIT_HEALTH" then
         local unit = ...
-        local frame = C_NamePlate.GetNamePlateForUnit(unit, false)
-        if frame then
-            rs.SetBloodText(frame.UnitFrame)
-            rs.SetBarColor(frame.UnitFrame)
+        if string.match(unit, "nameplate") then 
+            local frame = C_NamePlate.GetNamePlateForUnit(unit, false)
+            if frame then
+                rs.SetBloodText(frame.UnitFrame)
+                rs.SetBarColor(frame.UnitFrame)
+            end
         end
 
     elseif event == "UNIT_AURA" then
-        local unit, isFullUpdate, updatedAuraInfos = ...
-        if not string.match(unit, "nameplate") then return end
-        rs:OnUnitAuraUpdateRS(unit, isFullUpdate, updatedAuraInfos)
+        -- local unit, isFullUpdate, updatedAuraInfos = ...
+        -- if not string.match(unit, "nameplate") then return end
+        -- rs:OnUnitAuraUpdateRS(unit, isFullUpdate, updatedAuraInfos)
+        local unit, unitAuraUpdateInfo = ...
+        if string.match(unit, "nameplate") then 
+            local npbase = C_NamePlate.GetNamePlateForUnit(unit, false)
+            if npbase then
+                rs.OnUnitAuraUpdateRSV(npbase.UnitFrame.BuffFrame, unit, unitAuraUpdateInfo)
+                if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate then
+                    rs.UpdateUnitAurasFull(unit, npbase.UnitFrame)
+                else
+                    rs.UpdateUnitAurasIncremental(unit, unitAuraUpdateInfo, npbase.UnitFrame)
+                end
+            end
+        end
+
 
     elseif event == "UNIT_NAME_UPDATE" then 
         local unit = ...
@@ -871,6 +1047,7 @@ local function UIObj_Event(self, event, ...)
                 npbase.UnitFrame.CastingExpandFrame.InterrupteIndicator:Hide()
             end
         end
+
 
     elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
         local timestamp, subevent, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo()

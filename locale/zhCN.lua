@@ -20,8 +20,8 @@ rs.V.zhcn = {
     Title8 = "其它",
     Title10 = "插件配置",
 
-    BarTexture = "血条材质",
-    BarTextureTT = "若需要自定义材质，将你的材质改名为UI-TargetingFrame-BarFill后放置于目录 [~/_retail_/Interface/TargetingFrame/你的材质], 然后选择源生即可",
+    BarTexture = "材质",
+    BarTextureTT = "|cffFFD700源生|r 当前版本(10.0 DF)暴雪默认材质  \n\n|cffFFD7007.0 LEG 源生|r 7.0 LEG ~ 9.0 SL 版本的暴雪默认材质 \n\n|cffFFD700Customize|r 若需要自定义材质，把你的材质改名为myrstexture，存放于 ~/_retail_/Interface/AddOns/RSPlates/media/myrstexture，然后勾选此项 \n\n|cff66CCFF选择第一项源生时候需要重载生效|r",
     BarTextureSource = "源生",
 
     NarrowCastBar = "窄施法条",

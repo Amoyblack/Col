@@ -4,10 +4,10 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "9.2.74",
+	["Version"] = "10.0.01",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
-    ["BarTexture"] = "s1",
+    ["BarTexture"] = "s2",
 	["NarrowCast"] = false,
 	["BarBgCol"] = false,
     ["EliteIcon"] = true,
@@ -60,7 +60,7 @@ rs.V.DefaultSetting = {
     ["NameModePlayerOffY"] = 0,
     ["NameModeImitateOverlap"] = false,
 
-	["AuraNum"] = 3,
+	["AuraNum"] = 5,
 	["AuraDefault"] = true,
 	["AuraWhite"] = true,
 	["AuraOnlyMe"] = false,
