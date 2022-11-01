@@ -4,7 +4,7 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "10.0.02",
+	["Version"] = "10.0.03",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
     ["BarTexture"] = "s2",
@@ -168,6 +168,11 @@ rs.V.DefaultSetting = {
     ["DctColorAura"] = {
         [343502] = {0, 0, 1},   --鼓舞光环
     },
+    ["DctNeedColorAura"] = {
+        [343502] = {{0, 0, 1}, false},  --鼓舞光环
+        [217200] = {{0, 0, 1}, true},  --倒刺射击
+    },
+    
     ["DctInterrupteSpell"] = {
         [147362] = true,    --LR:反制射击
         [187707] = true,    --LR:压制(生存)

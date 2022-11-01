@@ -6,9 +6,12 @@ function rs.UpdateUnitAurasFull(unit, UnitFrame)
     local RSDB = rs.tabDB[rs.iDBmark] 
 
     local function HandleAura(aura)
-        if RSDB["DctColorAura"][aura.spellId] then
-            UnitFrame.ColorAura[aura.auraInstanceID] = RSDB["DctColorAura"][aura.spellId]
-            rs.SetBarColor(UnitFrame)
+        if RSDB["DctNeedColorAura"][aura.spellId] then
+            local unMatched = RSDB["DctNeedColorAura"][aura.spellId][2] and (aura.sourceUnit ~= "player" and aura.sourceUnit ~= "pet")
+            if not unMatched then
+                UnitFrame.ColorAura[aura.auraInstanceID] = RSDB["DctNeedColorAura"][aura.spellId][1]
+                rs.SetBarColor(UnitFrame)
+            end
         end
         if RSDB["ShowStolenBuff"] and aura.isStealable then
             UnitFrame.StolenAura[aura.auraInstanceID] = {aura.icon, aura.expirationTime, aura.duration}
@@ -30,11 +33,14 @@ function rs.UpdateUnitAurasIncremental(unit, unitAuraUpdateInfo, UnitFrame)
     local RSDB = rs.tabDB[rs.iDBmark]
         if unitAuraUpdateInfo.addedAuras ~= nil then
         for _, aura in ipairs(unitAuraUpdateInfo.addedAuras) do
-            local thisAuraColor = RSDB["DctColorAura"][aura.spellId]
+            local thisAuraColor = RSDB["DctNeedColorAura"][aura.spellId]
             local thisAuraStolen = RSDB["ShowStolenBuff"] and aura.isStealable
             if thisAuraColor then
-                UnitFrame.ColorAura[aura.auraInstanceID] = thisAuraColor
-                rs.SetBarColor(UnitFrame)
+                local unMatched = thisAuraColor[2] and (aura.sourceUnit ~= "player" and aura.sourceUnit ~= "pet")
+                if not unMatched then
+                    UnitFrame.ColorAura[aura.auraInstanceID] = thisAuraColor[1]
+                    rs.SetBarColor(UnitFrame)
+                end
             end
             if thisAuraStolen then
                 UnitFrame.StolenAura[aura.auraInstanceID] = {aura.icon, aura.expirationTime, aura.duration}
@@ -48,11 +54,14 @@ function rs.UpdateUnitAurasIncremental(unit, unitAuraUpdateInfo, UnitFrame)
         for _, auraInstanceID in ipairs(unitAuraUpdateInfo.updatedAuraInstanceIDs) do
             local newAura = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, auraInstanceID)
             if newAura then
-                local thisAuraColor = RSDB["DctColorAura"][newAura.spellId]
+                local thisAuraColor = RSDB["DctNeedColorAura"][newAura.spellId]
                 local thisAuraStolen = RSDB["ShowStolenBuff"] and newAura.isStealable
                 if thisAuraColor then
-                    UnitFrame.ColorAura[newAura.auraInstanceID] = thisAuraColor
-                    rs.SetBarColor(UnitFrame)
+                    local unMatched = thisAuraColor[2] and (newAura.sourceUnit ~= "player" and newAura.sourceUnit ~= "pet")
+                    if not unMatched then
+                        UnitFrame.ColorAura[newAura.auraInstanceID] = thisAuraColor[1]
+                        rs.SetBarColor(UnitFrame)
+                    end
                 end
                 if thisAuraStolen then
                     UnitFrame.StolenAura[newAura.auraInstanceID] = {newAura.icon, newAura.expirationTime, newAura.duration}

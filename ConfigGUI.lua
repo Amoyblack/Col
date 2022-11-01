@@ -16,7 +16,7 @@ local MapIconTexture  = "Interface\\AddOns\\RSPlates\\media\\rsicon"
 local tabSpellDesc = {}
 local tabSpellName = {
     "DctInterrupteSpell",
-    "DctColorAura",
+    "DctNeedColorAura",
     "BlackList",
     "DctAura",
 }
@@ -766,8 +766,8 @@ options.args.dungeon = {
                             print(L["NpcAuraInputError"])
                         else
                             local auraName = GetSpellInfo(iAuraId)
-                            if not rs.tabDB[rs.iDBmark]["DctColorAura"][iAuraId] and auraName then 
-                                rs.tabDB[rs.iDBmark]["DctColorAura"][iAuraId] = {0, 0, 1}
+                            if not rs.tabDB[rs.iDBmark]["DctNeedColorAura"][iAuraId] and auraName then 
+                                rs.tabDB[rs.iDBmark]["DctNeedColorAura"][iAuraId] = {{0, 0, 1}, false}
                                 print(L["NpcAuraAdded"]..auraName)
                                 GenerateSingleSpellDesc(iAuraId)
                                 rs.RefDungeonAuraPanel()
@@ -1605,7 +1605,7 @@ function rs.GetNameByNpcID(iNpcID)
 end
 
 
--- Npc ID
+-- 特定 Npc ID
 function rs.RefDungeonNPCPanel()
     local node = options.args.dungeon.args.NpcGroup.args.NpcColorGroup
     local v = 1
@@ -1646,11 +1646,11 @@ function rs.RefDungeonNPCPanel()
 end
 
 
--- Npc光环
+-- 携带特定光环
 function rs.RefDungeonAuraPanel()
     local node = options.args.dungeon.args.AuraGroup.args.AuraColorGroup
     node.args = {}
-    for i, k in pairs(rs.tabDB[rs.iDBmark]["DctColorAura"]) do 
+    for i, k in pairs(rs.tabDB[rs.iDBmark]["DctNeedColorAura"]) do 
             local sAuraID = tostring(i)
             local iconname, _, icon = GetSpellInfo(i)
             node.args["group"..sAuraID] = {
@@ -1673,22 +1673,30 @@ function rs.RefDungeonAuraPanel()
                 end,
                 -- desc = format("%s\n\n%s", des, L["RemoveCheckBoxTT"]),
                 -- width = "double",
-                width = "double",
+                width = 1,
                 name = iconname,
                 image = icon,
                 order = 1,
-                set = function(info,value) rs.tabDB[rs.iDBmark]["DctColorAura"][i] = nil rs.RefDungeonAuraPanel() 
+                set = function(info,value) rs.tabDB[rs.iDBmark]["DctNeedColorAura"][i] = nil rs.RefDungeonAuraPanel() 
                     print(L["NpcAuraDeled"]..iconname)
                 end 
+            }
+            node.args["group"..sAuraID].args[sAuraID.."DungeonAuraPanelOnlyMe"] = {
+                type = "toggle",
+                order = 2,
+                name = "只来源于我",
+                desc = "只对来源于我或者我宠物的光环染色",
+                get = function(info) return rs.tabDB[rs.iDBmark]["DctNeedColorAura"][i][2] end,
+                set = function(info, value) rs.tabDB[rs.iDBmark]["DctNeedColorAura"][i][2] = value end,
             }
             node.args["group"..sAuraID].args[sAuraID.."DungeonAuraPanelColor"] = {
                 type = "color",
                 name = L["NpcbarColor"],
-                order = 2,
+                order = 3,
                 desc = L["NpcAuraColorSelectTT"],
                 width = "half",
-                get = function(info) return rs.tabDB[rs.iDBmark]["DctColorAura"][i][1], rs.tabDB[rs.iDBmark]["DctColorAura"][i][2], rs.tabDB[rs.iDBmark]["DctColorAura"][i][3] end,
-                set = function(info,r,g,b,a) rs.tabDB[rs.iDBmark]["DctColorAura"][i] = {r-r%0.01, g-g%0.01, b-b%0.01} end,
+                get = function(info) return rs.tabDB[rs.iDBmark]["DctNeedColorAura"][i][1][1], rs.tabDB[rs.iDBmark]["DctNeedColorAura"][i][1][2], rs.tabDB[rs.iDBmark]["DctNeedColorAura"][i][1][3] end,
+                set = function(info,r,g,b,a) rs.tabDB[rs.iDBmark]["DctNeedColorAura"][i][1] = {r-r%0.01, g-g%0.01, b-b%0.01} end,
             }
     end
 
