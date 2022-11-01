@@ -14,9 +14,9 @@ function rs.RsShouldShowBuff(unit, aura, BlizzardShouldShow)
         -- 资源条buff
         if RSDB["personalNpBuffEnable"] and aura.isHelpful then
             local filterAll = RSDB["personalNpBuffFilterAll"]
-            local filterBlizzard = BlizzardShouldShow
+            local filterBlizzard = RSDB["personalNpBuffFilterBlizzard"] and BlizzardShouldShow
             local filterWatchlist = RSDB["personalNpBuffFilterWatchList"] and RSDB["DctAura"][spellId]
-            local filterLessMinite = RSDB["personalNpBuffFilterLessMinite"] and (duration > 59 or duration == 0 or expirationTime == 0) 
+            local filterLessMinite = RSDB["personalNpBuffFilterLessMinite"] and (duration > 60 or duration == 0 or expirationTime == 0) 
             if filterAll or filterBlizzard or filterWatchlist then 
                 if filterLessMinite then return end
                 if RSDB["BlackList"][spellId] then return end
@@ -27,7 +27,7 @@ function rs.RsShouldShowBuff(unit, aura, BlizzardShouldShow)
         if RSDB["personalNpdeBuffEnable"] and aura.isHarmful then
             local filterAll = RSDB["personalNpdeBuffFilterAll"]
             local filterWatchlist = RSDB["personalNpdeBuffFilterWatchList"] and RSDB["DctAura"][spellId]
-            local filterLessMinite = RSDB["personalNpdeBuffFilterLessMinite"] and (duration > 59 or duration == 0 or expirationTime == 0) 
+            local filterLessMinite = RSDB["personalNpdeBuffFilterLessMinite"] and (duration > 60 or duration == 0 or expirationTime == 0) 
             if filterAll or filterWatchlist then 
                 if filterLessMinite then return end
                 if RSDB["BlackList"][spellId] then return end
@@ -39,7 +39,7 @@ function rs.RsShouldShowBuff(unit, aura, BlizzardShouldShow)
         if RSDB["otherNpBuffEnable"] and aura.isHelpful then
             local filterAll = RSDB["otherNpBuffFilterAll"]
             local filterWatchlist = RSDB["otherNpBuffFilterWatchList"] and RSDB["DctAura"][spellId]
-            local filterLessMinite = RSDB["otherNpBuffFilterLessMinite"] and (duration > 59 or duration == 0 or expirationTime == 0) 
+            local filterLessMinite = RSDB["otherNpBuffFilterLessMinite"] and (duration > 60 or duration == 0 or expirationTime == 0) 
             if filterAll or filterWatchlist then
                 if filterLessMinite then return end
                 if RSDB["BlackList"][spellId] then return end
@@ -49,9 +49,9 @@ function rs.RsShouldShowBuff(unit, aura, BlizzardShouldShow)
         -- 姓名板 debuff
         if RSDB["otherNpdeBuffEnable"] and aura.isHarmful then
             local filterAll = RSDB["otherNpdeBuffFilterAll"]
-            local filterBlizzard = BlizzardShouldShow
+            local filterBlizzard = RSDB["otherNpdeBuffFilterBlizzard"] and BlizzardShouldShow
             local filterWatchlist = RSDB["otherNpdeBuffFilterWatchList"] and RSDB["DctAura"][spellId]
-            local filterLessMinite = RSDB["otherNpdeBuffFilterLessMinite"] and (duration > 59 or duration == 0 or expirationTime == 0) 
+            local filterLessMinite = RSDB["otherNpdeBuffFilterLessMinite"] and (duration > 60 or duration == 0 or expirationTime == 0) 
             local filterOnlyMe = RSDB["otherNpdeBuffFilterOnlyMe"] and (caster ~= "player" and caster ~= "pet")
             if filterAll or filterWatchlist or filterBlizzard then 
                 if filterLessMinite or filterOnlyMe then return end
