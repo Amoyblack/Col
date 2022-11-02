@@ -1684,8 +1684,8 @@ function rs.RefDungeonAuraPanel()
             node.args["group"..sAuraID].args[sAuraID.."DungeonAuraPanelOnlyMe"] = {
                 type = "toggle",
                 order = 2,
-                name = "只来源于我",
-                desc = "只对来源于我或者我宠物的光环染色",
+                name = L["NpcAuraColorOnlyMe"],
+                desc = L["NpcAuraColorOnlyMeTT"],
                 get = function(info) return rs.tabDB[rs.iDBmark]["DctNeedColorAura"][i][2] end,
                 set = function(info, value) rs.tabDB[rs.iDBmark]["DctNeedColorAura"][i][2] = value end,
             }

@@ -21,8 +21,8 @@ rs.V.DefaultSetting = {
 	["nameplateGlobalScale"] = 1.0,
 	["nameplateMaxDistance"] = 45,
 	["nameplateOtherTopInset"] = 0.08,
-	["nameplateOverlapV"] = 1.1,
-	["nameplateOverlapH"] = 0.8,
+	["nameplateOverlapV"] = 0.6,
+	["nameplateOverlapH"] = 0.6,
     ["nameplateOccludedAlphaMult"] = 0.4,
 
     ["nameplateShowAll"] = 1,
@@ -65,7 +65,7 @@ rs.V.DefaultSetting = {
 	["AuraWhite"] = true,
 	["AuraOnlyMe"] = false,
 
-    ["DynamicHeightOffSet"] = true,
+    ["DynamicHeightOffSet"] = false,
 	["AuraHeight"] = 0,
     ["SelfAuraHeight"] = 0,
     ["SquareAura"] = false,

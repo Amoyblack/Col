@@ -253,6 +253,9 @@ rs.V.zhtw = {
     NpcAuraDeled = "|cffFFD700---RSPlates:|r 光環成功刪除 ",
     NpcAuraColorSelectTT = "選擇攜帶該光環的NPC血條顏色",
 
+    NpcAuraColorOnlyMe = "只來源於我",
+    NpcAuraColorOnlyMeTT = "只對來源於我或者我寵物的光環染色",
+    
     NpcbarColor = "血條顏色",
     RemoveCheckBoxTT = "|cff00FF7F--- 點擊移除 ---|r",
 

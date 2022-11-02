@@ -253,6 +253,9 @@ rs.V.enus = {
     NpcAuraDeled = "|cffFFD700---RSPlates:|r Aura successfully added ",
     NpcAuraColorSelectTT = "Choose the color of the NPC's healthbar that has the aura",
 
+    NpcAuraColorOnlyMe = "Only From Me",
+    NpcAuraColorOnlyMeTT = "Only color aura that from my pet or myself",
+
     NpcbarColor = "Healthbar Color",
     RemoveCheckBoxTT = "|cff00FF7F--- Click to remove ---|r",
 

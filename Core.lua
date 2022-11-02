@@ -218,9 +218,9 @@ function rs.CreateUIObj(unitFrame, namePlate)
 		unitFrame.healthBar.value:SetTextColor(1,1,1)
 		unitFrame.healthBar.value:Hide()
 		if rs.tabDB[rs.iDBmark]["CenterDetail"] then
-			unitFrame.healthBar.value:SetPoint("BOTTOM", unitFrame.healthBar, "CENTER", 0, -4)
+			unitFrame.healthBar.value:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, 0)
 		else
-			unitFrame.healthBar.value:SetPoint("BOTTOMRIGHT", unitFrame.healthBar, "RIGHT", 0, -4)
+			unitFrame.healthBar.value:SetPoint("RIGHT", unitFrame.healthBar, "RIGHT", 0, 0)
 		end
 
 		-- 箭头 new ui
@@ -731,6 +731,8 @@ end
 function rs.RefCastingBar(unitFrame)
     local self = unitFrame.castBar
     local unit = self.unit
+    -- print(unit, "                             RefCastingBar")
+    if not unit then return end
     if unit then 
         rs.ThinCastBar(self)
 
@@ -789,6 +791,8 @@ function rs.HookBlizzedFunc()
     
     -- Thin CastBar
     hooksecurefunc(CastingBarMixin, "FinishSpell", function(self)
+        if not self.unit then return end
+        -- print(self.unit, "                             FinishSpell")
         if rs.tabDB[rs.iDBmark]["BarTexture"] ~= "s1" then
             if self:IsForbidden() then return end
             self:SetStatusBarTexture(dctTexture[rs.tabDB[rs.iDBmark]["BarTexture"]])
@@ -797,9 +801,11 @@ function rs.HookBlizzedFunc()
 
     hooksecurefunc(CastingBarMixin, "OnEvent", function(self, event, ...)
         local arg1 = ...;
+        if not self.unit then return end
         if ( arg1 ~= self.unit ) then return end
         if self:IsForbidden() then return end
 
+        -- print(arg1, "  ", self.unit, "    OnEvent")
 
         rs.ThinCastBar(self)
 
@@ -809,6 +815,7 @@ function rs.HookBlizzedFunc()
 
         if rs.tabDB[rs.iDBmark]["BarTexture"] ~= "s1" then
             if event == "UNIT_SPELLCAST_START" then
+                -- local unitTarget, castGUID, spellID = ...
                 local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(unit);
                 if notInterruptible then
                     r, g, b = rgbGrey[1], rgbGrey[2], rgbGrey[3]
@@ -817,6 +824,7 @@ function rs.HookBlizzedFunc()
                 end
 
             elseif event == "UNIT_SPELLCAST_CHANNEL_START" then
+                -- local unitTarget, castGUID, spellID = ...
                 local name, text, texture, startTime, endTime, isTradeSkill, notInterruptible, spellID, _, numStages = UnitChannelInfo(unit);
                 if notInterruptible then
                     r, g, b = rgbGrey[1], rgbGrey[2], rgbGrey[3]
@@ -825,15 +833,19 @@ function rs.HookBlizzedFunc()
                 end
 
             elseif ( event == "UNIT_SPELLCAST_STOP" or event == "UNIT_SPELLCAST_CHANNEL_STOP" or event == "UNIT_SPELLCAST_EMPOWER_STOP") then
+                -- local unitTarget, castGUID, spellID = ...
                 onlyTexture = true
 
                 -- 施法完成，被打断(先触发UNIT_SPELLCAST_INTERRUPTED)
             elseif ( event == "UNIT_SPELLCAST_FAILED" or event == "UNIT_SPELLCAST_INTERRUPTED" ) then
+                -- local unitTarget, castGUID, spellID = ...
                 r, g, b = rgbRed[1], rgbRed[2], rgbRed[3]
             elseif ( event == "UNIT_SPELLCAST_INTERRUPTIBLE" or event == "UNIT_SPELLCAST_NOT_INTERRUPTIBLE" ) then
+                -- local unitTarget = ...
                 onlyTexture = true
                 -- print(event)
             elseif ( event == "UNIT_SPELLCAST_DELAYED" ) then
+                -- local unitTarget, castGUID, spellID = ...
                 onlyTexture = true
                 -- print(event)
             end
