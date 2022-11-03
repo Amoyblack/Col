@@ -275,7 +275,7 @@ rs.V.zhtw = {
     Title9TT = "使用名字替代血條顯示",
 
     EnableNamemode = "啟用",
-    EnableNamemodeTT = "對選中的單位 使用名字替代血條顯示 (由於暴雪的限制，友方類型單位在副本中不生效)",
+    EnableNamemodeTT = "對下面勾選的單位 使用名字替代血條顯示 (由於暴雪的限制，友方類型單位在副本中不生效)",
 
     NamemodeGroupTitle = "單位類型",
 

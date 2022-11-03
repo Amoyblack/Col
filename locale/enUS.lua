@@ -271,7 +271,6 @@ rs.V.enus = {
     MiniMapEnableTT = "It may need to ReloadUI to take effect When using MinimapButtonBag or this type of minimap-button-Integrate addons",
 
 
-
     Title9 = "Name Mode",
     Title9TT = "Use Name instead of Healthbar to display",
 

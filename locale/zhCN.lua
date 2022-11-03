@@ -233,7 +233,6 @@ rs.V.zhcn = {
 
 
 
-
     BlizzardPanelLargeInfo = "RSPlates基于大姓名版风格制作，推荐开启 '大姓名板' 选项",
 
     needReload = "|cff66CCFF >> 重载后生效<< |r",
@@ -272,13 +271,11 @@ rs.V.zhcn = {
     MiniMapEnableTT = "在使用MinimapButtonBag等地图按钮整合插件时可能需要重载才会生效",
 
 
-
-
     Title9 = "名字模式",
     Title9TT = "使用名字替代血条显示",
 
     EnableNamemode = "启用",
-    EnableNamemodeTT = "对选中的单位 使用名字替代血条显示 (由于暴雪的限制，友方类型单位在副本中不生效)",
+    EnableNamemodeTT = "对下面勾选的单位 使用名字替代血条显示 (由于暴雪的限制，友方类型单位在副本中不生效)",
 
     NamemodeGroupTitle = "单位类型",
 
