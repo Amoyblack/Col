@@ -14,7 +14,8 @@ function rs.UpdateUnitAurasFull(unit, UnitFrame)
             end
         end
         if RSDB["ShowStolenBuff"] and aura.isStealable then
-            UnitFrame.StolenAura[aura.auraInstanceID] = {aura.icon, aura.expirationTime, aura.duration}
+            -- UnitFrame.StolenAura[aura.auraInstanceID] = {aura.icon, aura.expirationTime, aura.duration}
+            UnitFrame.StolenAura[aura.auraInstanceID] = aura
             rs.SetStolen(UnitFrame)
         end
         return false
@@ -43,7 +44,8 @@ function rs.UpdateUnitAurasIncremental(unit, unitAuraUpdateInfo, UnitFrame)
                 end
             end
             if thisAuraStolen then
-                UnitFrame.StolenAura[aura.auraInstanceID] = {aura.icon, aura.expirationTime, aura.duration}
+                -- UnitFrame.StolenAura[aura.auraInstanceID] = {aura.icon, aura.expirationTime, aura.duration}
+                UnitFrame.StolenAura[aura.auraInstanceID] = aura
                 rs.SetStolen(UnitFrame)
             end
             -- Perform any setup tasks for this aura here.
@@ -64,7 +66,8 @@ function rs.UpdateUnitAurasIncremental(unit, unitAuraUpdateInfo, UnitFrame)
                     end
                 end
                 if thisAuraStolen then
-                    UnitFrame.StolenAura[newAura.auraInstanceID] = {newAura.icon, newAura.expirationTime, newAura.duration}
+                    -- UnitFrame.StolenAura[newAura.auraInstanceID] = {newAura.icon, newAura.expirationTime, newAura.duration}
+                    UnitFrame.StolenAura[newAura.auraInstanceID] = newAura
                     rs.SetStolen(UnitFrame)
                 end
             end

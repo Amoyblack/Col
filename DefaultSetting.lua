@@ -4,10 +4,10 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "10.0.03",
+	["Version"] = "10.0.04",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
-    ["BarTexture"] = "s2",
+    ["BarTexture"] = "s3",
 	["NarrowCast"] = false,
 	["BarBgCol"] = false,
     ["EliteIcon"] = true,
@@ -192,6 +192,42 @@ rs.V.DefaultSetting = {
     }
 }
 
+rs.updateInfo = {
+    "\n|cffFFD70010.0.04|r\n",
+    "添加更新日志和赞助页签",
+    "修改自定义材质的存放路径",
+    "为小姓名板适配窄施法条样式",
+    "为可偷取/驱散光环添加层数显示",
+    "插件目录下添加config.lua，可用来配置一些额外功能选项（如染色优先级等）",
+    "\n|cffFFD70010.0.03|r\n",
+    "血量数值现改为垂直居中",
+    "修复一个和Quartz使用时产生异常的问题",
+    "地下城助手中的指定光环染色现在添加了<只来源于我>过滤器",
+    "\n|cffFFD70010.0.02|r\n",
+    "修复一个光环过滤器失效的问题",
+    "\n|cffFFD70010.0.01|r\n",
+    "调整所有非源生材质的施法条样式与行为表现（包括7.0LEG源生），使其与10.0之前的版本保持一致",
+    "\n|cffFFD70010.0.00|r\n",
+    "适配10.0客户端",
+}
 
+rs.updateInfoEN = {
+    "\n|cffFFD70010.0.04|r\n",
+    "Add changelog and sponsor tab",
+    "Change the storage path of custom texture",
+    "Adaptive narrow castbar style for small-style-nameplates",
+    "Add stack display for stealable/purgable auras",
+    "Add config.lua to the addon directory, which can be used to configure some additional function options (such as color priority, etc.)",
+    "\n|cffFFD70010.0.03|r\n",
+    "Health values are now vertically centered",
+    "Fix a bug that caused an issue when used with Quartz",
+    "Specified aura color in Dungeon Helper now add the <Only From Me> filter",
+    "\n|cffFFD70010.0.02|r\n",
+    "Fix an issue that a aura filter would not work",
+    "\n|cffFFD70010.0.01|r\n",
+    "Adjust cast bar style and behavior for all non-source textures (including 7.0LEG Source) to be consistent with pre-10.0 versions",
+    "\n|cffFFD70010.0.00|r\n",
+    "Adapt to 10.0 client",
+}
 
 

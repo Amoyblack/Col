@@ -21,7 +21,7 @@ rs.V.enus = {
     Title10 = "Profile",
 
     BarTexture = "Texture",
-    BarTextureTT = "|cffFFD700source|r Current Version(10.0 DF)Blizzard default texture  \n\n|cffFFD7007.0 LEG source|r 7.0 LEG ~ 9.0 SL Version Blizzard default texture \n\n|cffFFD700Customize|r If you need a custom texture, rename your texture file to <myrstexture>, store it in ~/_retail_/Interface/AddOns/RSPlates/media/myrstexture, and select this option \n\n|cff66CCFFWhen select the first option - <source>, you may need to reload UI to take effect|r",
+    BarTextureTT = "\n|cffFFD700source|r Current Version(10.0 DF)Blizzard default texture \n\n|cffFFD7007.0 LEG source|r 7.0 LEG ~ 9.0 SL Version Blizzard default texture \n\n|cffFFD700Customize|r If you need a custom texture, rename your texture file to |cff00FF7F<MyRsTexture>|r, store it in |cff00FF7F//_retail_/Interface/MyRsTexture|r, and select this option \n\n|cff66CCFFWhen select the first option - <source>, you may need to reload UI to take effect|r",
     BarTextureSource = "source",
 
     NarrowCastBar = "Narrow CastBar",
@@ -313,4 +313,11 @@ rs.V.enus = {
     NameplatePersonalHideDelaySeconds = "HideDelay (sec)",
 
     CVarExtraLink = "|cffFFD700More complete CVar documentation can be found here:  https://wowpedia.fandom.com/wiki/Console_variables/Complete_list |r",
+
+    VersionLog = "Change Log",
+
+    Sponsor = "Sponsor",
+    SponsorDesc = "\n\nIf you like |cff00FF7FRS|r|cffFFD700Plates|r  You can sponsor me in the following ways\n\nYour support will make this addon go further, you can remark the Game id and Server to me\n\n\n",
+    SponsorWX = "WeChat(CN)",
+    SponsorIFD = "iFaDian(CN)",
 }

@@ -140,7 +140,7 @@ options.args.basic = {
                         s5 = "|TInterface\\AddOns\\RSPlates\\media\\bar_raid:10:150:0:0|t  raid",
                         s6 = "|TInterface\\AddOns\\RSPlates\\media\\bar_raid_bright:10:150:0:0|t  raid_L",
                         s7 = "|TInterface\\AddOns\\RSPlates\\media\\bar_solid:10:150:0:0|t  solid",
-                        s8 = "|TInterface\\AddOns\\RSPlates\\media\\myrstexture:10:150:0:0|t  Customize",
+                        s8 = "|TInterface\\MyRsTexture:10:150:0:0|t  Customize",
                     }
                 }
             }
@@ -1428,10 +1428,94 @@ options.args.auras = {
     }
 }
 
+options.args.gap1 = {
+    name = " ",
+    type = "group",
+    order = 7,
+    disabled = true,
+    args = {},
+}
+
+options.args.gap2 = {
+    name = " ",
+    type = "group",
+    order = 8,
+    disabled = true,
+    args = {},
+}
+
+options.args.UpdateInfo = {
+    name = L["VersionLog"],
+    type = "group",
+    order = 9,
+    args = {
+        content = {
+            order = 1,
+            type = "description",
+            name = function() 
+                local info = ""
+                local changelog
+                local clientlang = GetLocale()
+                if clientlang == "zhCN" or clientlang == "zhTW" then
+                    changelog = rs.updateInfo
+                else
+                    changelog = rs.updateInfoEN
+                end
+                for k, v in pairs(changelog) do
+                    info = info..v.."\n"
+                end
+                return info
+            end,
+        }
+    }
+}
+options.args.sponsor = {
+    name = "|cffDDDDDD"..L["Sponsor"].."|r ",
+    type = "group",
+    order = 10,
+    -- disabled = true,
+    args = {
+        TitleLine = {
+            type = "description",
+            order = 1,
+            name = L["SponsorDesc"],
+        },
+        WXRecievePic = {
+            type = "input",
+            order = 10,
+            name = L["SponsorWX"],
+            desc = "|TInterface\\AddOns\\RSPlates\\media\\QR:150:150:0:0|t",
+            width = 2.5,
+            get = function() return "QR Code" end,
+        },
+        AFaDian = {
+            type = "input",
+            order = 11,
+            name = L["SponsorIFD"],
+            width = 2.5,
+            get = function() return "https://afdian.net/a/RSPlates" end,
+        },
+        Patreon = {
+            type = "input",
+            order = 12,
+            name = "Patreon",
+            width = 2.5,
+            get = function() return "https://www.patreon.com/RSPlates" end,
+        },
+        USDC = {
+            type = "input",
+            order = 13,
+            name = "Crypto  USDC - TRC20",
+            width = 2.5,
+            get = function() return "TNn1keSMKgJB896a1EsnvRfkYHCfwnGujd" end,
+        },
+    },
+}
+
 options.args.auras.args.whitelist = {
     name = L["MenuWhiteList"],
     type = "group",
-    order = 8,
+    order = 1,
     args = {
         whitelistDesc = {
             name = L["WhiteListDesc"],
@@ -1480,7 +1564,7 @@ options.args.auras.args.whitelist = {
 options.args.auras.args.blacklist = {
     name = L["MenuBlackList"],
     type = "group",
-    order = 9,
+    order = 2,
     args = {
         blacklistDesc = {
             name = L["BlacklistDesc"],

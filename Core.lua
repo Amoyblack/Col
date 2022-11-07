@@ -24,7 +24,7 @@ local dctTexture = {
     ["s5"] = "Interface\\AddOns\\RSPlates\\media\\bar_raid",
     ["s6"] = "Interface\\AddOns\\RSPlates\\media\\bar_raid_bright",
     ["s7"] = "Interface\\AddOns\\RSPlates\\media\\bar_solid",
-    ["s8"] = "Interface\\AddOns\\RSPlates\\media\\myrstexture",
+    ["s8"] = "Interface\\MyRsTexture",
 }
 
 local tabGUID2unit = {}
@@ -279,15 +279,15 @@ function rs.CreateUIObj(unitFrame, namePlate)
 
 		-- 任务 new ui
 		unitFrame.healthBar.questIcon = unitFrame.healthBar:CreateTexture("QuestIcon", "OVERLAY")
-		unitFrame.healthBar.questIcon:SetSize(30, 30)
+		unitFrame.healthBar.questIcon:SetSize(rs.ExtraConfig.questIconSize, rs.ExtraConfig.questIconSize)
 		unitFrame.healthBar.questIcon:SetTexture(questTexture)
-		unitFrame.healthBar.questIcon:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, 45)
+		unitFrame.healthBar.questIcon:SetPoint("BOTTOM", unitFrame.healthBar, "TOP", 0, 20)
 		unitFrame.healthBar.questIcon:SetVertexColor(.96, .85 , .1)
 		unitFrame.healthBar.questIcon:Hide()
 
 		-- 偷取/驱散buff模块 new ui
 		unitFrame.StolenFrame = CreateFrame("Frame", nil, unitFrame.healthBar)
-		unitFrame.StolenFrame:SetSize(25, 25)
+		unitFrame.StolenFrame:SetSize(rs.ExtraConfig.stolenBuffSize, rs.ExtraConfig.stolenBuffSize)
 		unitFrame.StolenFrame:SetPoint("LEFT", unitFrame.healthBar, "RIGHT", 10, 0)
 		unitFrame.StolenFrame:Hide()
 
@@ -300,6 +300,9 @@ function rs.CreateUIObj(unitFrame, namePlate)
 		unitFrame.StolenFrame.Cooldown:SetAllPoints()
 		unitFrame.StolenFrame.Cooldown:SetReverse(true)
 		unitFrame.StolenFrame.Cooldown:SetHideCountdownNumbers(true)
+
+		unitFrame.StolenFrame.count = rs.createtext(unitFrame.StolenFrame.Cooldown, "OVERLAY", 10, "OUTLINE", "CENTER")
+		unitFrame.StolenFrame.count:SetPoint("BOTTOMRIGHT", unitFrame.StolenFrame, "BOTTOMRIGHT", -1, 1)
 
         namePlate.NpcNameRS = rs.createtext(namePlate, "OVERLAY", 12, "OUTLINE", "CENTER")
         namePlate.NpcNameRS:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, 0)
@@ -362,38 +365,75 @@ function rs.SetBarColor(frame)
             end
         end
 
-        -- 焦点
-        if UnitIsUnit("focus", unit) and rs.tabDB[rs.iDBmark]["FocusColorEnable"] then
-            r, g, b = rs.tabDB[rs.iDBmark]["FocusColor"][1], rs.tabDB[rs.iDBmark]["FocusColor"][2], rs.tabDB[rs.iDBmark]["FocusColor"][3]
-
-        -- 锁定玩家颜色
-        elseif rs.tabDB[rs.iDBmark]["LockPlayerColor"] and (UnitIsPlayer(unit) or UnitIsPossessed(unit) or UnitPlayerControlled(unit)) then
-            do end
-
-        -- 目标颜色
-        elseif rs.tabDB[rs.iDBmark]["TargetColorEnable"] and UnitIsUnit("target", unit) and not UnitIsUnit("player", unit) then
-            r, g, b = rs.tabDB[rs.iDBmark]["TargetColor"][1], rs.tabDB[rs.iDBmark]["TargetColor"][2], rs.tabDB[rs.iDBmark]["TargetColor"][3]
-
-        -- 资源条不染色
-        elseif UnitIsUnit("player", unit) then
-            do end
-        -- 灰名
-        elseif UnitIsTapDenied(unit) then
-            do end
-        -- 1 自定义NpcID
-        elseif NpcColor then
-            r, g, b = NpcColor[1], NpcColor[2], NpcColor[3]
-        -- 2 携带自定义光环
-        elseif AuraColor then
-            r, g, b = AuraColor[1], AuraColor[2], AuraColor[3]
-        -- 3 斩杀
-        elseif rs.tabDB[rs.iDBmark]["SlayEnable"] and rs.IsOnKillHealth(unit) then
-            r, g, b = rs.tabDB[rs.iDBmark]["SlayColor"][1], rs.tabDB[rs.iDBmark]["SlayColor"][2], rs.tabDB[rs.iDBmark]["SlayColor"][3]
-
-        -- 4 仇恨，目标与玩家处于战斗状态
-        elseif rs.tabDB[rs.iDBmark]["ThreatColorEnable"] and threatStatus then
-            r, g, b = rs.IsOnThreatList(frame.unit)
+        for key in string.gmatch(rs.ExtraConfig.ColorOrder, "%a") do 
+            -- 资源条不染色
+            if UnitIsUnit("player", unit) then
+                break
+            -- 锁定玩家颜色
+            elseif rs.tabDB[rs.iDBmark]["LockPlayerColor"] and (UnitIsPlayer(unit) or UnitIsPossessed(unit) or UnitPlayerControlled(unit)) then
+                break
+            -- A 焦点
+            elseif key == "A" and rs.tabDB[rs.iDBmark]["FocusColorEnable"] and UnitIsUnit("focus", unit) then
+                r, g, b = rs.tabDB[rs.iDBmark]["FocusColor"][1], rs.tabDB[rs.iDBmark]["FocusColor"][2], rs.tabDB[rs.iDBmark]["FocusColor"][3]
+                break
+            -- B 目标颜色
+            elseif key == "B" and rs.tabDB[rs.iDBmark]["TargetColorEnable"] and UnitIsUnit("target", unit) then
+                r, g, b = rs.tabDB[rs.iDBmark]["TargetColor"][1], rs.tabDB[rs.iDBmark]["TargetColor"][2], rs.tabDB[rs.iDBmark]["TargetColor"][3]
+                break
+            -- C 灰名
+            elseif key == "C" and UnitIsTapDenied(unit) then
+                break
+            -- D 自定义NpcID
+            elseif key == "D" and NpcColor then
+                r, g, b = NpcColor[1], NpcColor[2], NpcColor[3]
+                break
+            -- E 携带自定义光环
+            elseif key == "E" and AuraColor then
+                r, g, b = AuraColor[1], AuraColor[2], AuraColor[3]
+                break
+            -- F 斩杀
+            elseif key == "F" and rs.tabDB[rs.iDBmark]["SlayEnable"] and rs.IsOnKillHealth(unit) then
+                r, g, b = rs.tabDB[rs.iDBmark]["SlayColor"][1], rs.tabDB[rs.iDBmark]["SlayColor"][2], rs.tabDB[rs.iDBmark]["SlayColor"][3]
+                break
+            -- G 仇恨，目标与玩家处于战斗状态
+            elseif key == "G" and rs.tabDB[rs.iDBmark]["ThreatColorEnable"] and threatStatus then
+                r, g, b = rs.IsOnThreatList(frame.unit)
+                break
+            end
         end
+        
+        -- 焦点
+        -- if UnitIsUnit("focus", unit) and rs.tabDB[rs.iDBmark]["FocusColorEnable"] then
+        --     r, g, b = rs.tabDB[rs.iDBmark]["FocusColor"][1], rs.tabDB[rs.iDBmark]["FocusColor"][2], rs.tabDB[rs.iDBmark]["FocusColor"][3]
+
+        -- -- 锁定玩家颜色
+        -- elseif rs.tabDB[rs.iDBmark]["LockPlayerColor"] and (UnitIsPlayer(unit) or UnitIsPossessed(unit) or UnitPlayerControlled(unit)) then
+        --     do end
+
+        -- -- 目标颜色
+        -- elseif rs.tabDB[rs.iDBmark]["TargetColorEnable"] and UnitIsUnit("target", unit) and not UnitIsUnit("player", unit) then
+        --     r, g, b = rs.tabDB[rs.iDBmark]["TargetColor"][1], rs.tabDB[rs.iDBmark]["TargetColor"][2], rs.tabDB[rs.iDBmark]["TargetColor"][3]
+
+        -- -- 资源条不染色
+        -- elseif UnitIsUnit("player", unit) then
+        --     do end
+        -- -- 灰名
+        -- elseif UnitIsTapDenied(unit) then
+        --     do end
+        -- -- 1 自定义NpcID
+        -- elseif NpcColor then
+        --     r, g, b = NpcColor[1], NpcColor[2], NpcColor[3]
+        -- -- 2 携带自定义光环
+        -- elseif AuraColor then
+        --     r, g, b = AuraColor[1], AuraColor[2], AuraColor[3]
+        -- -- 3 斩杀
+        -- elseif rs.tabDB[rs.iDBmark]["SlayEnable"] and rs.IsOnKillHealth(unit) then
+        --     r, g, b = rs.tabDB[rs.iDBmark]["SlayColor"][1], rs.tabDB[rs.iDBmark]["SlayColor"][2], rs.tabDB[rs.iDBmark]["SlayColor"][3]
+
+        -- -- 4 仇恨，目标与玩家处于战斗状态
+        -- elseif rs.tabDB[rs.iDBmark]["ThreatColorEnable"] and threatStatus then
+        --     r, g, b = rs.IsOnThreatList(frame.unit)
+        -- end
 
 
 
@@ -439,11 +479,12 @@ function rs.ThinCastBar(self, event, ...)
         -- Thin cast bar
         if rs.tabDB[rs.iDBmark]["NarrowCast"]then
             local function SetThin(self)
+                local healthbarHeight = self:GetParent().healthBar:GetHeight()
                 self.Icon:SetShown(true)
                 -- self.Icon:SetTexture(texture)
                 self:SetHeight(rs.tabDB[rs.iDBmark]["CastHeight"])
                 self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -3, 0)
-                self.Icon:SetSize(rs.tabDB[rs.iDBmark]["CastHeight"] + 13, rs.tabDB[rs.iDBmark]["CastHeight"] + 13)  -- 13 + height
+                self.Icon:SetSize(rs.tabDB[rs.iDBmark]["CastHeight"] + healthbarHeight + 2, rs.tabDB[rs.iDBmark]["CastHeight"] + healthbarHeight + 2)  -- 13 + height
                 self.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
                 self.BorderShield:SetPoint("LEFT",self, "LEFT", -2, 0)
             end
@@ -674,9 +715,14 @@ function rs.SetStolen(unitFrame)
     end
     if stolenAura then
         unitFrame.StolenFrame:Show()
-        unitFrame.StolenFrame.Texture:SetTexture(stolenAura[1])
-        unitFrame.StolenFrame.Cooldown:SetCooldown(stolenAura[2] - stolenAura[3], stolenAura[3])
+        unitFrame.StolenFrame.Texture:SetTexture(stolenAura.icon)
+        unitFrame.StolenFrame.Cooldown:SetCooldown(stolenAura.expirationTime - stolenAura.duration, stolenAura.duration)
         unitFrame.healthBar.curTarget:SetPoint("LEFT", unitFrame.StolenFrame, "RIGHT", 0, 0)
+        if stolenAura.applications > 1 then
+            unitFrame.StolenFrame.count:SetText(stolenAura.applications)
+        else
+            unitFrame.StolenFrame.count:SetText("")
+        end
     else
         unitFrame.StolenFrame:Hide()
         unitFrame.healthBar.curTarget:SetPoint("LEFT", unitFrame.healthBar, "RIGHT", 0, 0)
@@ -1094,6 +1140,16 @@ local function UIObj_Event(self, event, ...)
             rs.UpdateCvars()
             rs.inLock = false
         end
+
+    -- elseif event == "CVAR_UPDATE" then 
+    --     local cvar, data = ...
+    --     if cvar == "NamePlateClassificationScale" then
+    --         if data == "1.25" then
+    --             -- print('开启大姓名板')
+    --         elseif data == "1" then
+    --             -- print('开启小姓名板')
+    --         end
+    --     end
     end
 end
 
@@ -1117,9 +1173,26 @@ UIObjectDriveFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 UIObjectDriveFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
 
 
+-- UIObjectDriveFrame:RegisterEvent("CVAR_UPDATE")
+
+
 
 SLASH_TEST1 = "/rslog"
 SlashCmdList.TEST = function()
+    -- local order = "abcdefghi"
+    
+
+
+    -- SetCVar("NamePlateClassificationScale", 1.25) 
+    -- SetCVar("NamePlateVerticalScale", 3) 
+    -- SetCVar("NamePlateHorizontalScale", 1.4) 
+
+    -- local tarnp = C_NamePlate.GetNamePlateForUnit("target", false)
+    -- if tarnp then
+    --     local unitframe = tarnp.UnitFrame
+    --     print(unitframe.healthBar:GetHeight())
+    -- end
+
     -- for i, k in pairs(tabGUID2unit) do
     --     print(i, k)
     -- end

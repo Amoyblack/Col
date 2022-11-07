@@ -28,6 +28,7 @@ locale\enUS.lua
 locale\zhTW.lua
 locale\LangSet.lua
 
+config.lua
 
 DefaultSetting.lua
 
@@ -39,6 +40,6 @@ Dungeonhelp.lua
 CVars.lua
 NameMode.lua
 
-ConfigGUI.lua
+GUI.lua
 
 

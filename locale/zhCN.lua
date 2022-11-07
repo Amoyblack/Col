@@ -21,7 +21,7 @@ rs.V.zhcn = {
     Title10 = "插件配置",
 
     BarTexture = "材质",
-    BarTextureTT = "|cffFFD700源生|r 当前版本(10.0 DF)暴雪默认材质  \n\n|cffFFD7007.0 LEG 源生|r 7.0 LEG ~ 9.0 SL 版本的暴雪默认材质 \n\n|cffFFD700Customize|r 若需要自定义材质，把你的材质改名为myrstexture，存放于 ~/_retail_/Interface/AddOns/RSPlates/media/myrstexture，然后勾选此项 \n\n|cff66CCFF选择第一项源生时候需要重载生效|r",
+    BarTextureTT = "\n|cffFFD700源生|r 当前版本(10.0 DF)暴雪默认材质 \n\n|cffFFD7007.0 LEG 源生|r 7.0 LEG ~ 9.0 SL 版本的暴雪默认材质 \n\n|cffFFD700Customize|r 若需要自定义材质，把你的材质改名为|cff00FF7F<MyRsTexture>|r，存放于 |cff00FF7F//_retail_/Interface/MyRsTexture|r，然后勾选此项 \n\n|cff66CCFF选择第一项源生时候需要重载生效|r",
     BarTextureSource = "源生",
 
     NarrowCastBar = "窄施法条",
@@ -313,4 +313,11 @@ rs.V.zhcn = {
     NameplatePersonalHideDelaySeconds = "渐隐时间（秒）",
 
     CVarExtraLink = "|cffFFD700更多完整的CVar文档手册可以在这里查阅:  https://wowpedia.fandom.com/wiki/Console_variables/Complete_list |r",
+
+    VersionLog = "更新日志",
+
+    Sponsor = "赞助",
+    SponsorDesc = "\n\n如果你喜欢|cff00FF7FRS|r|cffFFD700Plates|r  可以通过下面的方式赞助我\n\n你的支持会让这个插件走的更远，可以备注上游戏id与服务器\n\n\n",
+    SponsorWX = "微信",
+    SponsorIFD = "爱发电",
 }
