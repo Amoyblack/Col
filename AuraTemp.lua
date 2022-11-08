@@ -24,8 +24,8 @@ function rs.UpdateUnitAurasFull(unit, UnitFrame)
 
     local batchCount = nil
     local usePackedAura = true
-    AuraUtil.ForEachAura(unit, "HELPFUL", BUFF_MAX_DISPLAY, HandleAura, usePackedAura)
-    AuraUtil.ForEachAura(unit, "HARMFUL", BUFF_MAX_DISPLAY, HandleAura, usePackedAura)
+    AuraUtil.ForEachAura(unit, "HELPFUL", batchCount, HandleAura, usePackedAura)
+    AuraUtil.ForEachAura(unit, "HARMFUL", batchCount, HandleAura, usePackedAura)
 
 end
 

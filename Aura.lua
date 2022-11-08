@@ -286,8 +286,8 @@ function rs.ParseAllAurasRSV(self, forceAll)
 
 	local batchCount = nil;
 	local usePackedAura = true;
-	AuraUtil.ForEachAura(self.unit, "HARMFUL", BUFF_MAX_DISPLAY, HandleAura, usePackedAura);
-	AuraUtil.ForEachAura(self.unit, "HELPFUL", BUFF_MAX_DISPLAY, HandleAura, usePackedAura);
+	AuraUtil.ForEachAura(self.unit, "HARMFUL", batchCount, HandleAura, usePackedAura);
+	AuraUtil.ForEachAura(self.unit, "HELPFUL", batchCount, HandleAura, usePackedAura);
 end
 
 

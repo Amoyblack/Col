@@ -258,14 +258,14 @@ function rs.CreateUIObj(unitFrame, namePlate)
         unitFrame.CastingExpandFrame.CastingTarget:Hide()
 
         -- Timer
-        unitFrame.CastingExpandFrame.CastingTimer = rs.createtext(unitFrame.castBar, "OVERLAY", 12, "OUTLINE", "CENTER")
+        unitFrame.CastingExpandFrame.CastingTimer = rs.createtext(unitFrame.castBar, "OVERLAY", rs.ExtraConfig.CastingTimerSize, "OUTLINE", "CENTER")
         unitFrame.CastingExpandFrame.CastingTimer:SetPoint("RIGHT", unitFrame.castBar, "RIGHT", 0, 0)
         unitFrame.CastingExpandFrame.CastingTimer:Hide()
 
         -- Interrupte Indicator
 
         unitFrame.CastingExpandFrame.InterrupteIndicator = CreateFrame("Frame", nil, unitFrame.CastingExpandFrame)
-        unitFrame.CastingExpandFrame.InterrupteIndicator:SetSize(7, 7)
+        unitFrame.CastingExpandFrame.InterrupteIndicator:SetSize(rs.ExtraConfig.InterrupteIndicatorSize, rs.ExtraConfig.InterrupteIndicatorSize)
 		unitFrame.CastingExpandFrame.InterrupteIndicator:SetPoint("BOTTOMLEFT", unitFrame.healthBar, "TOPLEFT", 0, 3)
 		unitFrame.CastingExpandFrame.InterrupteIndicator:Hide()
 
@@ -479,7 +479,9 @@ function rs.ThinCastBar(self, event, ...)
         -- Thin cast bar
         if rs.tabDB[rs.iDBmark]["NarrowCast"]then
             local function SetThin(self)
-                local healthbarHeight = self:GetParent().healthBar:GetHeight()
+                local uf = self:GetParent()
+                local health = uf.healthBar
+                local healthbarHeight = health:GetHeight()
                 self.Icon:SetShown(true)
                 -- self.Icon:SetTexture(texture)
                 self:SetHeight(rs.tabDB[rs.iDBmark]["CastHeight"])
@@ -780,7 +782,6 @@ function rs.RefCastingBar(unitFrame)
     -- print(unit, "                             RefCastingBar")
     if not unit then return end
     if unit then 
-        rs.ThinCastBar(self)
 
         local r, g, b
         if rs.tabDB[rs.iDBmark]["BarTexture"] ~= "s1" then
@@ -842,6 +843,12 @@ function rs.HookBlizzedFunc()
         if rs.tabDB[rs.iDBmark]["BarTexture"] ~= "s1" then
             if self:IsForbidden() then return end
             self:SetStatusBarTexture(dctTexture[rs.tabDB[rs.iDBmark]["BarTexture"]])
+        end
+    end)
+
+    hooksecurefunc(CastingBarMixin, "OnShow", function(self)
+        if self.unit then
+            rs.ThinCastBar(self)
         end
     end)
 
