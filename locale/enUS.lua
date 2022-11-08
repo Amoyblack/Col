@@ -317,7 +317,7 @@ rs.V.enus = {
     VersionLog = "Change Log",
 
     Sponsor = "Sponsor",
-    SponsorDesc = "\n\nIf you like |cff00FF7FRS|r|cffFFD700Plates|r  You can sponsor me in the following ways\n\nYour support will make this addon go further, you can remark the Game id and Server to me\n\n\n",
+    SponsorDesc = "\n\nIf you like |cff00FF7FRS|r|cffFFD700Plates|r  You can sponsor me in the following ways\n\nYour support will make this addon go further, please remark the Game id and Server to me if u want\n\n\n",
     SponsorWX = "WeChat(CN)",
     SponsorIFD = "iFaDian(CN)",
 }

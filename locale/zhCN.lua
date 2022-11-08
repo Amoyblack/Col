@@ -317,7 +317,7 @@ rs.V.zhcn = {
     VersionLog = "更新日志",
 
     Sponsor = "赞助",
-    SponsorDesc = "\n\n如果你喜欢|cff00FF7FRS|r|cffFFD700Plates|r  可以通过下面的方式赞助我\n\n你的支持会让这个插件走的更远，可以备注上游戏id与服务器\n\n\n",
+    SponsorDesc = "\n\n如果你喜欢|cff00FF7FRS|r|cffFFD700Plates|r  可以通过下面的方式赞助我\n\n你的支持会让这个插件走的更远，如果愿意请备注上游戏id与服务器\n\n\n",
     SponsorWX = "微信",
     SponsorIFD = "爱发电",
 }
