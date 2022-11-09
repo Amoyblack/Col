@@ -27,6 +27,8 @@ local dctTexture = {
     ["s8"] = "Interface\\MyRsTexture",
 }
 
+local healthBarHeight = 11
+
 local tabGUID2unit = {}
 
 local rgbYello = {245/256, 161/256, 5/256}
@@ -479,14 +481,11 @@ function rs.ThinCastBar(self, event, ...)
         -- Thin cast bar
         if rs.tabDB[rs.iDBmark]["NarrowCast"]then
             local function SetThin(self)
-                local uf = self:GetParent()
-                local health = uf.healthBar
-                local healthbarHeight = health:GetHeight()
                 self.Icon:SetShown(true)
                 -- self.Icon:SetTexture(texture)
                 self:SetHeight(rs.tabDB[rs.iDBmark]["CastHeight"])
                 self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -3, 0)
-                self.Icon:SetSize(rs.tabDB[rs.iDBmark]["CastHeight"] + healthbarHeight + 2, rs.tabDB[rs.iDBmark]["CastHeight"] + healthbarHeight + 2)  -- 13 + height
+                self.Icon:SetSize(rs.tabDB[rs.iDBmark]["CastHeight"] + healthBarHeight + 2, rs.tabDB[rs.iDBmark]["CastHeight"] + healthBarHeight + 2)  -- 13 + height
                 self.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
                 self.BorderShield:SetPoint("LEFT",self, "LEFT", -2, 0)
             end
@@ -735,7 +734,9 @@ end
 ---手动设置一次需要设置的
 function rs.On_NpRefreshOnce(unitFrame)
     if unitFrame:IsForbidden() then return end
-
+    
+    healthBarHeight = unitFrame.healthBar:GetHeight()
+    
     rs.SetStolen(unitFrame)
 
 	rs.SetBarTexture(unitFrame)
