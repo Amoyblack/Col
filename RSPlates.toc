@@ -35,7 +35,6 @@ DefaultSetting.lua
 Core.lua
 Quest.lua
 Aura.lua
-AuraTemp.lua
 Dungeonhelp.lua
 CVars.lua
 NameMode.lua

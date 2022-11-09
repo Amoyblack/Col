@@ -735,8 +735,7 @@ end
 ---手动设置一次需要设置的
 function rs.On_NpRefreshOnce(unitFrame)
     if unitFrame:IsForbidden() then return end
-    --Stolen/ColorAura
-    rs.UpdateUnitAurasFull(unitFrame.unit, unitFrame)
+
     rs.SetStolen(unitFrame)
 
 	rs.SetBarTexture(unitFrame)
@@ -767,7 +766,7 @@ end
 function rs.RefUnitAuraTotally(unitFrame)
     local unit = unitFrame.unit
     -- unitFrame.BuffFrame:UpdateBuffs(unit, nil, {})
-    rs.UpdateBuffsRSV(unitFrame.BuffFrame, unit, nil, {})
+    rs.UpdateBuffsRSV(unitFrame.BuffFrame, unit, nil, {}, unitFrame)
     -- rs.UpdateBuffsRSV(unitFrame.BuffFrame, unit, nil, {})
 end
 -- function rs.RefAuraForOneNp(unitFrame)
@@ -1052,16 +1051,12 @@ local function UIObj_Event(self, event, ...)
         -- local unit, isFullUpdate, updatedAuraInfos = ...
         -- if not string.match(unit, "nameplate") then return end
         -- rs:OnUnitAuraUpdateRS(unit, isFullUpdate, updatedAuraInfos)
+        -- 9.0 SL above
         local unit, unitAuraUpdateInfo = ...
         if string.match(unit, "nameplate") then 
             local npbase = C_NamePlate.GetNamePlateForUnit(unit, false)
             if npbase then
                 rs.OnUnitAuraUpdateRSV(npbase.UnitFrame.BuffFrame, unit, unitAuraUpdateInfo)
-                if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate then
-                    rs.UpdateUnitAurasFull(unit, npbase.UnitFrame)
-                else
-                    rs.UpdateUnitAurasIncremental(unit, unitAuraUpdateInfo, npbase.UnitFrame)
-                end
             end
         end
 
@@ -1186,10 +1181,6 @@ UIObjectDriveFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
 
 SLASH_TEST1 = "/rslog"
 SlashCmdList.TEST = function()
-    -- local order = "abcdefghi"
-    
-
-
     -- SetCVar("NamePlateClassificationScale", 1.25) 
     -- SetCVar("NamePlateVerticalScale", 3) 
     -- SetCVar("NamePlateHorizontalScale", 1.4) 

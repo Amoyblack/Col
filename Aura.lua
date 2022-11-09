@@ -106,7 +106,7 @@ function rs.OnUnitAuraUpdateRSV(self, unit, unitAuraUpdateInfo)
 	local nameplate = C_NamePlate.GetNamePlateForUnit(unit, issecure());
 	if (nameplate) then
 		-- nameplate.UnitFrame.BuffFrame:UpdateBuffsRSV(nameplate.namePlateUnitToken, unitAuraUpdateInfo, auraSettings);
-		rs.UpdateBuffsRSV(nameplate.UnitFrame.BuffFrame, nameplate.namePlateUnitToken, unitAuraUpdateInfo, auraSettings);
+		rs.UpdateBuffsRSV(nameplate.UnitFrame.BuffFrame, nameplate.namePlateUnitToken, unitAuraUpdateInfo, auraSettings, nameplate.UnitFrame);
 		-- if isPlayer and self.personalFriendlyBuffFrame then
 		-- 	local auraSettingsFriendlyBuffs = {
 		-- 		helpful = true;
@@ -119,7 +119,7 @@ function rs.OnUnitAuraUpdateRSV(self, unit, unitAuraUpdateInfo)
 	end
 end
 
-function rs.UpdateBuffsRSV(self, unit, unitAuraUpdateInfo, auraSettings)
+function rs.UpdateBuffsRSV(self, unit, unitAuraUpdateInfo, auraSettings, UnitFrame)
     local RSDB = rs.tabDB[rs.iDBmark]
 
     local filters = {};
@@ -145,7 +145,7 @@ function rs.UpdateBuffsRSV(self, unit, unitAuraUpdateInfo, auraSettings)
 
 	local aurasChanged = false;
 	if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate or unit ~= previousUnit or self.auras == nil or filterString ~= previousFilter then
-		rs.ParseAllAurasRSV(self, auraSettings.showAll);
+		rs.ParseAllAurasRSV(self, auraSettings.showAll, UnitFrame);
 		aurasChanged = true;
 	else
 		if unitAuraUpdateInfo.addedAuras ~= nil then
@@ -155,6 +155,22 @@ function rs.UpdateBuffsRSV(self, unit, unitAuraUpdateInfo, auraSettings)
 					self.auras[aura.auraInstanceID] = aura;
 					aurasChanged = true;
 				end
+                --- TempAura 
+                local thisAuraColor = RSDB["DctNeedColorAura"][aura.spellId]
+                local thisAuraStolen = RSDB["ShowStolenBuff"] and aura.isStealable
+                if thisAuraColor then
+                    local unMatched = thisAuraColor[2] and (aura.sourceUnit ~= "player" and aura.sourceUnit ~= "pet")
+                    if not unMatched then
+                        UnitFrame.ColorAura[aura.auraInstanceID] = thisAuraColor[1]
+                        rs.SetBarColor(UnitFrame)
+                    end
+                end
+                if thisAuraStolen then
+                    -- UnitFrame.StolenAura[aura.auraInstanceID] = {aura.icon, aura.expirationTime, aura.duration}
+                    UnitFrame.StolenAura[aura.auraInstanceID] = aura
+                    rs.SetStolen(UnitFrame)
+                end
+
 			end
 		end
 
@@ -165,6 +181,26 @@ function rs.UpdateBuffsRSV(self, unit, unitAuraUpdateInfo, auraSettings)
 					self.auras[auraInstanceID] = newAura;
 					aurasChanged = true;
 				end
+
+                --- TempAura
+                local newAura = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, auraInstanceID)
+                if newAura then
+                    local thisAuraColor = RSDB["DctNeedColorAura"][newAura.spellId]
+                    local thisAuraStolen = RSDB["ShowStolenBuff"] and newAura.isStealable
+                    if thisAuraColor then
+                        local unMatched = thisAuraColor[2] and (newAura.sourceUnit ~= "player" and newAura.sourceUnit ~= "pet")
+                        if not unMatched then
+                            UnitFrame.ColorAura[newAura.auraInstanceID] = thisAuraColor[1]
+                            rs.SetBarColor(UnitFrame)
+                        end
+                    end
+                    if thisAuraStolen then
+                        -- UnitFrame.StolenAura[newAura.auraInstanceID] = {newAura.icon, newAura.expirationTime, newAura.duration}
+                        UnitFrame.StolenAura[newAura.auraInstanceID] = newAura
+                        rs.SetStolen(UnitFrame)
+                    end
+                end
+                --- End
 			end
 		end
 
@@ -174,6 +210,17 @@ function rs.UpdateBuffsRSV(self, unit, unitAuraUpdateInfo, auraSettings)
 					self.auras[auraInstanceID] = nil;
 					aurasChanged = true;
 				end
+
+                --- Aura Temp
+                if UnitFrame.ColorAura[auraInstanceID] then 
+                    UnitFrame.ColorAura[auraInstanceID] = nil
+                    rs.SetBarColor(UnitFrame)
+                end
+                if UnitFrame.StolenAura[auraInstanceID] then 
+                    UnitFrame.StolenAura[auraInstanceID] = nil
+                    rs.SetStolen(UnitFrame)
+                end
+                --- End
 			end
 		end
 	end
@@ -268,18 +315,44 @@ function rs.UpdateBuffsRSV(self, unit, unitAuraUpdateInfo, auraSettings)
 	self:Layout();
 end
 
-function rs.ParseAllAurasRSV(self, forceAll)
+function rs.ParseAllAurasRSV(self, forceAll, UnitFrame)
+    local RSDB = rs.tabDB[rs.iDBmark] 
+
     if self.auras == nil then
 		self.auras = TableUtil.CreatePriorityTable(AuraUtil.DefaultAuraCompare, TableUtil.Constants.AssociativePriorityTable);
 	else
 		self.auras:Clear();
 	end
 
+    if next(UnitFrame.ColorAura) then
+        UnitFrame.ColorAura = {}
+        rs.SetBarColor(UnitFrame)
+    end
+    if next(UnitFrame.StolenAura) then
+        UnitFrame.StolenAura = {}
+        rs.SetStolen(UnitFrame)
+    end
+
 	local function HandleAura(aura)
         local BlizzardShouldShow = self:ShouldShowBuff(aura, forceAll)
 		if rs.RsShouldShowBuff(self.unit, aura, BlizzardShouldShow) then
 			self.auras[aura.auraInstanceID] = aura;
 		end
+
+        -- From AuraTemp
+        if RSDB["DctNeedColorAura"][aura.spellId] then
+            local unMatched = RSDB["DctNeedColorAura"][aura.spellId][2] and (aura.sourceUnit ~= "player" and aura.sourceUnit ~= "pet")
+            if not unMatched then
+                UnitFrame.ColorAura[aura.auraInstanceID] = RSDB["DctNeedColorAura"][aura.spellId][1]
+                rs.SetBarColor(UnitFrame)
+            end
+        end
+        if RSDB["ShowStolenBuff"] and aura.isStealable then
+            -- UnitFrame.StolenAura[aura.auraInstanceID] = {aura.icon, aura.expirationTime, aura.duration}
+            UnitFrame.StolenAura[aura.auraInstanceID] = aura
+            rs.SetStolen(UnitFrame)
+        end
+        -- From AuraTemp End
 
 		return false;
 	end
