@@ -7,7 +7,7 @@ rs.V.DefaultSetting = {
 	["Version"] = "10.0.05",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
-    ["BarTexture"] = "s3",
+    ["BarTexture"] = "s2",
 	["NarrowCast"] = false,
 	["BarBgCol"] = false,
     ["EliteIcon"] = true,
@@ -193,6 +193,9 @@ rs.V.DefaultSetting = {
 }
 
 rs.updateInfo = {
+    "\n|cffFFD70010.0.05|r\n",
+    "CVAR选项中新增血条框架大小",
+    "修复一个由窄施法条引起的污染",
     "\n|cffFFD70010.0.04|r\n",
     "添加更新日志和赞助页签",
     "修改自定义材质的存放路径",
@@ -212,6 +215,9 @@ rs.updateInfo = {
 }
 
 rs.updateInfoEN = {
+    "\n|cffFFD70010.0.05|r\n",
+    "Add healthbar frame size in CVAR options",
+    "Fix a taint caused by narrow castbar",
     "\n|cffFFD70010.0.04|r\n",
     "Add changelog and sponsor tab",
     "Change the storage path of custom texture",

@@ -312,6 +312,12 @@ rs.V.zhtw = {
     NameplatePersonalShowWithTarget = "有目標時顯示",
     NameplatePersonalHideDelaySeconds = "漸隱時間（秒）",
 
+    HealthBarFrameSize = "血條框架大小（僅開啟大姓名板時可用）",
+    HealthBarHeight = "高",
+    HealthBarHeightTT = "默認 2.7 |cffFF0000 這個CVar是按角色存儲在服務器上的，即只能設置並影響當前角色|r",
+    HealthBarWidth = "寬",
+    HealthBarWidthTT = "默認 1.4 |cffFF0000 這個CVar是按角色存儲在服務器上的，即只能設置並影響當前角色|r",
+
     CVarExtraLink = "|cffFFD700更多完整的CVar文檔手冊可以在這裡查閱:  https://wowpedia.fandom.com/wiki/Console_variables/Complete_list |r",
 
     VersionLog = "更新日誌",

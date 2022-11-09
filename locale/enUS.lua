@@ -312,6 +312,12 @@ rs.V.enus = {
     NameplatePersonalShowWithTarget = "Has a target",
     NameplatePersonalHideDelaySeconds = "HideDelay (sec)",
 
+    HealthBarFrameSize = "HealthBar Size（Only available when <Larger Nameplates> is turned on）",
+    HealthBarHeight = "Height",
+    HealthBarHeightTT = "Default 2.7 |cffFF0000 This CVar is stored on the blizzard server by character, so it can only be set and affects the current character|r",
+    HealthBarWidth = "Width",
+    HealthBarWidthTT = "Default 1.4 |cffFF0000 This CVar is stored on the blizzard server by character, so it can only be set and affects the current character|r",
+
     CVarExtraLink = "|cffFFD700More complete CVar documentation can be found here:  https://wowpedia.fandom.com/wiki/Console_variables/Complete_list |r",
 
     VersionLog = "Change Log",

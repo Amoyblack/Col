@@ -814,11 +814,11 @@ options.args.cvars = {
             end
 
         },
-        CvarExtraLink = {
-            order = 10,
-            name = L["CVarExtraLink"],
-            type = "description",
-        },
+        -- CvarExtraLink = {
+        --     order = 10,
+        --     name = L["CVarExtraLink"],
+        --     type = "description",
+        -- },
         CvarsSliderGroup = {
             name = "CVars",
             order = 5,
@@ -923,6 +923,7 @@ options.args.cvars = {
                             name = L["NameplatePersonalShowAlways"],
                             type = "toggle",
                             order = 1,
+                            width = 0.9,
                             get = function(info) if tonumber(GetCVar(info[#info])) == 1 then return true else return false end end,
                             set = function(info, value) if value == true then rs.tabDB[rs.iDBmark][info[#info]] = 1 else rs.tabDB[rs.iDBmark][info[#info]] = 0 end rs.UpdateCvars() end,
                         },
@@ -930,6 +931,7 @@ options.args.cvars = {
                             name = L["NameplatePersonalShowInCombat"],
                             type = "toggle",
                             order = 2,
+                            width = 0.9,
                             get = function(info) if tonumber(GetCVar(info[#info])) == 1 then return true else return false end end,
                             set = function(info, value) if value == true then rs.tabDB[rs.iDBmark][info[#info]] = 1 else rs.tabDB[rs.iDBmark][info[#info]] = 0 end rs.UpdateCvars() end,
                         },
@@ -937,6 +939,7 @@ options.args.cvars = {
                             name = L["NameplatePersonalShowWithTarget"],
                             type = "toggle",
                             order = 3,
+                            width = 0.9,
                             get = function(info) if tonumber(GetCVar(info[#info])) == 2 then return true else return false end end,
                             set = function(info, value) if value == true then rs.tabDB[rs.iDBmark][info[#info]] = 2 else rs.tabDB[rs.iDBmark][info[#info]] = 0 end rs.UpdateCvars() end,
                         },
@@ -955,6 +958,45 @@ options.args.cvars = {
                         },
                     },
                 },
+
+                cvargap3 = {
+                    order = 31,
+                    name = " \n\n ",
+                    type = "description",
+                },
+
+                -- todo :　这个CVAR先不存到RSDB里
+                FrameSizeGroup = {
+                    order = 40,
+                    type = "group",
+                    inline = true,
+                    name = L["HealthBarFrameSize"],
+                    disabled = function() return GetCVar("NamePlateClassificationScale") ~= "1.25" or not rs.tabDB[rs.iDBmark]["EnableCvar"] end,
+                    get = function(info) return tonumber(GetCVar(info[#info])) end,
+                    set = function (info, value) 
+                        SetCVar(info[#info], value)
+                    end,
+                    args = {
+                        NamePlateVerticalScale = {
+                            name = L["HealthBarHeight"],
+                            desc = L["HealthBarHeightTT"],
+                            type = "range",
+                            order = 1,
+                            min = 1.5,
+                            max = 4,
+                            step  = 0.1,    
+                        },
+                        NamePlateHorizontalScale = {
+                            name = L["HealthBarWidth"],
+                            desc = L["HealthBarWidthTT"],
+                            type = "range",
+                            order = 2,
+                            min = 1,
+                            max = 1.8,
+                            step  = 0.1,    
+                        }
+                    }
+                }
             },
         },
 
