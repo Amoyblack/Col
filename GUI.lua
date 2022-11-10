@@ -2105,7 +2105,7 @@ function rs.RefBuffFrameDisplay()
 		if unitFrame.unit then 
 			local self = unitFrame.BuffFrame
             -- 重新init全更新一遍所有buff
-            rs.UpdateBuffsRSV(self, unitFrame.unit, nil, {})
+            rs.UpdateBuffsRSV(self, unitFrame.unit, nil, {}, unitFrame)
         end
 	end	
 end

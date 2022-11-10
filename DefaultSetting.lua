@@ -4,7 +4,7 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "10.0.05",
+	["Version"] = "10.0.06",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
     ["BarTexture"] = "s2",
@@ -193,6 +193,8 @@ rs.V.DefaultSetting = {
 }
 
 rs.updateInfo = {
+    "\n|cffFFD70010.0.06|r\n",
+    "BugFix",
     "\n|cffFFD70010.0.05|r\n",
     "CVAR选项中新增血条框架大小",
     "修复一个由窄施法条引起的污染",
@@ -215,6 +217,8 @@ rs.updateInfo = {
 }
 
 rs.updateInfoEN = {
+    "\n|cffFFD70010.0.06|r\n",
+    "BugFix",
     "\n|cffFFD70010.0.05|r\n",
     "Add healthbar frame size in CVAR options",
     "Fix a taint caused by narrow castbar",
