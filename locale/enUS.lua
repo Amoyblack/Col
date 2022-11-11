@@ -146,7 +146,7 @@ rs.V.enus = {
     AuraFilterOnlyMeTT = "Only show auras from me and my pets",
 
     Exp = "Explosive Helper",
-    ExpTT = "When Explosives spawn, all of other nameplates will be hidden until there is no more Explosives alive",
+    ExpTT = "When Explosives spawn, all of other nameplates will be hidden until there is no more Explosives alive（ |cffFFD700Always Show Nameplates|r in CVAR needs to be turned on at the same time）",
 
     CastHeight = "Castbar Width",
     CastHeightTT = "Only works in narrow castbar style",
@@ -294,13 +294,13 @@ rs.V.enus = {
 
     NameModeHeightOffset = "Height Offset",
 
-    GetSpellDesFailInfo = "|cffFF0000The spell has no description Or the Addon is not received due to blizzard server delay. If the latter, Re-open the RSPlates settings interface, it can be displayed normally|r",
+    GetSpellDesFailInfo = "There is no description for this skill or aura temporarily",
 
     ShowAllNP = "Always Show Nameplates",
     ShowAllNPTT = "When off it only shows the nameplates (or Name in name-mode) in battle, when on it will always show. Same option as <Always Show Nameplates> in Blizzard UI settings",
 
     ShowNpcNP = "Show Friendly NPC nameplates",
-    ShowNpcNPTT = "Display the friendly NPC's nameplates (or name in name mode), you need to open <Friendly Players> in Blizzard UI settings , the initial shortcut key is Shift + V",
+    ShowNpcNPTT = "Display the friendly NPC's nameplates (or name in name mode), need to open <Friendly Nameplates> in Blizzard UI settings, the Default shortcut key is Shift + V",
 
     NameModeNameSize = "Name Size",
 

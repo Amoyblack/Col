@@ -146,7 +146,7 @@ rs.V.zhtw = {
     AuraFilterOnlyMeTT = "只顯示來源於我和我寵物的光環",
 
     Exp = "火爆詞綴助手",
-    ExpTT = "場上有炸藥小球時，自動隱藏其他所有單位的名條，直到場上沒有球為止",
+    ExpTT = "場上有炸藥小球時，自動隱藏其他所有單位的名條，直到場上沒有球為止（需要同時開啟CVAR中的 |cffFFD700總是顯示名條|r）",
 
     CastHeight = "施法條寬度",
     CastHeightTT = "只對窄施法條生效",
@@ -294,13 +294,13 @@ rs.V.zhtw = {
 
     NameModeHeightOffset = "高度偏移",
 
-    GetSpellDesFailInfo = "|cffFF0000該技能沒有描述  或  服務器延遲導致插件未接收到，如是後者重新打開設置界面即可正常顯示|r",
+    GetSpellDesFailInfo = "該技能或光環暫時沒有獲取到描述",
 
-    ShowAllNP = "總是顯示名稱",
-    ShowAllNPTT = "關閉時只在戰鬥中顯示姓名板(或 在名字模式下的名字)，開啟後會始終顯示。與暴雪界面設置裡的 <總是顯示名稱> 是同一個選項",
+    ShowAllNP = "總是顯示名條",
+    ShowAllNPTT = "關閉時只在戰鬥中顯示姓名板(或 在名字模式下的名字)，開啟後會始終顯示。與暴雪界面設置裡的 <總是顯示名條> 是同一個選項",
 
     ShowNpcNP = "顯示友方NPC姓名板",
-    ShowNpcNPTT = "顯示友方NPC的姓名板（或 名字模式下的名字），需開啟 友方玩家姓名板，初始快捷鍵 Shift + V",
+    ShowNpcNPTT = "顯示友方NPC的姓名板（或 名字模式下的名字），需開啟 友方姓名板，初始快捷鍵 Shift + V",
 
     NameModeNameSize = "名字大小",
 

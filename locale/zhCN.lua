@@ -146,7 +146,7 @@ rs.V.zhcn = {
     AuraFilterOnlyMeTT = "只显示来源于我和我宠物的光环",
 
     Exp = "易爆球助手",
-    ExpTT = "场上有易爆球时会自动隐藏其他所有单位的血条,直到场上没有易爆球为止",
+    ExpTT = "场上有易爆球时会自动隐藏其他所有单位的血条,直到场上没有易爆球为止（需要同时开启CVAR中的 |cffFFD700始终显示姓名板|r）",
 
     CastHeight = "施法条宽度",
     CastHeightTT = "只对窄施法条生效",
@@ -294,13 +294,13 @@ rs.V.zhcn = {
 
     NameModeHeightOffset = "高度偏移",
 
-    GetSpellDesFailInfo = "|cffFF0000该技能没有描述  或  服务器延迟导致插件未接收到，如是后者重新打开设置界面即可正常显示|r",
+    GetSpellDesFailInfo = "该技能或光环暂时没有获取到描述",
 
     ShowAllNP = "始终显示姓名板",
     ShowAllNPTT = "关闭时只在战斗中显示姓名板(或 在名字模式下的名字)，开启后会始终显示。  与暴雪界面设置里的 <显示所有姓名板> 是同一个选项",
 
     ShowNpcNP = "显示友方NPC姓名板",
-    ShowNpcNPTT = "显示友方NPC的姓名板（或 名字模式下的名字），需开启 友方玩家姓名板，初始快捷键 Shift + V",
+    ShowNpcNPTT = "显示友方NPC的姓名板（或 名字模式下的名字），需开启 友方姓名板，初始快捷键 Shift + V",
 
     NameModeNameSize = "名字大小",
 
