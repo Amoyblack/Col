@@ -36,6 +36,19 @@ local rgbGreen = {0/256, 250/256, 0/256}
 local rgbGrey = {180/256, 180/256, 180/256}
 local rgbRed = {256/256, 0/256, 0/256}
 
+local TankSpec = {
+    [73] = true,     --FZ
+    [250] = true,     --DK
+    [581] = true,     --DH
+    [268] = true,     --WS
+    [66] = true,     --FQ
+    [104] = true,     --XT
+}
+
+local ThreateColorSquence 
+local DpsThreateColorSquence
+local TankThreateColorSquence 
+
 -------------------------------------------------
 function rs.RSOn()
     if not rs.tabDB[rs.iDBmark]["DynamicHeightOffSet"] then 
@@ -482,6 +495,7 @@ function rs.ThinCastBar(self, event, ...)
         if rs.tabDB[rs.iDBmark]["NarrowCast"]then
             local function SetThin(self)
                 self.Icon:SetShown(true)
+                -- self:SetFrameStrata("HIGH")
                 -- self.Icon:SetTexture(texture)
                 self:SetHeight(rs.tabDB[rs.iDBmark]["CastHeight"])
                 self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -3, 0)
@@ -604,16 +618,16 @@ end
 function rs.IsOnThreatList(unit)
 	local _, threatStatus = UnitDetailedThreatSituation("player", unit)
 	if threatStatus == 3 then  --穩定仇恨，當前坦克/securely tanking, highest threat
-        return rs.tabDB[rs.iDBmark]["TankSafeColor"][1], rs.tabDB[rs.iDBmark]["TankSafeColor"][2], rs.tabDB[rs.iDBmark]["TankSafeColor"][3]
+        return ThreateColorSquence[3][1], ThreateColorSquence[3][2], ThreateColorSquence[3][3]
 		-- return .9, .1, .4  --紅色/red
 	elseif threatStatus == 2 then  --非當前仇恨，當前坦克(已OT或坦克正在丟失仇恨)/insecurely tanking, another unit have higher threat but not tanking.
-        return rs.tabDB[rs.iDBmark]["TankLoseColor"][1], rs.tabDB[rs.iDBmark]["TankLoseColor"][2], rs.tabDB[rs.iDBmark]["TankLoseColor"][3]
+        return ThreateColorSquence[2][1], ThreateColorSquence[2][2], ThreateColorSquence[2][3]
 		-- return .9, .1, .9  --粉色/pink
 	elseif threatStatus == 1 then  --當前仇恨，非當前坦克(非坦克高仇恨或坦克正在獲得仇恨)/not tanking, higher threat than tank.
-        return rs.tabDB[rs.iDBmark]["dpsOTColor"][1], rs.tabDB[rs.iDBmark]["dpsOTColor"][2], rs.tabDB[rs.iDBmark]["dpsOTColor"][3]
+        return ThreateColorSquence[1][1], ThreateColorSquence[1][2], ThreateColorSquence[1][3]
 		-- return .4, .1, .9  --紫色/purple
 	elseif threatStatus == 0 then  --低仇恨，安全/not tanking, lower threat than tank.
-        return rs.tabDB[rs.iDBmark]["dpsSafeColor"][1], rs.tabDB[rs.iDBmark]["dpsSafeColor"][2], rs.tabDB[rs.iDBmark]["dpsSafeColor"][3]
+        return ThreateColorSquence[0][1], ThreateColorSquence[0][2], ThreateColorSquence[0][3]
 		-- return .1, .7, .9  --藍色/blue
 	end
 end
@@ -667,6 +681,7 @@ function rs.SetSelectionHighlight(unitFrame)
             unitFrame.ClassificationFrame:Hide()
         else
             unitFrame.ClassificationFrame:Show()
+            unitFrame.ClassificationFrame:SetFrameStrata("BACKGROUND")
         end
     end
 end
@@ -947,6 +962,18 @@ function rs.HookBlizzedFunc()
     end)
 end
 
+function rs.RefSpecThreateColor()
+    if rs.tabDB[rs.iDBmark]["TankColorReverse"] then
+        local id, name = GetSpecializationInfo(GetSpecialization())
+        if TankSpec[id] then
+            ThreateColorSquence = TankThreateColorSquence
+        else
+            ThreateColorSquence = DpsThreateColorSquence
+        end
+    else
+        ThreateColorSquence = DpsThreateColorSquence
+    end
+end
 
 
 ----------ONLOAD EVENT---------
@@ -994,6 +1021,20 @@ function loadFrame:OnEvent(event, arg1)
             rs.iDBmark = 1
         end
 
+        DpsThreateColorSquence = {
+            [0] = rs.tabDB[rs.iDBmark]["dpsSafeColor"],
+            [1] = rs.tabDB[rs.iDBmark]["dpsOTColor"],
+            [2] = rs.tabDB[rs.iDBmark]["TankLoseColor"],
+            [3] = rs.tabDB[rs.iDBmark]["TankSafeColor"],
+        }
+        
+        TankThreateColorSquence = {
+            [3] = rs.tabDB[rs.iDBmark]["dpsSafeColor"],
+            [2] = rs.tabDB[rs.iDBmark]["dpsOTColor"],
+            [1] = rs.tabDB[rs.iDBmark]["TankLoseColor"],
+            [0] = rs.tabDB[rs.iDBmark]["TankSafeColor"],
+        }
+
         rs.OnColCheck()
 		rs.RSOn()
         rs.InitMinimapBtn()
@@ -1005,6 +1046,7 @@ function loadFrame:OnEvent(event, arg1)
         if rs.V.AddonFirstLoad then
             rs.SetCVarOnFirstTime()
         end
+        rs.RefSpecThreateColor()
     elseif event == "LOADING_SCREEN_DISABLED" then
         C_Timer.After(1, rs.UpdateCvars)
 	end
@@ -1153,6 +1195,8 @@ local function UIObj_Event(self, event, ...)
     --             -- print('开启小姓名板')
     --         end
     --     end
+    elseif event == "PLAYER_SPECIALIZATION_CHANGED" then
+        rs.RefSpecThreateColor()
     end
 end
 
@@ -1174,6 +1218,7 @@ UIObjectDriveFrame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
 UIObjectDriveFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
 UIObjectDriveFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+UIObjectDriveFrame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
 
 
 -- UIObjectDriveFrame:RegisterEvent("CVAR_UPDATE")

@@ -45,6 +45,9 @@ rs.V.zhtw = {
     Tanklosethreat = "高威脅(超過臨界)",
     TanklosethreatTT = "|cffFFD700DPS|r  已OT，單位開始切換目標攻擊你 \n|cffFFD700TANK|r  已丟失仇恨，單位從你身上切換目標",
 
+    TankColorReverse = "Tank顏色反轉",
+    TankColorReverseTT = "當你為Tank時，自動反轉仇恨顏色",
+
     Health = "血量",
     HealthValue = "數值",
     HealthPercentage = "百分比",
@@ -323,7 +326,7 @@ rs.V.zhtw = {
     VersionLog = "更新日誌",
 
     Sponsor = "贊助",
-    SponsorDesc = "\n\n如果你喜歡|cff00FF7FRS|r|cffFFD700Plates|r  可以通過下面的方式贊助我\n\n你的支持會讓這個插件走的更遠，如果願意請備註上游戲id與服務器\n\n\n",
+    SponsorDesc = "\n\n如果你喜歡|cff00FF7FRS|r|cffFFD700Plates|r  可以通過下面的方式贊助我\n\n你的支持會讓這個插件走的更遠\n\n\n",
     SponsorWX = "微信",
     SponsorIFD = "愛發電",
 }

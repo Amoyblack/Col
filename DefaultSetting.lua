@@ -4,7 +4,7 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "10.0.06",
+	["Version"] = "10.0.07",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
     ["BarTexture"] = "s2",
@@ -38,6 +38,7 @@ rs.V.DefaultSetting = {
     ["dpsOTColor"] = {.4, .1, .9},      --dps高仇恨（即将OT) / 默认紫色	Dps high threat (OT soon)
     ["TankLoseColor"] = {.9, .1, .9},   --Tank即将丢失仇恨 / 默认亮粉色	Tank unstable threat (lose threat soon)
     ["TankSafeColor"] = {.9, .1, .4},   --Tank稳定仇恨 / 默认暗粉色		Tank stable threat 
+    ["TankColorReverse"] = false, 
 
     ["SlayEnable"] = false,
 	["Slayline"] = 0,
@@ -193,6 +194,8 @@ rs.V.DefaultSetting = {
 }
 
 rs.updateInfo = {
+    "\n|cffFFD70010.0.07|r\n",
+    "添加Tank仇恨颜色反转选项",
     "\n|cffFFD70010.0.06|r\n",
     "BugFix",
     "\n|cffFFD70010.0.05|r\n",
@@ -217,6 +220,8 @@ rs.updateInfo = {
 }
 
 rs.updateInfoEN = {
+    "\n|cffFFD70010.0.07|r\n",
+    "Add Threat Color Reverse for Tank",
     "\n|cffFFD70010.0.06|r\n",
     "BugFix",
     "\n|cffFFD70010.0.05|r\n",

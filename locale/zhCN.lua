@@ -45,6 +45,9 @@ rs.V.zhcn = {
     Tanklosethreat = "高仇恨(超过临界)",
     TanklosethreatTT = "|cffFFD700DPS|r  已OT，单位开始切换目标攻击你 \n|cffFFD700TANK|r  已丢失仇恨，单位从你身上切换目标",
 
+    TankColorReverse = "Tank颜色反转",
+    TankColorReverseTT = "当你为T专精时，自动反转仇恨颜色",
+
     Health = "血量",
     HealthValue = "数值",
     HealthPercentage = "百分比",
@@ -323,7 +326,7 @@ rs.V.zhcn = {
     VersionLog = "更新日志",
 
     Sponsor = "赞助",
-    SponsorDesc = "\n\n如果你喜欢|cff00FF7FRS|r|cffFFD700Plates|r  可以通过下面的方式赞助我\n\n你的支持会让这个插件走的更远，如果愿意请备注上游戏id与服务器\n\n\n",
+    SponsorDesc = "\n\n如果你喜欢|cff00FF7FRS|r|cffFFD700Plates|r  可以通过下面的方式赞助我\n\n你的支持会让这个插件走的更远\n\n\n",
     SponsorWX = "微信",
     SponsorIFD = "爱发电",
 }

@@ -45,6 +45,9 @@ rs.V.enus = {
     Tanklosethreat = "High Threat(over threshold)",
     TanklosethreatTT = "|cffFFD700DPS|r  Already OT, the unit starts to switch targets to attack you \n|cffFFD700TANK|r  Lost threat, units switch targets from you",
 
+    TankColorReverse = "Tank Color Reverse",
+    TankColorReverseTT = "Auto reverse threat color when you are a tank",
+
     Health = "Health Text",
     HealthValue = "Value",
     HealthPercentage = "Percent",
@@ -323,7 +326,7 @@ rs.V.enus = {
     VersionLog = "Change Log",
 
     Sponsor = "Sponsor",
-    SponsorDesc = "\n\nIf you like |cff00FF7FRS|r|cffFFD700Plates|r  You can sponsor me in the following ways\n\nYour support will make this addon go further, please remark the Game id and Server to me if u want\n\n\n",
+    SponsorDesc = "\n\nIf you like |cff00FF7FRS|r|cffFFD700Plates|r  You can sponsor me in the following ways\n\nYour support will make this addon go further\n\n\n",
     SponsorWX = "WeChat(CN)",
     SponsorIFD = "iFaDian(CN)",
 }

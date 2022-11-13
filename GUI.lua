@@ -216,7 +216,7 @@ options.args.basic = {
                     desc = L["Omen3TT"],
                     type = "toggle",
                     order = 2,
-                    width = "full",
+                    -- width = "full",
                     set = function (info, value) 
                         if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
                             rs.tabDB[rs.iDBmark][info[#info]] = value 
@@ -224,11 +224,26 @@ options.args.basic = {
                         rs.UpdateAllNameplatesOnce()
                     end,
                 },
+                TankColorReverse = {
+                    name = L["TankColorReverse"],
+                    desc = L["TankColorReverseTT"],
+                    type = "toggle",
+                    order = 3,
+                    disabled = function() return not rs.tabDB[rs.iDBmark]["ThreatColorEnable"] end,
+                    -- width = "full",
+                    set = function (info, value) 
+                        if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                            rs.tabDB[rs.iDBmark][info[#info]] = value 
+                        end 
+                        rs.RefSpecThreateColor()
+                        rs.UpdateAllNameplatesOnce()
+                    end,
+                },
                 omen3colorgroup = {
                     name = " ",
                     type = "group",
                     inline = true, 
-                    order = 3,
+                    order = 5,
                     get = function(info)
                         return rs.tabDB[rs.iDBmark][info[#info]][1], rs.tabDB[rs.iDBmark][info[#info]][2], rs.tabDB[rs.iDBmark][info[#info]][3]
                     end,
@@ -275,7 +290,7 @@ options.args.basic = {
                 SlayEnable = {
                     name = L["SlayColtext"],
                     type = "toggle",
-                    order = 4,
+                    order = 6,
                     width = "full",
                     set = function (info, value) 
                         if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
@@ -288,7 +303,7 @@ options.args.basic = {
                     name = " ",
                     type = "group",
                     inline = true,
-                    order = 5, 
+                    order = 7, 
                     args = {
                         Slayline = {
                             name = L["SlayLine"],
@@ -1522,35 +1537,35 @@ options.args.sponsor = {
             order = 1,
             name = L["SponsorDesc"],
         },
-        WXRecievePic = {
-            type = "input",
-            order = 10,
-            name = L["SponsorWX"],
-            desc = "|TInterface\\AddOns\\RSPlates\\media\\QR:150:150:0:0|t",
-            width = 2.5,
-            get = function() return "QR Code" end,
-        },
+        -- WXRecievePic = {
+        --     type = "input",
+        --     order = 10,
+        --     name = L["SponsorWX"],
+        --     desc = "|TInterface\\AddOns\\RSPlates\\media\\QR:150:150:0:0|t",
+        --     width = 2.5,
+        --     get = function() return "QR Code" end,
+        -- },
         AFaDian = {
             type = "input",
             order = 11,
-            name = L["SponsorIFD"],
+            name = L["SponsorIFD"].." For RMB (Chinese Yuan)",
             width = 2.5,
             get = function() return "https://afdian.net/a/RSPlates" end,
         },
-        Patreon = {
+        Kofi = {
             type = "input",
             order = 12,
-            name = "Patreon",
+            name = "ko-fi (For Other Currency)",
             width = 2.5,
-            get = function() return "https://www.patreon.com/RSPlates" end,
+            get = function() return "https://ko-fi.com/rsplates" end,
         },
-        USDC = {
-            type = "input",
-            order = 13,
-            name = "Crypto  USDC - TRC20",
-            width = 2.5,
-            get = function() return "TNn1keSMKgJB896a1EsnvRfkYHCfwnGujd" end,
-        },
+        -- USDC = {
+        --     type = "input",
+        --     order = 13,
+        --     name = "Crypto  USDC - TRC20",
+        --     width = 2.5,
+        --     get = function() return "TNn1keSMKgJB896a1EsnvRfkYHCfwnGujd" end,
+        -- },
     },
 }
 
@@ -2021,7 +2036,7 @@ function rs.SwitchBugReportWindow()
         bugReportFrame = AceGUI:Create("Frame")
         bugReportFrame:SetTitle("|cff00FF7FRS|rPlates - Bug Report")
         bugReportFrame:SetWidth(450)
-        bugReportFrame:SetHeight(180)
+        bugReportFrame:SetHeight(140)
         bugReportFrame:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
         bugReportFrame:SetLayout("Flow")
 
@@ -2034,14 +2049,14 @@ function rs.SwitchBugReportWindow()
         Input2:SetRelativeWidth(1)
         bugReportFrame:AddChild(Input2)
 
-        local Info3 = AceGUI:Create("Label")
-        Info3:SetText("中文社区")
-        bugReportFrame:AddChild(Info3)
+        -- local Info3 = AceGUI:Create("Label")
+        -- Info3:SetText("中文社区")
+        -- bugReportFrame:AddChild(Info3)
     
-        local Input3 = AceGUI:Create("EditBox")
-        Input3:SetText("https://bbs.nga.cn/read.php?tid=16229958")
-        Input3:SetRelativeWidth(1)
-        bugReportFrame:AddChild(Input3)
+        -- local Input3 = AceGUI:Create("EditBox")
+        -- Input3:SetText("https://bbs.nga.cn/read.php?tid=16229958")
+        -- Input3:SetRelativeWidth(1)
+        -- bugReportFrame:AddChild(Input3)
 
     end
 end
