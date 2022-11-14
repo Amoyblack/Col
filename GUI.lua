@@ -1485,89 +1485,84 @@ options.args.auras = {
     }
 }
 
-options.args.gap1 = {
-    name = " ",
-    type = "group",
-    order = 7,
-    disabled = true,
-    args = {},
-}
+-- options.args.gap1 = {
+--     name = " ",
+--     type = "group",
+--     order = 7,
+--     disabled = true,
+--     args = {},
+-- }
 
-options.args.gap2 = {
-    name = " ",
-    type = "group",
-    order = 8,
-    disabled = true,
-    args = {},
-}
+-- options.args.gap2 = {
+--     name = " ",
+--     type = "group",
+--     order = 8,
+--     disabled = true,
+--     args = {},
+-- }
 
-options.args.UpdateInfo = {
-    name = L["VersionLog"],
-    type = "group",
-    order = 9,
-    args = {
-        content = {
-            order = 1,
-            type = "description",
-            name = function() 
-                local info = ""
-                local changelog
-                local clientlang = GetLocale()
-                if clientlang == "zhCN" or clientlang == "zhTW" then
-                    changelog = rs.updateInfo
-                else
-                    changelog = rs.updateInfoEN
-                end
-                for k, v in pairs(changelog) do
-                    info = info..v.."\n"
-                end
-                return info
-            end,
-        }
-    }
-}
-options.args.sponsor = {
-    name = "|cffDDDDDD"..L["Sponsor"].."|r ",
-    type = "group",
-    order = 10,
-    -- disabled = true,
-    args = {
-        TitleLine = {
-            type = "description",
-            order = 1,
-            name = L["SponsorDesc"],
-        },
-        -- WXRecievePic = {
-        --     type = "input",
-        --     order = 10,
-        --     name = L["SponsorWX"],
-        --     desc = "|TInterface\\AddOns\\RSPlates\\media\\QR:150:150:0:0|t",
-        --     width = 2.5,
-        --     get = function() return "QR Code" end,
-        -- },
-        AFaDian = {
-            type = "input",
-            order = 11,
-            name = L["SponsorIFD"].." For RMB (Chinese Yuan)",
-            width = 2.5,
-            get = function() return "https://afdian.net/a/RSPlates" end,
-        },
-        Kofi = {
-            type = "input",
-            order = 12,
-            name = "ko-fi (For Other Currency)",
-            width = 2.5,
-            get = function() return "https://ko-fi.com/rsplates" end,
-        },
-        -- USDC = {
-        --     type = "input",
-        --     order = 13,
-        --     name = "Crypto  USDC - TRC20",
-        --     width = 2.5,
-        --     get = function() return "TNn1keSMKgJB896a1EsnvRfkYHCfwnGujd" end,
-        -- },
-    },
-}
+
+-- options.args.UpdateInfo = {
+--     name = L["VersionLog"],
+--     type = "group",
+--     order = 9,
+--     args = {
+--         content = {
+--             order = 1,
+--             type = "description",
+--             name = function() 
+--                 local info = ""
+--                 local changelog
+--                 local clientlang = GetLocale()
+--                 if clientlang == "zhCN" or clientlang == "zhTW" then
+--                     changelog = rs.updateInfo
+--                 else
+--                     changelog = rs.updateInfoEN
+--                 end
+--                 for k, v in pairs(changelog) do
+--                     info = info..v.."\n"
+--                 end
+--                 return info
+--             end,
+--         }
+--     }
+-- }
+
+-- options.args.sponsor = {
+--     name = "|cffDDDDDD"..L["Sponsor"].."|r ",
+--     type = "group",
+--     order = 10,
+--     -- disabled = true,
+--     args = {
+--         TitleLine = {
+--             type = "description",
+--             order = 1,
+--             name = L["SponsorDesc"],
+--         },
+--         -- WXRecievePic = {
+--         --     type = "input",
+--         --     order = 10,
+--         --     name = L["SponsorWX"],
+--         --     desc = "|TInterface\\AddOns\\RSPlates\\media\\QR:150:150:0:0|t",
+--         --     width = 2.5,
+--         --     get = function() return "QR Code" end,
+--         -- },
+--         AFaDian = {
+--             type = "input",
+--             order = 11,
+--             name = L["SponsorIFD"].." For RMB (Chinese Yuan)",
+--             width = 2.5,
+--             get = function() return "https://afdian.net/a/RSPlates" end,
+--         },
+--         Kofi = {
+--             type = "input",
+--             order = 12,
+--             name = "ko-fi (For Other Currency)",
+--             width = 2.5,
+--             get = function() return "https://ko-fi.com/rsplates" end,
+--         },
+--     },
+-- }
 
 options.args.auras.args.whitelist = {
     name = L["MenuWhiteList"],
@@ -1977,10 +1972,10 @@ local function CreateBlizzardOptionPanel(frame)
         frame.version:SetText(L["Version"] .. rs.tabDB[rs.iDBmark]["Version"])
         frame.version:SetFont(STANDARD_TEXT_FONT, 20)
 
-        frame.largeStyleInfo = frame:CreateFontString(nil, "OVERLAY")
-        frame.largeStyleInfo:SetPoint("LEFT", frame, "TOPLEFT", 20, -230);  
-        frame.largeStyleInfo:SetFontObject("GameFontHighlight");
-        frame.largeStyleInfo:SetText(L["BlizzardPanelLargeInfo"])
+        -- frame.largeStyleInfo = frame:CreateFontString(nil, "OVERLAY")
+        -- frame.largeStyleInfo:SetPoint("LEFT", frame, "TOPLEFT", 20, -230);  
+        -- frame.largeStyleInfo:SetFontObject("GameFontHighlight");
+        -- frame.largeStyleInfo:SetText(L["BlizzardPanelLargeInfo"])
 
     end
 end
@@ -2036,7 +2031,7 @@ function rs.SwitchBugReportWindow()
         bugReportFrame = AceGUI:Create("Frame")
         bugReportFrame:SetTitle("|cff00FF7FRS|rPlates - Bug Report")
         bugReportFrame:SetWidth(450)
-        bugReportFrame:SetHeight(140)
+        bugReportFrame:SetHeight(120)
         bugReportFrame:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
         bugReportFrame:SetLayout("Flow")
 

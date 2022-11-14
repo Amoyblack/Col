@@ -66,7 +66,7 @@ rs.V.DefaultSetting = {
 	["AuraWhite"] = true,
 	["AuraOnlyMe"] = false,
 
-    ["DynamicHeightOffSet"] = false,
+    ["DynamicHeightOffSet"] = true,
 	["AuraHeight"] = 0,
     ["SelfAuraHeight"] = 0,
     ["SquareAura"] = false,
@@ -195,7 +195,11 @@ rs.V.DefaultSetting = {
 
 rs.updateInfo = {
     "\n|cffFFD70010.0.07|r\n",
+    "移除赞助页",
     "添加Tank仇恨颜色反转选项",
+    "修复窄施法条闪光材质过高的问题",
+    "修复精英图标遮挡窄施法条的问题",
+    "修复开启动态光环浮动高度时，当前目标的光环高度过高的问题",
     "\n|cffFFD70010.0.06|r\n",
     "BugFix",
     "\n|cffFFD70010.0.05|r\n",

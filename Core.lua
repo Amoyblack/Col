@@ -494,6 +494,7 @@ function rs.ThinCastBar(self, event, ...)
         -- Thin cast bar
         if rs.tabDB[rs.iDBmark]["NarrowCast"]then
             local function SetThin(self)
+                self.Spark:SetHeight(rs.tabDB[rs.iDBmark]["CastHeight"] + 10)
                 self.Icon:SetShown(true)
                 -- self:SetFrameStrata("HIGH")
                 -- self.Icon:SetTexture(texture)
@@ -777,6 +778,8 @@ function rs.On_NpRefreshOnce(unitFrame)
     rs.RefInterrupteIndicator(unitFrame)
 
     rs.RefUnitAuraTotally(unitFrame)
+
+    rs.ThinCastBar(unitFrame.castBar)
 end
 
 function rs.RefUnitAuraTotally(unitFrame)
