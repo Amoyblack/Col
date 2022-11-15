@@ -102,7 +102,9 @@ end
 local function OnNpMouseover(MouseoverFrame)
     if rs.IsLegalUnit(MouseoverFrame) then
         if UnitIsUnit(MouseoverFrame.unit, "mouseover") and not UnitIsUnit(MouseoverFrame.unit, "player") then
-            MouseoverFrame:Show()
+            if (MouseoverFrame:GetParent().healthBar:IsShown()) then
+                MouseoverFrame:Show()
+            end
         else
             MouseoverFrame:Hide()
         end
@@ -163,6 +165,8 @@ end
 
 
 function rs.RegExtraUIEvent(unitFrame)
+    -- 接管Unit_Health，减轻Hook被调用开销
+    unitFrame:UnregisterEvent("UNIT_HEALTH")
     -- remove 会 unRegallevent, release pool , 不要判断rsed, each time
     if rs.tabDB[rs.iDBmark]["MouseoverGlow"] then
         unitFrame.MouseoverFrame:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
@@ -205,6 +209,12 @@ function rs.CreateUIObj(unitFrame, namePlate)
 
 	if not unitFrame.rsed then
 
+        hooksecurefunc(unitFrame, "Show", function(self)
+            if self.hasShownAsName and not UnitIsUnit(self.unit, "player") then 
+                self:Hide()
+            end
+        end)
+
         unitFrame.BuffFrame.UpdateBuffs = function() return end
         -- unitFrame.BuffFrame.UpdateAnchor = rs.UpdateAnchor
 
@@ -214,7 +224,12 @@ function rs.CreateUIObj(unitFrame, namePlate)
         unitFrame.BuffFrame.UpdateAnchor = rs.UpdateAnchor
 
 		-- 施法条毛玻璃边
-		unitFrame.castBar.castBG = rs.CreateBackDrop(unitFrame.castBar, unitFrame.castBar, 1)
+        local isLargerNameplate = GetCVar("NamePlateClassificationScale") == "1.25"
+        if isLargerNameplate then
+		    unitFrame.castBar.castBG = rs.CreateBackDrop(unitFrame.castBar, unitFrame.castBar, 1)
+        else
+		    unitFrame.castBar.castBG = rs.CreateBackDrop(unitFrame.castBar, unitFrame.castBar, 1, nil, true)
+        end
 
 		-- 施法图标 黑边
 		unitFrame.castBar.Icon.iconborder = rs.CreateBG(unitFrame.castBar.Icon)
@@ -227,15 +242,17 @@ function rs.CreateUIObj(unitFrame, namePlate)
 
 
 		-- 血量
-		unitFrame.healthBar.value = rs.createtext(unitFrame.healthBar, "OVERLAY", 11, "OUTLINE", "CENTER")
+		unitFrame.healthBar.value = rs.createtext(unitFrame.healthBar, "OVERLAY", rs.ExtraConfig.healthValueSize, "OUTLINE", "CENTER")
 		unitFrame.healthBar.value:SetShadowColor(0,0,0,1)
 		unitFrame.healthBar.value:SetShadowOffset(0.5,-0.5)
 		unitFrame.healthBar.value:SetTextColor(1,1,1)
 		unitFrame.healthBar.value:Hide()
 		if rs.tabDB[rs.iDBmark]["CenterDetail"] then
-			unitFrame.healthBar.value:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, 0)
+            PixelUtil.SetPoint(unitFrame.healthBar.value, "CENTER", unitFrame.healthBar, "CENTER", 0, 0)
+			-- unitFrame.healthBar.value:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, 0)
 		else
-			unitFrame.healthBar.value:SetPoint("RIGHT", unitFrame.healthBar, "RIGHT", 0, 0)
+            PixelUtil.SetPoint(unitFrame.healthBar.value, "RIGHT", unitFrame.healthBar, "RIGHT", 0, 0)
+			-- unitFrame.healthBar.value:SetPoint("RIGHT", unitFrame.healthBar, "RIGHT", 0, 0)
 		end
 
 		-- 箭头 new ui
@@ -344,6 +361,12 @@ end
 --血条数值
 function rs.SetBloodText(unitFrame)
     if rs.IsLegalUnit(unitFrame) then
+        local CurHealth = UnitHealth(unitFrame.unit)
+        local MaxHealth = UnitHealthMax(unitFrame.unit)
+
+        PixelUtil.SetStatusBarValue(unitFrame.healthBar, CurHealth);
+        -- unitFrame.healthBar:SetValue(CurHealth)
+
         if unitFrame.healthBar.value then
             if UnitIsUnit("player", unitFrame.unit) then
                 unitFrame.healthBar.value:Hide()
@@ -351,7 +374,7 @@ function rs.SetBloodText(unitFrame)
             end
 
             unitFrame.healthBar.value:Show()
-            unitFrame.healthBar.value:SetText(rs.GetDetailText(unitFrame.unit))
+            unitFrame.healthBar.value:SetText(rs.GetDetailText(unitFrame.unit, CurHealth, MaxHealth))
         end
     end
 end
@@ -575,12 +598,10 @@ function rs.RefInterrupteIndicator(frame)
     end
 end
 
-function rs.GetDetailText(unit)
+function rs.GetDetailText(unit, CurHealth, MaxHealth)
 	local iType = rs.tabDB[rs.iDBmark]["DetailType"]
 	if iType == "s1" then return "" end
 
-	local CurHealth = UnitHealth(unit)
-	local MaxHealth = UnitHealthMax(unit)
 
 	local fPer = string.format("%.0f%%",(CurHealth/MaxHealth*100))
 	local fCur
@@ -658,7 +679,7 @@ function rs.SetSelectionHighlight(unitFrame)
             -- unitFrame.castBar.Icon:SetAlpha(1)
             -- Namemode Select Glow
             if namePlate and namePlate.NpcNameRS then
-                if namePlate.NpcNameRS:IsShown() then
+                if unitFrame.hasShownAsName then
                     namePlate.NameSelectGlow:Show()
                 end
             end

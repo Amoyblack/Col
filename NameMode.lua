@@ -49,15 +49,13 @@ function rs.SetNameMode(unitFrame)
             return 
         end
         
-        --  "pvp", "arena"  "raid"
-
-        local inInstance, instanceType = IsInInstance()
+        local inInstance, instanceType = IsInInstance()  --  "pvp", "arena"  "raid"
         if inInstance and instanceType == "party" then 
             return 
         end
 
-        unitFrame:Show()
         unitFrame.hasShownAsName = false
+        unitFrame:Show()
         
         -- 再匹配
         if rs.tabDB[rs.iDBmark]["EnableNamemode"] then 
@@ -68,39 +66,35 @@ function rs.SetNameMode(unitFrame)
             local IsFriendly = UnitIsFriend("player", unit)
             local CanAttack = UnitCanAttack("player", unit)
 
-            -- print(UnitName(unit), reaction, IsFriendly, "canattack: ", CanAttack)
             -- NPC Friendly
             if reaction >= 5 and not IsPlayer and rs.tabDB[rs.iDBmark]["NameModeFriendlyNpc"] then 
-                if NpcTitle then 
-                    sTitle = NpcTitle
-                else
-                    sTitle = ""
-                end
-
                 unitFrame:Hide()
                 unitFrame.hasShownAsName = true
                 namePlate.NpcNameRS:Show()
-                namePlate.NpcNameRS:SetText(format("|cff94FF80%s|r\n%s",name, sTitle))
+                if NpcTitle then
+                    namePlate.NpcNameRS:SetText(format("|cff94FF80%s|r\n%s",name, NpcTitle))
+                else
+                    namePlate.NpcNameRS:SetText(format("|cff94FF80%s|r",name))
+                end
                 namePlate.NpcNameRS:SetFont(STANDARD_TEXT_FONT, rs.tabDB[rs.iDBmark]["NameModeFriendlyNPCSize"], outlinetable[rs.tabDB[rs.iDBmark]["NameModeNameType"]])
                 namePlate.NpcNameRS:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, rs.tabDB[rs.iDBmark]["NameModeNpcOffY"])
 
             -- NPC Not Friendly
             elseif reaction < 5 and not IsPlayer and not CanAttack and rs.tabDB[rs.iDBmark]["NameModeFriendlyNpc"] then 
                 local r, g, b, a = UnitSelectionColor(unit, true)
-                if NpcTitle then 
-                    sTitle = NpcTitle
-                else
-                    sTitle = ""
-                end
                 unitFrame:Hide()
                 unitFrame.hasShownAsName = true
                 namePlate.NpcNameRS:Show()
-                namePlate.NpcNameRS:SetText(format("%s\n|cffFFFFFF%s|r",name, sTitle))
+                if NpcTitle then
+                    namePlate.NpcNameRS:SetText(format("%s\n|cffFFFFFF%s|r",name, NpcTitle))
+                else
+                    namePlate.NpcNameRS:SetText(format("%s",name))
+                end
+                    
                 namePlate.NpcNameRS:SetTextColor(r,g,b,a)
                 namePlate.NpcNameRS:SetFont(STANDARD_TEXT_FONT, rs.tabDB[rs.iDBmark]["NameModeFriendlyNPCSize"], outlinetable[rs.tabDB[rs.iDBmark]["NameModeNameType"]])
                 namePlate.NpcNameRS:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, rs.tabDB[rs.iDBmark]["NameModeNpcOffY"])
 
-                
             -- Player
             elseif IsFriendly and IsPlayer and not CanAttack and rs.tabDB[rs.iDBmark]["NameModeFriendlyPlayer"] then 
                 local r, g, b, a

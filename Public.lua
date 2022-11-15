@@ -36,7 +36,7 @@ end
 
 
 -- 带毛框幕布背景
-function rs.CreateBackDrop(parent, anchor, a, offsize)
+function rs.CreateBackDrop(parent, anchor, a, offsize, extra)
 	-- 模拟默认参数
 	if offsize == nil then
 		offsize = 3
@@ -48,8 +48,13 @@ function rs.CreateBackDrop(parent, anchor, a, offsize)
 	if flvl - 1 >= 0 then frame:SetFrameLevel(flvl-1) end
 
 	frame:ClearAllPoints()
-    frame:SetPoint("TOPLEFT", anchor, "TOPLEFT", -offsize, offsize)
-    frame:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", offsize, -offsize)
+    if not extra then
+        frame:SetPoint("TOPLEFT", anchor, "TOPLEFT", -offsize, offsize)
+        frame:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", offsize, -offsize)
+    else
+        frame:SetPoint("TOPLEFT", anchor, "TOPLEFT", -offsize, 2)
+        frame:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", offsize, -offsize)
+    end
 
     frame:SetBackdrop(
     	{

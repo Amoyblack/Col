@@ -378,7 +378,11 @@ function rs:UpdateAnchor()
     if isPlayer then 
         self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, 5 + targetYOffset + rs.tabDB[rs.iDBmark]["SelfAuraHeight"] + SquareExtraOffSet);
 	elseif (self:GetParent().unit and ShouldShowName(self:GetParent())) then
-		self:SetPoint("BOTTOM", self:GetParent(), "TOP", 0, targetYOffset + rs.tabDB[rs.iDBmark]["AuraHeight"] + SquareExtraOffSet - 15);
+        if rs.tabDB[rs.iDBmark]["NarrowCast"] then
+		    self:SetPoint("BOTTOM", self:GetParent(), "TOP", 0, targetYOffset + rs.tabDB[rs.iDBmark]["AuraHeight"] + SquareExtraOffSet - 13);
+        else
+		    self:SetPoint("BOTTOM", self:GetParent(), "TOP", 0, targetYOffset + rs.tabDB[rs.iDBmark]["AuraHeight"] + SquareExtraOffSet );
+        end
 	else
 		self:SetPoint("BOTTOM", self:GetParent().healthBar, "TOP", 0, 5 + targetYOffset + rs.tabDB[rs.iDBmark]["AuraHeight"] + SquareExtraOffSet);
 	end

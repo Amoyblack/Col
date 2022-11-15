@@ -16,7 +16,8 @@ local config = rs.ExtraConfig
 ------  不要改上面的 Dont touch above -------
 -------------------------------------------
 
-
+-- 血量字体大小 （health value size)
+config.healthValueSize = 11
 
 -- 任务标记大小 (Quest Mark Icon Size)  Default:30
 config.questIconSize = 30

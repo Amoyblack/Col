@@ -1118,17 +1118,17 @@ options.args.namemode = {
                     get = function (info) return rs.tabDB[rs.iDBmark][info[#info]] end
 
                 },
-                NameModeImitateOverlap = {
-                    name = L["NameModeImitateOverlap"],
-                    desc = L["NameModeImitateOverlapTT"],
-                    order = 15,
-                    type = "toggle",
-                    width = 1.5,
-                    set = function (info, value)
-                    rs.tabDB[rs.iDBmark][info[#info]] = value
-                    rs.UpdateCvars()
-                    end,
-                }
+                -- NameModeImitateOverlap = {
+                --     name = L["NameModeImitateOverlap"],
+                --     desc = L["NameModeImitateOverlapTT"],
+                --     order = 15,
+                --     type = "toggle",
+                --     width = 1.5,
+                --     set = function (info, value)
+                --     rs.tabDB[rs.iDBmark][info[#info]] = value
+                --     rs.UpdateCvars()
+                --     end,
+                -- }
             }
         }
 
