@@ -259,7 +259,7 @@ rs.V.enus = {
     NpcAuraColorOnlyMe = "Only From Me",
     NpcAuraColorOnlyMeTT = "Only color aura that from my pet or myself",
 
-    NpcbarColor = "Healthbar Color",
+    NpcbarColor = "Color",
     RemoveCheckBoxTT = "|cff00FF7F--- Click to remove ---|r",
 
     MarginCol1 = "\nSince the new version of RSP has refactored and optimized the performance and structure, you need to manually delete the plugin directory of the old version once",
