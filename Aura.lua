@@ -250,7 +250,6 @@ function rs.UpdateBuffsRSV(self, unit, unitAuraUpdateInfo, auraSettings, UnitFra
         
         
 		buff.Icon:SetTexture(aura.icon);
-        buff:SetMouseClickEnabled(false)
         if RSDB["SquareAura"] then
             buff:SetSize(RSDB["AuraSize"],RSDB["AuraSize"])
             buff.Icon:SetPoint("TOPLEFT", buff,"TOPLEFT", 1, -1)
@@ -271,6 +270,8 @@ function rs.UpdateBuffsRSV(self, unit, unitAuraUpdateInfo, auraSettings, UnitFra
         end
 
 		buff:Show();
+        -- buff:SetScript("OnEnter", function() end)
+        buff:SetMouseClickEnabled(false)
 
 		buffIndex = buffIndex + 1;
 		return buffIndex >= BUFF_MAX_DISPLAY;

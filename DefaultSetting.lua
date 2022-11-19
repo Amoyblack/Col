@@ -4,7 +4,7 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "10.0.10",
+	["Version"] = "10.0.11",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
     ["BarTexture"] = "s2",

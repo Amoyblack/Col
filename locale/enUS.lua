@@ -21,7 +21,7 @@ rs.V.enus = {
     Title10 = "Profile",
 
     BarTexture = "Texture",
-    BarTextureTT = "\n|cffFFD700source|r Current Version(10.0 DF)Blizzard default texture \n\n|cffFFD7007.0 LEG source|r 7.0 LEG ~ 9.0 SL Version Blizzard default texture \n\n|cffFFD700Customize|r If you need a custom texture, rename your texture file to |cff00FF7F<MyRsTexture>|r, store it in |cff00FF7F//_retail_/Interface/MyRsTexture|r, and select this option \n\n|cff66CCFFWhen select the first option - <source>, you may need to reload UI to take effect|r",
+    BarTextureTT = "\n|cffFFD700source|r Current Version(10.0 DF)Blizzard default texture\n\n|cffFFD7007.0 LEG source|r 7.0 LEG ~ 9.0 SL Version Blizzard default texture\n\n|cffFFD700Customize|r If you need a custom texture, rename your texture file to |cff00FF7F<MyRsTexture>|r, store it in |cff00FF7F//_retail_/Interface/MyRsTexture|r, and select this option\n\n|cff66CCFFWhen select the first option - <source>, you may need to reload UI to take effect|r",
     BarTextureSource = "source",
 
     NarrowCastBar = "Narrow CastBar",

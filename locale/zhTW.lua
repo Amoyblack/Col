@@ -21,7 +21,7 @@ rs.V.zhtw = {
     Title10 = "插件配置",
 
     BarTexture = "材質",
-    BarTextureTT = "\n|cffFFD700源生|r 當前版本(10.0 DF)暴雪默認材質 \n\n|cffFFD7007.0 LEG 源生|r 7.0 LEG ~ 9.0 SL 版本的暴雪默認材質 \n\n|cffFFD700Customize|r 若需要自定義材質，把你的材質改名為|cff00FF7F<MyRsTexture>|r，存放於 |cff00FF7F//_retail_/Interface/MyRsTexture|r，然後勾選此項 \n\n|cff66CCFF選擇第一項源生時候需要重載生效|r",
+    BarTextureTT = "\n|cffFFD700源生|r 當前版本(10.0 DF)暴雪默認材質\n\n|cffFFD7007.0 LEG 源生|r 7.0 LEG ~ 9.0 SL 版本的暴雪默認材質\n\n|cffFFD700Customize|r 若需要自定義材質，把你的材質改名為|cff00FF7F<MyRsTexture>|r，存放於 |cff00FF7F//_retail_/Interface/MyRsTexture|r，然後勾選此項\n\n|cff66CCFF選擇第一項源生時候需要重載生效|r",
     BarTextureSource = "源生",
 
     NarrowCastBar = "窄施法條",

@@ -29,7 +29,7 @@ local dctTexture = {
 
 local healthBarHeight = 11
 
-local tabGUID2unit = {}
+-- local tabGUID2unit = {}
 
 local rgbYello = {245/256, 161/256, 5/256}
 local rgbGreen = {0/256, 250/256, 0/256}
@@ -68,24 +68,24 @@ function rs.On_Np_Add(unitToken)
     if namePlateFrameBase then
         local unitFrame = namePlateFrameBase.UnitFrame
         unitFrame.healthBar.AuraR, unitFrame.healthBar.AuraG, unitFrame.healthBar.AuraB = nil, nil, nil
-        rs.SetGUIDTable(unitToken, UnitGUID(unitToken))
+        -- rs.SetGUIDTable(unitToken, UnitGUID(unitToken))
         rs.CreateUIObj(unitFrame, namePlateFrameBase)
         rs.RegExtraUIEvent(unitFrame)
         rs.On_NpRefreshOnce(unitFrame)
     end
 end
 
-function rs.On_Np_Remove(unitToken)
-    rs.SetGUIDTable(unitToken, nil)
-end
+-- function rs.On_Np_Remove(unitToken)
+--     rs.SetGUIDTable(unitToken, nil)
+-- end
 
-function rs.SetGUIDTable(unit, GUID)
-    if GUID then
-        tabGUID2unit[unit] = GUID
-    else
-        tabGUID2unit[unit] = nil
-    end
-end
+-- function rs.SetGUIDTable(unit, GUID)
+--     if GUID then
+--         tabGUID2unit[unit] = GUID
+--     else
+--         tabGUID2unit[unit] = nil
+--     end
+-- end
 
 
 function rs.On_Np_Create(self, namePlateFrameBase)
@@ -243,8 +243,8 @@ function rs.CreateUIObj(unitFrame, namePlate)
 
 		-- 血量
 		unitFrame.healthBar.value = rs.createtext(unitFrame.healthBar, "OVERLAY", rs.ExtraConfig.healthValueSize, "OUTLINE", "CENTER")
-		unitFrame.healthBar.value:SetShadowColor(0,0,0,1)
-		unitFrame.healthBar.value:SetShadowOffset(0.5,-0.5)
+		-- unitFrame.healthBar.value:SetShadowColor(0,0,0,1)
+		-- unitFrame.healthBar.value:SetShadowOffset(0.5,-0.5)
 		unitFrame.healthBar.value:SetTextColor(1,1,1)
 		unitFrame.healthBar.value:Hide()
 		if rs.tabDB[rs.iDBmark]["CenterDetail"] then
@@ -1063,7 +1063,7 @@ function loadFrame:OnEvent(event, arg1)
 		rs.RSOn()
         rs.InitMinimapBtn()
         rs.GenerateSpellDescCacheAll()
-
+        C_Timer.After(1, rs.GenerateNpcNameAll)
 
     -- time : entering_world --> WA set --> loading_screen_disabled
     elseif event == "PLAYER_ENTERING_WORLD" then
@@ -1100,9 +1100,9 @@ local function UIObj_Event(self, event, ...)
         local unit = ...
         rs.On_Np_Add(unit)
 
-    elseif event == "NAME_PLATE_UNIT_REMOVED" then
-        local unit = ...
-        rs.On_Np_Remove(unit)
+    -- elseif event == "NAME_PLATE_UNIT_REMOVED" then
+    --     local unit = ...
+    --     rs.On_Np_Remove(unit)
 
     elseif event == "UNIT_HEALTH" then
         local unit = ...
@@ -1180,9 +1180,10 @@ local function UIObj_Event(self, event, ...)
         local timestamp, subevent, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo()
         if subevent == "SPELL_INTERRUPT" then
             if not rs.tabDB[rs.iDBmark]["CastInterrupteFrom"] then return end
-            for npUnit, npGUID in pairs(tabGUID2unit) do
-                if npGUID == destGUID then
-                    local npbase = C_NamePlate.GetNamePlateForUnit(npUnit)
+            -- local sourceUnit = UnitTokenFromGUID(sourceGUID)
+            local destUnit = UnitTokenFromGUID(destGUID) -- 被打断
+            if string.match(destUnit or "", "nameplate") then 
+                local npbase = C_NamePlate.GetNamePlateForUnit(destUnit, false)
                     if npbase then
                         -- npbase.UnitFrame.CastingExpandFrame.CastingTarget:Hide()
                         -- npbase.UnitFrame.CastingExpandFrame.InterrupteIndicator:Hide()
@@ -1202,7 +1203,29 @@ local function UIObj_Event(self, event, ...)
                     end
                 end
             end
-        end
+
+            -- for npUnit, npGUID in pairs(tabGUID2unit) do
+            --     if npGUID == destGUID then
+            --         local npbase = C_NamePlate.GetNamePlateForUnit(npUnit)
+            --         if npbase then
+            --             -- npbase.UnitFrame.CastingExpandFrame.CastingTarget:Hide()
+            --             -- npbase.UnitFrame.CastingExpandFrame.InterrupteIndicator:Hide()
+            --             if sourceName then
+            --                 local name, server = strsplit("-", sourceName)
+            --                 -- print("-----", npUnit, npGUID , destGUID)
+            --                 -- print("打断者", sourceName)
+            --                 -- print("被打断者：", UnitName(npUnit))
+            --                 local colorStr = "ffFFFFFF"
+
+            --                 if C_PlayerInfo.GUIDIsPlayer(sourceGUID) then
+            --                     local localizedClass, englishClass, localizedRace, englishRace, sex, _name, realm = GetPlayerInfoByGUID(sourceGUID)
+            --                     colorStr = RAID_CLASS_COLORS[englishClass].colorStr
+            --                 end
+            --                 npbase.UnitFrame.castBar.Text:SetText(string.format("|c%s[%s]|r 打断", colorStr, name))
+            --             end
+            --         end
+            --     end
+            -- end
 
     elseif event == "PLAYER_REGEN_ENABLED" then
         if rs.inLock then
@@ -1232,7 +1255,7 @@ UIObjectDriveFrame:RegisterEvent("UNIT_AURA")
 UIObjectDriveFrame:RegisterEvent("UNIT_NAME_UPDATE")
 UIObjectDriveFrame:RegisterEvent("PLAYER_FOCUS_CHANGED")
 UIObjectDriveFrame:RegisterEvent("NAME_PLATE_UNIT_ADDED")
-UIObjectDriveFrame:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
+-- UIObjectDriveFrame:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
 
 -- UIObjectDriveFrame:RegisterEvent("UNIT_TARGET")
 UIObjectDriveFrame:RegisterEvent("UNIT_SPELLCAST_START")

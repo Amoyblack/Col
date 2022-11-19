@@ -13,6 +13,7 @@ local AceMap = LibStub("LibDBIcon-1.0")
 
 local MapIconTexture  = "Interface\\AddOns\\RSPlates\\media\\rsicon"
 
+local tabNpcName = {}
 local tabSpellDesc = {}
 local tabSpellName = {
     "DctInterrupteSpell",
@@ -45,6 +46,34 @@ local function GenerateSingleSpellDesc(iSpellID, cbFunc)
             cbFunc()
         end
     end)
+end
+
+-- todo: Find other way
+function rs.GenerateNpcNameAll()
+    if rs.table_leng(tabNpcName) == rs.table_leng(rs.tabDB[rs.iDBmark]["DctColorNpc"]) then return end
+    local iii = 0
+    local res
+    repeat
+        tabNpcName = {}
+        iii = iii + 1
+        for iNpcID, v in pairs(rs.tabDB[rs.iDBmark]["DctColorNpc"]) do
+            local sNpcName = rs.GetNameByNpcID(iNpcID)
+            if sNpcName then
+                tabNpcName[iNpcID] = sNpcName
+            end
+        end
+        if rs.table_leng(tabNpcName) == rs.table_leng(rs.tabDB[rs.iDBmark]["DctColorNpc"]) then
+            res = true
+        else
+            res = false
+        end
+    until (res or iii >= 5)
+    if res then
+        -- print(string.format(" %d 次获取到了 npcName", iii))
+        return true
+    else
+        -- print("RSPlates Debug: Fail to get npc name after 5 times attempts")
+    end
 end
 
 local options = {
@@ -735,8 +764,10 @@ options.args.dungeon = {
                             if not rs.tabDB[rs.iDBmark]["DctColorNpc"][iNpcID] and sNpcname then 
                                 rs.tabDB[rs.iDBmark]["DctColorNpc"][iNpcID] = {0, 0, 1}
                                 print(L["NpcIDAdded"]..sNpcname)
-                                rs.RefDungeonNPCPanel()
-                                rs.UpdateAllNameplatesOnce()
+                                if rs.GenerateNpcNameAll() then
+                                    rs.RefDungeonNPCPanel()
+                                    rs.UpdateAllNameplatesOnce()
+                                end
                             else
                                 print(L["NpcIDInputError"])
                             end
@@ -1709,6 +1740,7 @@ function rs.SwitchConfigGUI(page)
             ConfigFrameContainer:SetStatusText(format("%s%s",L["UpdateVersion"], rs.tabDB[rs.iDBmark]["Version"]))
             ConfigFrameContainer:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
         -- end
+        rs.GenerateNpcNameAll()
         rs.RefInterrupteSpellPanel()
         rs.RefWhitelistAuraPanel()
         rs.RefBlacklistAuraPanel()
@@ -1725,19 +1757,33 @@ function rs.SwitchConfigGUI(page)
 end
 
 
-local RSNpcIDTooltip
-RSNpcIDTooltip = CreateFrame("GameTooltip", "RSNPCID", UIParent, "GameTooltipTemplate")
-RSNpcIDTooltip:SetOwner(UIParent, "ANCHOR_NONE")
+-- local RSNpcIDTooltip
+-- RSNpcIDTooltip = CreateFrame("GameTooltip", "RSNPCID", UIParent, "GameTooltipTemplate")
+-- RSNpcIDTooltip:SetOwner(UIParent, "ANCHOR_NONE")
 
 function rs.GetNameByNpcID(iNpcID)
     -- SetOwer May Release once 
-    RSNpcIDTooltip:SetOwner(UIParent, "ANCHOR_NONE")
-    RSNpcIDTooltip:SetHyperlink(format("unit:Creature-0-0-0-0-%d", iNpcID))
+    -- RSNpcIDTooltip:SetOwner(UIParent, "ANCHOR_NONE")
+    -- RSNpcIDTooltip:SetHyperlink(format("unit:Creature-0-0-0-0-%d", iNpcID))
 
-    if RSNPCIDTextLeft1 and RSNPCIDTextLeft1.GetText then 
-        local name = RSNPCIDTextLeft1:GetText()
-        return name
+
+    local tooltipData = C_TooltipInfo.GetHyperlink(format("unit:Creature-0-0-0-0-%d", iNpcID))
+
+    if tooltipData then 
+        for _, line in ipairs(tooltipData.lines) do
+            TooltipUtil.SurfaceArgs(line)
+        end
+
+        if tooltipData.lines[1] and tooltipData.lines[1].leftText then
+            return tooltipData.lines[1].leftText
+        end
+    else
+        -- print("RSPlates: Debug --> Failed to initialize NPCID, try to reopen Config-Interface. NpcId:", iNpcID)
     end
+    -- if RSNPCIDTextLeft1 and RSNPCIDTextLeft1.GetText then 
+    --     local name = RSNPCIDTextLeft1:GetText()
+    --     return name
+    -- end
 end
 
 
@@ -1746,8 +1792,8 @@ function rs.RefDungeonNPCPanel()
     local node = options.args.dungeon.args.NpcGroup.args.NpcColorGroup
     local v = 1
     node.args = {}
-    for i, k in pairs(rs.tabDB[rs.iDBmark]["DctColorNpc"]) do 
-        local sNpcName = rs.GetNameByNpcID(i)
+    for i, k in pairs(tabNpcName) do 
+        local sNpcName = k
         local sNpcID = tostring(i)
         if sNpcName then
             node.args[sNpcID.."DungeonNPCPanelName"] = {
@@ -1756,9 +1802,12 @@ function rs.RefDungeonNPCPanel()
                 order = v,
                 name = format("NpcID: %s  [ %s ]",sNpcID,sNpcName),
                 desc = L["RemoveCheckBoxTT"],
-                set = function(info,value) rs.tabDB[rs.iDBmark]["DctColorNpc"][i] = nil rs.RefDungeonNPCPanel() 
+                set = function(info,value) rs.tabDB[rs.iDBmark]["DctColorNpc"][i] = nil
                     print(L["NpcIDDeled"]..sNpcName)
-                    rs.UpdateAllNameplatesOnce()
+                    if rs.GenerateNpcNameAll() then
+                        rs.RefDungeonNPCPanel() 
+                        rs.UpdateAllNameplatesOnce()
+                    end
                 end 
             }
             v = v + 1
@@ -1772,11 +1821,11 @@ function rs.RefDungeonNPCPanel()
                 set = function(info,r,g,b,a) rs.tabDB[rs.iDBmark]["DctColorNpc"][i] = {r-r%0.01, g-g%0.01, b-b%0.01} end,
             }
             v = v + 1
-            node.args[sNpcID.."DungeonNPCPanelgapline"] = {
-                type = "description",
-                name = " ",
-                order = v,
-            }
+            -- node.args[sNpcID.."DungeonNPCPanelgapline"] = {
+            --     type = "description",
+            --     name = " ",
+            --     order = v,
+            -- }
         end
     end
 end

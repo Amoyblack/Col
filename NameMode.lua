@@ -1,6 +1,6 @@
 local addon, rs = ...
 
-local RSNpcTitleTooltip = CreateFrame("GameTooltip", "RS_Name_Tooltip", nil, "GameTooltipTemplate")
+-- local RSNpcTitleTooltip = CreateFrame("GameTooltip", "RS_Name_Tooltip", nil, "GameTooltipTemplate")
 
 local outlinetable = {
     ["s1"] = "nil",
@@ -11,21 +11,35 @@ local outlinetable = {
 
 local function GetNpcTitle(unit)
     if not unit then return end
-    local GUID = UnitGUID(unit)
-    RSNpcTitleTooltip:SetOwner(UIParent, "ANCHOR_NONE")
-    RSNpcTitleTooltip:SetHyperlink("unit:" .. GUID)
-    -- local line = _G["RS_Name_TooltipTextLeft" .. 2]
-    if RS_Name_TooltipTextLeft2 and RS_Name_TooltipTextLeft2.GetText then
-    -- local line = RS_Name_TooltipTextLeft2
-        local text = RS_Name_TooltipTextLeft2:GetText()
-        if not text then return end 
-        -- local res,_ = text:gsub("%D+", "")
-        if not (string.match(text, "?") or string.match(text, "%d")) then 
-            return text 
+
+    local tooltipData = C_TooltipInfo.GetUnit(unit)
+
+    if tooltipData then
+        for _, line in ipairs(tooltipData.lines) do
+            TooltipUtil.SurfaceArgs(line)
+        end
+
+        if tooltipData.lines[2] and not (string.match(tooltipData.lines[2].leftText or "", "%d") or string.match(tooltipData.lines[2].leftText or "", "?")) then 
+            return tooltipData.lines[2].leftText
         else
             return 
         end
     end
+    -- local GUID = UnitGUID(unit)
+    -- RSNpcTitleTooltip:SetOwner(UIParent, "ANCHOR_NONE")
+    -- RSNpcTitleTooltip:SetHyperlink("unit:" .. GUID)
+    -- -- local line = _G["RS_Name_TooltipTextLeft" .. 2]
+    -- if RS_Name_TooltipTextLeft2 and RS_Name_TooltipTextLeft2.GetText then
+    -- -- local line = RS_Name_TooltipTextLeft2
+    --     local text = RS_Name_TooltipTextLeft2:GetText()
+    --     if not text then return end 
+    --     -- local res,_ = text:gsub("%D+", "")
+    --     if not (string.match(text, "?") or string.match(text, "%d")) then 
+    --         return text 
+    --     else
+    --         return 
+    --     end
+    -- end
 end
 
 
