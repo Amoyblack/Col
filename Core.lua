@@ -204,6 +204,8 @@ function rs.CreateUIObj(unitFrame, namePlate)
         unitFrame.MouseoverFrame.unit = unit
     end
 
+    healthBarHeight = unitFrame.healthBar:GetHeight()
+    unitFrame.hasShownAsName = false
     unitFrame.ColorAura = {}
     unitFrame.StolenAura = {}
 
@@ -211,7 +213,10 @@ function rs.CreateUIObj(unitFrame, namePlate)
 
         hooksecurefunc(unitFrame, "Show", function(self)
             if self.hasShownAsName and not UnitIsUnit(self.unit, "player") then 
-                self:Hide()
+                local inInstance, instanceType = IsInInstance()
+                if not inInstance then 
+                    securecallfunction(self.Hide, self)
+                end
             end
         end)
 
@@ -243,8 +248,8 @@ function rs.CreateUIObj(unitFrame, namePlate)
 
 		-- 血量
 		unitFrame.healthBar.value = rs.createtext(unitFrame.healthBar, "OVERLAY", rs.ExtraConfig.healthValueSize, "OUTLINE", "CENTER")
-		-- unitFrame.healthBar.value:SetShadowColor(0,0,0,1)
-		-- unitFrame.healthBar.value:SetShadowOffset(0.5,-0.5)
+		-- unitFrame.healthBar.value:SetShadowColor(0, 0, 0, 1)
+		-- unitFrame.healthBar.value:SetShadowOffset(1, -0.5)
 		unitFrame.healthBar.value:SetTextColor(1,1,1)
 		unitFrame.healthBar.value:Hide()
 		if rs.tabDB[rs.iDBmark]["CenterDetail"] then
@@ -771,8 +776,6 @@ end
 ---手动设置一次需要设置的
 function rs.On_NpRefreshOnce(unitFrame)
     if unitFrame:IsForbidden() then return end
-    
-    healthBarHeight = unitFrame.healthBar:GetHeight()
     
     rs.SetStolen(unitFrame)
 
