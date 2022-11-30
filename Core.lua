@@ -14,6 +14,8 @@
 local ADDONName, rs = ...
 local L = rs.L
 
+_G.RSPLATES_GLOBAL_ACCESS = rs
+
 local arrorTexture = "Interface\\AddOns\\RSPlates\\media\\arrorH"
 local questTexture = "Interface\\AddOns\\RSPlates\\media\\questQuestion"
 local dctTexture = {
@@ -27,8 +29,7 @@ local dctTexture = {
     ["s8"] = "Interface\\MyRsTexture",
 }
 
-local healthBarHeight = 11
-
+rs.healthBarHeight = 11
 -- local tabGUID2unit = {}
 
 local rgbYello = {245/256, 161/256, 5/256}
@@ -204,7 +205,7 @@ function rs.CreateUIObj(unitFrame, namePlate)
         unitFrame.MouseoverFrame.unit = unit
     end
 
-    healthBarHeight = unitFrame.healthBar:GetHeight()
+    rs.healthBarHeight = unitFrame.healthBar:GetHeight()
     unitFrame.hasShownAsName = false
     unitFrame.ColorAura = {}
     unitFrame.StolenAura = {}
@@ -528,7 +529,7 @@ function rs.ThinCastBar(self, event, ...)
                 -- self.Icon:SetTexture(texture)
                 self:SetHeight(rs.tabDB[rs.iDBmark]["CastHeight"])
                 self.Icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMLEFT", -3, 0)
-                self.Icon:SetSize(rs.tabDB[rs.iDBmark]["CastHeight"] + healthBarHeight + 2, rs.tabDB[rs.iDBmark]["CastHeight"] + healthBarHeight + 2)  -- 13 + height
+                self.Icon:SetSize(rs.tabDB[rs.iDBmark]["CastHeight"] + rs.healthBarHeight + 2, rs.tabDB[rs.iDBmark]["CastHeight"] + rs.healthBarHeight + 2)  -- 13 + height
                 self.Icon:SetTexCoord(0.1, 0.9,0.1 , 0.9)
                 self.BorderShield:SetPoint("LEFT",self, "LEFT", -2, 0)
             end
@@ -889,17 +890,15 @@ function rs.HookBlizzedFunc()
     end)
 
     hooksecurefunc(CastingBarMixin, "OnShow", function(self)
-        if self.unit then
-            rs.ThinCastBar(self)
-        end
+        if not rs.IsLegalUnit(self) then return end
+        rs.ThinCastBar(self)
     end)
 
     hooksecurefunc(CastingBarMixin, "OnEvent", function(self, event, ...)
         local arg1 = ...;
-        if not self.unit then return end
         if ( arg1 ~= self.unit ) then return end
-        if self:IsForbidden() then return end
 
+        if not rs.IsLegalUnit(self) then return end
         -- print(arg1, "  ", self.unit, "    OnEvent")
 
         rs.ThinCastBar(self)
