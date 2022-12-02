@@ -6,7 +6,7 @@
 ## Notes-zhCN: 源生姓名板增强
 ## Notes-zhTW: 源生姓名板增強
 ## Notes-enUS: Blizzard Nameplates Expanded
-
+## X-Website: https://www.curseforge.com/wow/addons/rsplates
 
 ## SavedVariables: RSPlatesDB
 ## SavedVariablesPerCharacter: RSPlatesDBPer

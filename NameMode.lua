@@ -49,6 +49,9 @@ function rs.SetNameMode(unitFrame)
         -- 先初始化状态
         local unit = unitFrame.unit
         
+        unitFrame.hasShownAsName = false
+        unitFrame:Show()
+
         local namePlate = C_NamePlate.GetNamePlateForUnit(unit, false)
         if namePlate and namePlate.NpcNameRS and namePlate.NameSelectGlow then 
             namePlate.NpcNameRS:Hide()
@@ -68,9 +71,10 @@ function rs.SetNameMode(unitFrame)
             return 
         end
 
-        unitFrame.hasShownAsName = false
-        unitFrame:Show()
-        
+        if unitFrame.WidgetContainer:IsShown() then
+            return 
+        end
+
         -- 再匹配
         if rs.tabDB[rs.iDBmark]["EnableNamemode"] then 
             local NpcTitle = GetNpcTitle(unit)

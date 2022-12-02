@@ -250,7 +250,7 @@ function rs.CreateUIObj(unitFrame, namePlate)
 		-- 血量
 		unitFrame.healthBar.value = rs.createtext(unitFrame.healthBar, "OVERLAY", rs.ExtraConfig.healthValueSize, "OUTLINE", "CENTER")
 		-- unitFrame.healthBar.value:SetShadowColor(0, 0, 0, 1)
-		-- unitFrame.healthBar.value:SetShadowOffset(1, -0.5)
+		-- unitFrame.healthBar.value:SetShadowOffset(1, -1)
 		unitFrame.healthBar.value:SetTextColor(1,1,1)
 		unitFrame.healthBar.value:Hide()
 		if rs.tabDB[rs.iDBmark]["CenterDetail"] then
@@ -344,6 +344,8 @@ function rs.CreateUIObj(unitFrame, namePlate)
 
         namePlate.NpcNameRS = rs.createtext(namePlate, "OVERLAY", 12, "OUTLINE", "CENTER")
         namePlate.NpcNameRS:SetPoint("CENTER", unitFrame.healthBar, "CENTER", 0, 0)
+        namePlate.NpcNameRS:SetShadowColor(0, 0, 0, 1)
+        namePlate.NpcNameRS:SetShadowOffset(1, -1)
 		namePlate.NpcNameRS:Hide()
 
         -- target glow new ui
