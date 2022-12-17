@@ -731,8 +731,14 @@ options.args.dungeon = {
         ExpballHelper = {
             order = 10,
             name = L["Exp"],
-            desc = L["ExpTT"]..L["needReload"],
+            desc = L["ExpTT"],
             type = "toggle",
+            set = function (info, value) 
+                if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+                    rs.tabDB[rs.iDBmark][info[#info]] = value 
+                end 
+                rs.InitTimer()
+            end,
         },
 
         NpcGroup = {

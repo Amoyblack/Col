@@ -29,6 +29,8 @@ local dctTexture = {
     ["s8"] = "Interface\\MyRsTexture",
 }
 
+rs.ticker = nil
+rs.curDungeonData = nil
 rs.healthBarHeight = 11
 -- local tabGUID2unit = {}
 
@@ -56,13 +58,25 @@ function rs.RSOn()
         rs.UpdateAnchor = rs.UpdateAnchorFixRS
     end
 	rs.HookBlizzedFunc()
-	if rs.tabDB[rs.iDBmark]["ExpballHelper"] then
-		rs.BallScanner()
-	end
+    rs.InitTimer()
 end
 -------------------------------------------------
 
+function rs.InitTimer()
+    if rs.ticker then
+        rs.ticker:Cancel()
+        rs.ticker = nil
+    end
 
+    if rs.tabDB[rs.iDBmark]["ExpballHelper"] then
+        rs.ticker = C_Timer.NewTicker(0.15, rs.OnlyShowBall)
+    else
+        for i, namePlate in pairs(C_NamePlate.GetNamePlates(false)) do
+            namePlate.UnitFrame.shouldHide = false
+            namePlate.UnitFrame:Show()
+        end
+    end
+end
 
 function rs.On_Np_Add(unitToken)
 	local namePlateFrameBase = C_NamePlate.GetNamePlateForUnit(unitToken, false)
@@ -232,10 +246,7 @@ function rs.CreateUIObj(unitFrame, namePlate)
         hooksecurefunc(unitFrame, "Show", function(self)
             if self.IsForbidden and self:IsForbidden() then return end
             if self.hasShownAsName and not UnitIsUnit(self.unit, "player") then 
-            -- local inInstance, instanceType = IsInInstance()
-            -- if not inInstance then 
                 securecallfunction(self.Hide, self)
-                -- end
             end
             
             if self.shouldHide then
@@ -1101,6 +1112,11 @@ function loadFrame:OnEvent(event, arg1)
         rs.RefSpecThreateColor()
     elseif event == "LOADING_SCREEN_DISABLED" then
         C_Timer.After(1, rs.UpdateCvars)
+        C_Timer.After(1, function()
+            local activeKeystoneLevel, activeAffixIDs = C_ChallengeMode.GetActiveKeystoneInfo()
+            rs.curDungeonData = activeAffixIDs
+        end)
+
 	end
 end
 loadFrame:SetScript("OnEvent", loadFrame.OnEvent);
