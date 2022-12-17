@@ -453,7 +453,7 @@ options.args.basic = {
                     type = "toggle",
                     order = 1,
                     set = function(info, value) rs.tabDB[rs.iDBmark][info[#info]] = value 
-                        for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+                        for i, namePlate in ipairs(C_NamePlate.GetNamePlates(false)) do
                             local unitFrame = namePlate.UnitFrame
                             rs.RegExtraUIEvent(unitFrame)
                         end	
@@ -539,7 +539,7 @@ options.args.basic = {
                     type = "toggle",
                     order = 1,
                     set = function(info, value) rs.tabDB[rs.iDBmark][info[#info]] = value 
-                        for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+                        for i, namePlate in ipairs(C_NamePlate.GetNamePlates(false)) do
                             local unitFrame = namePlate.UnitFrame
                             rs.RegExtraUIEvent(unitFrame)
                         end	
@@ -572,7 +572,7 @@ options.args.basic = {
                             type = "toggle",
                             order = 1,
                             set = function(info, value) rs.tabDB[rs.iDBmark][info[#info]] = value 
-                                for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+                                for i, namePlate in ipairs(C_NamePlate.GetNamePlates(false)) do
                                     -- will not get forbidden unitframe
                                     local unitFrame = namePlate.UnitFrame
                                     rs.RegExtraUIEvent(unitFrame)
@@ -2142,7 +2142,7 @@ StaticPopupDialogs.ResetAddonSetting = {
 ---- 不产生任何新逻辑   仅刷新界面----
 
 function rs.UpdateAllNameplatesOnce()
-	for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+	for i, namePlate in ipairs(C_NamePlate.GetNamePlates(false)) do
 		local unitFrame = namePlate.UnitFrame
 		rs.On_NpRefreshOnce(unitFrame)
         rs.ThinCastBar(unitFrame.castBar)
@@ -2158,7 +2158,7 @@ function rs.UpdateAllNameplatesOnce()
 end
 
 function rs.RefBuffFrameDisplay()
-	for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+	for i, namePlate in ipairs(C_NamePlate.GetNamePlates(false)) do
 		local unitFrame = namePlate.UnitFrame
 		unitFrame.BuffFrame:UpdateAnchor()
 		if unitFrame.unit then 

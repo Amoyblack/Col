@@ -72,8 +72,25 @@ function rs.On_Np_Add(unitToken)
         -- rs.SetGUIDTable(unitToken, UnitGUID(unitToken))
         rs.CreateUIObj(unitFrame, namePlateFrameBase)
         rs.RegExtraUIEvent(unitFrame)
-        rs.On_NpRefreshOnce(unitFrame)
+        rs.On_NpRefreshOnce(unitFrame, namePlateFrameBase)
+        unitFrame:Show()
     end
+end
+
+function rs.InitAttr(unitFrame, namePlate)
+    unitFrame.hasShownAsName = false
+    unitFrame.shouldHide = false
+    if namePlate and namePlate.NpcNameRS and namePlate.NameSelectGlow then 
+        namePlate.NpcNameRS:Hide()
+        namePlate.NpcNameRS:SetText("")
+        namePlate.NpcNameRS:SetTextColor(1,1,1)
+        namePlate.NameSelectGlow:Hide()
+    end
+
+    rs.healthBarHeight = unitFrame.healthBar:GetHeight()
+    unitFrame.ColorAura = {}
+    unitFrame.StolenAura = {}
+
 end
 
 -- function rs.On_Np_Remove(unitToken)
@@ -205,19 +222,24 @@ function rs.CreateUIObj(unitFrame, namePlate)
         unitFrame.MouseoverFrame.unit = unit
     end
 
-    rs.healthBarHeight = unitFrame.healthBar:GetHeight()
-    unitFrame.hasShownAsName = false
-    unitFrame.ColorAura = {}
-    unitFrame.StolenAura = {}
+    -- rs.healthBarHeight = unitFrame.healthBar:GetHeight()
+    -- unitFrame.hasShownAsName = false
+    -- unitFrame.ColorAura = {}
+    -- unitFrame.StolenAura = {}
 
 	if not unitFrame.rsed then
 
         hooksecurefunc(unitFrame, "Show", function(self)
+            if self.IsForbidden and self:IsForbidden() then return end
             if self.hasShownAsName and not UnitIsUnit(self.unit, "player") then 
-                local inInstance, instanceType = IsInInstance()
-                if not inInstance then 
-                    securecallfunction(self.Hide, self)
-                end
+            -- local inInstance, instanceType = IsInInstance()
+            -- if not inInstance then 
+                securecallfunction(self.Hide, self)
+                -- end
+            end
+            
+            if self.shouldHide then
+                securecallfunction(self.Hide, self)
             end
         end)
 
@@ -777,8 +799,10 @@ end
 
 
 ---手动设置一次需要设置的
-function rs.On_NpRefreshOnce(unitFrame)
+function rs.On_NpRefreshOnce(unitFrame, namePlateFrameBase)
     if unitFrame:IsForbidden() then return end
+
+    rs.InitAttr(unitFrame, namePlateFrameBase)
     
     rs.SetStolen(unitFrame)
 
@@ -866,7 +890,7 @@ function rs.HookBlizzedFunc()
     -- Size Change or Options Change
     hooksecurefunc(NamePlateDriverFrame, "UpdateNamePlateOptions", function()
         rs.UpdateCvars()
-        for k, namePlate in pairs(C_NamePlate.GetNamePlates()) do
+        for k, namePlate in pairs(C_NamePlate.GetNamePlates(false)) do
             rs.On_NpRefreshOnce(namePlate.UnitFrame)
         end
     end)
@@ -1140,7 +1164,7 @@ local function UIObj_Event(self, event, ...)
         end
 
     elseif event == "PLAYER_FOCUS_CHANGED" then 
-        for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+        for i, namePlate in ipairs(C_NamePlate.GetNamePlates(false)) do
             local unitFrame = namePlate.UnitFrame
             rs.SetBarColor(unitFrame)
         end

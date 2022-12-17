@@ -49,9 +49,9 @@ function rs.UpdateCvars()
     SetCVar("nameplateShowOnlyNames", 0)
 
     -- Need Load Delay, so put here
-    --if rs.tabDB[rs.iDBmark]["NameModeImitateOverlap"] then
-    --    C_NamePlate.SetNamePlateFriendlySize(1, -20)
-    --end
+    if rs.ExtraConfig.RefuceFriendlyNameplatesSize then
+       C_NamePlate.SetNamePlateFriendlySize(80, -10)
+    end
 end
 
 -- 用服务器数据覆盖本地数据

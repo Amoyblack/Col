@@ -4,7 +4,7 @@ local addon, rs  = ...
 local function OnlyShowBall()
 	local haskey = false
 
-	for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+	for i, namePlate in ipairs(C_NamePlate.GetNamePlates(false)) do
         if rs.IsExpBall(nil, namePlate.UnitFrame) then 
 			haskey = true
 		end
@@ -13,23 +13,24 @@ local function OnlyShowBall()
 	-- 场上存在易爆球
 	if haskey then 
         -- 隐藏球之外的血条框架
-        for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+        for i, namePlate in ipairs(C_NamePlate.GetNamePlates(false)) do
             local unitFrame = namePlate.UnitFrame
             if rs.IsExpBall(nil, namePlate.UnitFrame) then 
+                unitFrame.shouldHide = false
                 unitFrame:Show()
             else
                 if not UnitIsUnit("player", unitFrame.unit) then 
+                    unitFrame.shouldHide = true
                     unitFrame:Hide()
                 end
             end
         end
 	else
         -- 显示所有血条框架
-        for i, namePlate in ipairs(C_NamePlate.GetNamePlates()) do
+        for i, namePlate in ipairs(C_NamePlate.GetNamePlates(false)) do
             local unitFrame = namePlate.UnitFrame
-            -- if not unitFrame.hasShownAsName then 
-                unitFrame:Show()
-            -- end
+            unitFrame.shouldHide = false
+            unitFrame:Show()
         end		
 	end
 end

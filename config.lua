@@ -16,6 +16,9 @@ local config = rs.ExtraConfig
 ------  不要改上面的 Dont touch above -------
 -------------------------------------------
 
+
+
+
 -- 血量字体大小 （health value size)
 config.healthValueSize = 11
 
@@ -30,6 +33,9 @@ config.CastingTimerSize = 12
 
 -- 施法条打断指示器大小 (CastBar Interrupte-Indicator Size)  Default:7
 config.InterrupteIndicatorSize = 7
+
+-- 缩小友方姓名板尺寸，以此模拟友方姓名板重叠，让名字模式下的名字始终紧贴单位 (Simulate the overlap of friendly nameplates by reducing the size of friendly nameplates, so that names always stick to units when name mode is enabled)
+config.RefuceFriendlyNameplatesSize = false
 
 -- 染色优先级，当目标同时满足多个条件时，排在前面的覆盖后面的 
 -- Color Priority, When the target meets multiple conditions at the same time, the one in front covers the one behind
