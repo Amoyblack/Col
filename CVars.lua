@@ -49,7 +49,7 @@ function rs.UpdateCvars()
     SetCVar("nameplateShowOnlyNames", 0)
 
     -- Need Load Delay, so put here
-    if rs.ExtraConfig.RefuceFriendlyNameplatesSize then
+    if rs.ExtraConfig.ReduceFriendlyNameplatesSize then
        C_NamePlate.SetNamePlateFriendlySize(80, -10)
     end
 end

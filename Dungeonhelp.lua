@@ -3,7 +3,6 @@ local addon, rs  = ...
 
 function rs.OnlyShowBall()
     if (not rs.curDungeonData or rs.curDungeonData[3] ~= 13) and rs.ExpBallMode then return end
-    print('检测易爆球中')
 	local haskey = false
 
 	for i, namePlate in ipairs(C_NamePlate.GetNamePlates(false)) do
