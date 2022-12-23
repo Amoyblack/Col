@@ -4,7 +4,7 @@ local _, rs = ...
 
 
 rs.V.DefaultSetting = {
-	["Version"] = "10.0.15_1",
+	["Version"] = "10.0.20",
     ["ForceUpdate"] = false,
     ["ShowMiniMapBtn"] = true,
     ["BarTexture"] = "s2",
@@ -121,6 +121,9 @@ rs.V.DefaultSetting = {
 
 	["ExpballHelper"] = false,
 
+    ["UserScript"] = "-- put your script here\n-- See more on https://gitee.com/amoy2211/RSPlatesDocument\n\n\nlocal config = rs.ExtraConfig\n\nconfig.healthValueSize = 11\n\nconfig.questIconSize = 30\n\nconfig.stolenBuffSize = 25\n\nconfig.CastingTimerSize = 12\n\nconfig.InterrupteIndicatorSize = 7\n\nconfig.ReduceFriendlyNameplatesSize = false\n\nconfig.ColorOrder = \"ABCDEFG\"\n\nconfig.BoardSelectColor = true\n\nconfig.ExplosiveHelperScanList = {\n  [120651] = true,  -- explosive\n}\n\nconfig.ExplosiveHelperAffixDetection = true",
+    ["EditorFont"] = 1,
+
 	["DctAura"] = {	
         -- [3355] = true,	--冰冻陷阱
         -- [51514]	= true, --妖术
@@ -192,6 +195,51 @@ rs.V.DefaultSetting = {
         [183752] = true,    --DH:瓦解
     }
 }
+
+
+
+rs.ExtraConfig = {}
+
+rs.ExtraConfig.healthValueSize = 11
+
+rs.ExtraConfig.questIconSize = 30
+
+rs.ExtraConfig.stolenBuffSize = 25
+
+rs.ExtraConfig.CastingTimerSize = 12
+
+rs.ExtraConfig.InterrupteIndicatorSize = 7
+
+rs.ExtraConfig.ReduceFriendlyNameplatesSize = false
+
+rs.ExtraConfig.ColorOrder = "ABCDEFG"
+
+rs.ExtraConfig.BoardSelectColor = true
+
+rs.ExtraConfig.ExplosiveHelperScanList = {
+    [120651] = true, -- 易爆球
+}
+-- [119052] = true, -- 战旗
+-- [101398] = true, -- 灵能魔
+-- [179193] = true, -- 邪能方尖碑
+-- [114565] = true, -- 被遗忘的女王
+-- [5925] = true, -- 根基图腾
+-- [5913] = true, -- 战栗图腾
+-- [61245] = true, -- 电能图腾
+-- [105451] = true, -- 反击图腾
+-- [166523] = true, -- 暮钟图腾
+-- [179867] = true, -- 静电力场图腾
+-- [59764] = true, -- 治疗之潮图腾
+-- [10467] = true, -- 法力之潮图腾
+-- [53006] = true, -- 灵魂链接图腾
+-- [153285] = true, -- 奥格瑞玛61.47处的假人
+
+rs.ExtraConfig.ExplosiveHelperAffixDetection = true
+
+
+
+
+
 
 rs.updateInfo = {
     "\n|cffFFD70010.0.07|r\n",

@@ -17,6 +17,8 @@ Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
 Libs\LibDBIcon-1.0\lib.xml
 Libs\AceGUI-3.0\AceGUI-3.0.xml
 Libs\AceConfig-3.0\AceConfig-3.0.xml
+Libs\ChatThrottleLib.lua
+Libs\IndentsLib.lua
 
 
 
@@ -27,8 +29,6 @@ locale\zhCN.lua
 locale\enUS.lua
 locale\zhTW.lua
 locale\LangSet.lua
-
-config.lua
 
 DefaultSetting.lua
 

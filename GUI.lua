@@ -195,6 +195,7 @@ options.args.basic = {
                         s2 = L["HealthPercentage"],
                         s3 = L["HealthValue"],
                         s4 = L["HealthBothShow"],
+                        s5 = L["HealthBothShow_extra_a"],
                     },
                     set = function (info, value)
                     rs.tabDB[rs.iDBmark][info[#info]] = value 
@@ -1522,13 +1523,14 @@ options.args.auras = {
     }
 }
 
--- options.args.gap1 = {
---     name = " ",
---     type = "group",
---     order = 7,
---     disabled = true,
---     args = {},
--- }
+options.args.gap1 = {
+    name = " ",
+    type = "group",
+    order = 7,
+    disabled = true,
+    args = {},
+}
+
 
 -- options.args.gap2 = {
 --     name = " ",
@@ -1538,6 +1540,128 @@ options.args.auras = {
 --     args = {},
 -- }
 
+options.args.advanced = {
+    name = L["Title11"],
+    type = "group",
+    order = 9,
+    args = {
+        UserScript = {
+            type = "input",
+            order = 1,
+            name = "Code Lua",
+            desc = "The code inside the script is executed automatically when the addon loads or manually when the \"Save and Run\" button is clicked.",
+            multiline = 26,
+            width = "full",
+            -- set = function(info, value)
+            --     print("this method should not be called")
+            --     if rs.tabDB[rs.iDBmark][info[#info]] ~= nil then 
+            --         rs.tabDB[rs.iDBmark][info[#info]] = value 
+            --     end 
+            --     value = string.format("local rs = RSPLATES_GLOBAL_ACCESS\n%s", value)
+            --     local errp, _
+            --     local func, errf = loadstring(value, "RSPlates Script Output:")
+            --     if func then
+            --         _, errp = pcall(func)
+            --     end
+
+            --     local errOutput = errf or errp or ""
+            --     options.args.advanced.args.OutputLabel = {
+            --         type = "description",
+            --         order = 2,
+            --         name = string.format("|cffDDDDDD%s|r", errOutput)
+            --     }
+            -- end,
+            get = function (info) 
+                local insertlab = function()
+                    for i = 1, AceGUI:GetWidgetCount("MultiLineEditBox") do
+                        local editbox = _G[("MultiLineEditBox%sEdit"):format(i)]
+                        if editbox.obj.label:GetText() == "Code Lua" then
+                            editbox.obj.button:Hide()
+                            if rs.tabDB[rs.iDBmark]["EditorFont"] == 1 then
+                                local editfont = CreateFont("rseditefont")
+                                editfont:SetFont("Interface\\AddOns\\RSPlates\\media\\Amoy.ttf", 13, "")
+                                editbox:SetFontObject(editfont) 
+                            else
+                                editbox:SetFontObject(GameFontNormal) 
+                            end
+                            rs.indent.enable(editbox)
+                        end
+                    end
+                end
+                pcall(insertlab)
+                return rs.tabDB[rs.iDBmark][info[#info]] 
+            end,
+        },
+        SaveBtn = {
+            name = "Save",
+            type = "execute",
+            order = 2,
+            width = 0.4,
+            func = function(info, value)
+                for i = 1, AceGUI:GetWidgetCount("MultiLineEditBox") do
+                    local editbox = _G[("MultiLineEditBox%sEdit"):format(i)]
+                    if editbox.obj.label:GetText() == "Code Lua" then
+                        rs.tabDB[rs.iDBmark]["UserScript"] = editbox:GetText()
+                    end
+                end
+            end,
+        },
+        RunBtn = {
+            name = "Save and Run",
+            type = "execute",
+            order = 3,
+            width = 0.8,
+            func = function(info, value)
+                for i = 1, AceGUI:GetWidgetCount("MultiLineEditBox") do
+                    local editbox = _G[("MultiLineEditBox%sEdit"):format(i)]
+                    if editbox.obj.label:GetText() == "Code Lua" then
+                        local value = editbox:GetText()
+                        rs.tabDB[rs.iDBmark]["UserScript"] = value
+                        value = string.format("local rs = RSPLATES_GLOBAL_ACCESS\n%s", value)
+                        local errp, _
+                        local func, errf = loadstring(value, "Code Lua")
+                        if func then
+                            _, errp = pcall(func)
+                        end
+        
+                        local errOutput = errf or errp or ""
+                        options.args.advanced.args.OutputLabel = {
+                            type = "description",
+                            order = 5,
+                            name = string.format("|cffDDDDDD%s|r", errOutput)
+                        }
+
+                        for i, namePlate in ipairs(C_NamePlate.GetNamePlates(false)) do
+                            local unitFrame = namePlate.UnitFrame
+                            rs.On_NpRefreshOnce(unitFrame)
+                        end	
+                    end
+                end
+            end,
+        },
+        EditorFont = {
+            name = "",
+            type = "select",
+            desc = nil,
+            order = 4,
+            values = {
+                [1] = "Editor Font: Amoy",
+                [2] = "Editor Font: GameFont",
+            },
+            width = 1.5,
+        },
+        gapspace = {
+            name = " ",
+            type = "description",
+            order = 5,
+        },
+        OutputLabel = {
+            type = "description",
+            order = 7,
+            name = "",
+        }
+    },
+}
 
 -- options.args.UpdateInfo = {
 --     name = L["VersionLog"],
@@ -1752,7 +1876,7 @@ function rs.SwitchConfigGUI(page)
         rs.RefBlacklistAuraPanel()
         rs.RefDungeonNPCPanel()
         rs.RefDungeonAuraPanel()
-        AceConfigDialog:SetDefaultSize(addon, 800, 600)
+        AceConfigDialog:SetDefaultSize(addon, 800, 610)
         -- AceConfigDialog:SelectGroup(addon, "whitelist")
         AceConfigDialog:SelectGroup(addon, page)
         AceConfigDialog:Open(addon, ConfigFrameContainer)

@@ -11,7 +11,7 @@
 -- so, compromise it by Hooking blizzard ui, Global Set Event on new ui obj that Got by C_N API (api still occupied cpu lightly)
 
 
-local ADDONName, rs = ...
+local addonName, rs = ...
 local L = rs.L
 
 _G.RSPLATES_GLOBAL_ACCESS = rs
@@ -62,6 +62,21 @@ function rs.RSOn()
 end
 -------------------------------------------------
 
+function rs.RunUserScript()
+    local script = rs.tabDB[rs.iDBmark]["UserScript"]
+    script = string.format("local rs = RSPLATES_GLOBAL_ACCESS\n%s", script)
+    local errp, _
+    local func, errf = loadstring(script, "RSPlates Script Output:")
+    if func then
+        _, errp = pcall(func)
+    end
+
+    local errOutput = errf or errp
+    if errOutput then
+        print(("|cffFFD700%s|r%s"):format("RSPlates : ", errOutput))
+    end
+end
+
 function rs.InitTimer()
     if rs.ticker then
         rs.ticker:Cancel()
@@ -87,11 +102,10 @@ function rs.On_Np_Add(unitToken)
         rs.CreateUIObj(unitFrame, namePlateFrameBase)
         rs.RegExtraUIEvent(unitFrame)
         rs.On_NpRefreshOnce(unitFrame, namePlateFrameBase)
-        unitFrame:Show()
     end
 end
 
-function rs.InitAttr(unitFrame, namePlate)
+function rs.InitStatus(unitFrame, namePlate)
     unitFrame.hasShownAsName = false
     unitFrame.shouldHide = false
     if namePlate and namePlate.NpcNameRS and namePlate.NameSelectGlow then 
@@ -105,6 +119,7 @@ function rs.InitAttr(unitFrame, namePlate)
     unitFrame.ColorAura = {}
     unitFrame.StolenAura = {}
 
+    unitFrame:Show()
 end
 
 -- function rs.On_Np_Remove(unitToken)
@@ -674,6 +689,9 @@ function rs.GetDetailText(unit, CurHealth, MaxHealth)
 
 	elseif iType == "s4" then --数值/百分比
         return string.format("%s / %s",fCur, fPer)
+
+    elseif iType == "s5" then --数值(百分比)
+        return string.format("%s(%s)",fCur, fPer)
 	end
 end
 
@@ -813,7 +831,7 @@ end
 function rs.On_NpRefreshOnce(unitFrame, namePlateFrameBase)
     if unitFrame:IsForbidden() then return end
 
-    rs.InitAttr(unitFrame, namePlateFrameBase)
+    rs.InitStatus(unitFrame, namePlateFrameBase)
     
     rs.SetStolen(unitFrame)
 
@@ -1006,6 +1024,19 @@ function rs.HookBlizzedFunc()
     --     CastingExpandFrame_OnHookScript(self, escape)
     -- end)
 
+    -- 边框颜色
+    hooksecurefunc("CompactUnitFrame_UpdateHealthBorder", function(frame)
+        if not rs.ExtraConfig.BoardSelectColor then
+            if frame and frame.unit then
+                if rs.IsLegalUnit(frame) then
+                    frame.healthBar.border:SetVertexColor(0, 0, 0, 1);
+                    if frame.castBar and frame.castBar.border then
+                        frame.castBar.border:SetVertexColor(0, 0, 0, 1);
+                    end
+                end
+            end
+        end
+    end)
 
     -- 名字
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
@@ -1047,9 +1078,11 @@ local loadFrame = CreateFrame("FRAME");
 loadFrame:RegisterEvent("ADDON_LOADED");
 loadFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 loadFrame:RegisterEvent("LOADING_SCREEN_DISABLED")
+loadFrame:RegisterEvent("CHAT_MSG_ADDON")
+loadFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
 
-function loadFrame:OnEvent(event, arg1)
-	if event == "ADDON_LOADED" and arg1 == ADDONName then
+function loadFrame:OnEvent(event, ...)
+	if event == "ADDON_LOADED" and ... == addonName then
         local hasbeenForced
 		if not RSPlatesDB then
 			RSPlatesDB = rs.V.DefaultSetting
@@ -1098,25 +1131,42 @@ function loadFrame:OnEvent(event, arg1)
             [0] = rs.tabDB[rs.iDBmark]["TankSafeColor"],
         }
 
+        rs.RunUserScript()
         rs.OnColCheck()
 		rs.RSOn()
         rs.InitMinimapBtn()
         rs.GenerateSpellDescCacheAll()
         C_Timer.After(1, rs.GenerateNpcNameAll)
-
-    -- time : entering_world --> WA set --> loading_screen_disabled
+        
+        -- time : entering_world --> WA set --> loading_screen_disabled
     elseif event == "PLAYER_ENTERING_WORLD" then
         if rs.V.AddonFirstLoad then
             rs.SetCVarOnFirstTime()
         end
         rs.RefSpecThreateColor()
+        local succ = C_ChatInfo.RegisterAddonMessagePrefix(addonName) 
     elseif event == "LOADING_SCREEN_DISABLED" then
+        local guildName = select(1, GetGuildInfo("player"))
+        if guildName then 
+            ChatThrottleLib:SendAddonMessage("NORMAL",  addonName, rs.V.DefaultSetting.Version, "GUILD");
+        end
         C_Timer.After(1, rs.UpdateCvars)
         C_Timer.After(1, function()
             local activeKeystoneLevel, activeAffixIDs = C_ChallengeMode.GetActiveKeystoneInfo()
             rs.curDungeonData = activeAffixIDs
         end)
-
+    elseif event == "CHAT_MSG_ADDON" then
+        local prefix, data, channel, sender = ...
+        local myName = select(1, UnitName("player"))
+        local senderName = string.match(sender, "[^-]+")
+        if myName ~= senderName and prefix == addonName then
+        -- if prefix == addonName then
+            if false then
+                print(sender, "is Using RSPlates", data)
+            end
+        end
+    elseif event == "GROUP_ROSTER_UPDATE" then
+        ChatThrottleLib:SendAddonMessage("NORMAL",  addonName, rs.V.DefaultSetting.Version, "RAID");
 	end
 end
 loadFrame:SetScript("OnEvent", loadFrame.OnEvent);

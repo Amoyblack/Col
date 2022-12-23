@@ -19,6 +19,7 @@ rs.V.zhcn = {
     Title7 = "地下城助手",
     Title8 = "其它",
     Title10 = "插件配置",
+    Title11 = "脚本",
 
     BarTexture = "材质",
     BarTextureTT = "\n|cffFFD700源生|r 当前版本(10.0 DF)暴雪默认材质\n\n|cffFFD7007.0 LEG 源生|r 7.0 LEG ~ 9.0 SL 版本的暴雪默认材质\n\n|cffFFD700Customize|r 若需要自定义材质，把你的材质改名为|cff00FF7F<MyRsTexture>|r，存放于 |cff00FF7F//_retail_/Interface/MyRsTexture|r，然后勾选此项\n\n|cff66CCFF选择第一项源生时候需要重载生效|r",
@@ -52,6 +53,7 @@ rs.V.zhcn = {
     HealthValue = "数值",
     HealthPercentage = "百分比",
     HealthBothShow = "数值/百分比",
+    HealthBothShow_extra_a = "数值(百分比)",
     HealthNone = "不显示",
 
     CvarEnable = "启用",

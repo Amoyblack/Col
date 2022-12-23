@@ -26,8 +26,9 @@
 
 #### <font color = Orange>Setting</font>
 
-- /rs to open Setting interface
+- type "/rs" to open Setting interface
 - In-Game Setting interface (ESC - Interface - AddOns - RSPlates)
+- https://gitee.com/amoy2211/RSPlatesDocument
  
 
 #### <font color = Orange>Localization</font>
@@ -38,14 +39,7 @@
 - If your language is not listed above and would like to help me add your language such as Russian,Korean so on .  pls let me know
  
 
-#### <font color = Orange>Additional instructions</font>
 
-- The Addon is made based on the style of blizzard <Larger Nameplates>, It's recommended to enable it by [esc - interface - Names - Larger Nameplates]
-- When a unit meets multiple Color conditions at the same time, the Color priority is:  custom NPC > NPC with custom auras > execute > threat
-
-#### <font color = Orange>Video preview</font>
-
--  [Limit 2nd Kill Queen Azshara - youtube](https://www.youtube.com/watch?v=AdX0FfnaIO8) < starts at Video 7:53 Warlock SUPREME perspective >
 
 
 
