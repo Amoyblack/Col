@@ -535,7 +535,7 @@ function rs.SetBarColor(frame)
             r, g, b =  frame.healthBar.r, frame.healthBar.g, frame.healthBar.b
         end
 
-        -- FIX FOR 10.7 - Check if frame.healthBar exists before trying to color it
+        -- FIX FOR 10.0.7 - Check if frame.healthBar exists before trying to color it
         if (frame.healthBar) then 
             frame.healthBar:SetStatusBarColor(r, g, b);
         end
