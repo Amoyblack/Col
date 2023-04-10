@@ -535,7 +535,10 @@ function rs.SetBarColor(frame)
             r, g, b =  frame.healthBar.r, frame.healthBar.g, frame.healthBar.b
         end
 
-        frame.healthBar:SetStatusBarColor(r, g, b);
+        -- FIX FOR 10.7 - Check if frame.healthBar exists before trying to color it
+        if (frame.healthBar) then 
+            frame.healthBar:SetStatusBarColor(r, g, b);
+        end
 
         if (frame.optionTable.colorHealthWithExtendedColors) then
             frame.selectionHighlight:SetVertexColor(r, g, b);
