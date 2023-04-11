@@ -534,8 +534,9 @@ function rs.SetBarColor(frame)
         if not r then
             r, g, b =  frame.healthBar.r, frame.healthBar.g, frame.healthBar.b
         end
-
-        frame.healthBar:SetStatusBarColor(r, g, b);
+   
+        -- FIX FOR 10.0.7 - Prevents the addon for spitting errors when refreshing frames
+        frame.healthBar:SetStatusBarColor(r or 1, g or 1, b or 1);
 
         if (frame.optionTable.colorHealthWithExtendedColors) then
             frame.selectionHighlight:SetVertexColor(r, g, b);
